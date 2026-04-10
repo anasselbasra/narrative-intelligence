@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NATO Narrative Intelligence — Project Overview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --void:        #000000;
+      --surface-0:   #080808;
+      --surface-1:   #0f0f0f;
+      --surface-2:   #161616;
+      --border-hard: #2a2a2a;
+      --border-soft: #1a1a1a;
+      --red:         #d0021b;
+      --text-0:      #ffffff;
+      --text-1:      #c8c8c8;
+      --text-2:      #787878;
+      --text-3:      #404040;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-body:    'Barlow', sans-serif;
+      --font-data:    'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--void);
+      color: var(--text-1);
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.6;
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-hard) transparent;
+    }
+
+    .page {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 44px 32px 80px;
+    }
+
+    /* ── Document header ───────────────────────────────────────── */
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border-hard);
+      margin-bottom: 44px;
+    }
+
+    .class-tag {
+      display: inline-block;
+      font-family: var(--font-data);
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: .2em;
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 2px 8px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .doc-ref {
+      display: block;
+      font-family: var(--font-data);
+      font-size: 9px;
+      color: var(--text-3);
+      letter-spacing: .1em;
+    }
+
+    .doc-meta-block {
+      text-align: right;
+    }
+
+    .doc-meta-row {
+      font-family: var(--font-data);
+      font-size: 9px;
+      color: var(--text-3);
+      letter-spacing: .08em;
+      line-height: 1.9;
+    }
+
+    .doc-meta-row strong {
+      color: var(--text-2);
+      font-weight: 400;
+    }
+
+    /* ── Title block ───────────────────────────────────────────── */
+    .title-block {
+      margin-bottom: 44px;
+    }
+
+    .overline {
+      font-family: var(--font-data);
+      font-size: 9px;
+      color: var(--red);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .main-title {
+      font-family: var(--font-display);
+      font-size: 46px;
+      font-weight: 800;
+      color: var(--text-0);
+      letter-spacing: -.02em;
+      line-height: .95;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .main-title span { color: var(--red); }
+
+    .sub-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--text-2);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      margin-bottom: 24px;
+    }
+
+    .title-rule {
+      width: 40px;
+      height: 2px;
+      background: var(--red);
+      margin-bottom: 22px;
+    }
+
+    .abstract {
+      font-size: 13.5px;
+      color: var(--text-1);
+      line-height: 1.75;
+      max-width: 620px;
+      font-weight: 300;
+    }
+
+    /* ── Parameters grid ───────────────────────────────────────── */
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-hard);
+      border: 1px solid var(--border-hard);
+      margin-bottom: 44px;
+    }
+
+    .param-cell {
+      background: var(--surface-0);
+      padding: 18px 20px;
+    }
+
+    .param-label {
+      font-family: var(--font-data);
+      font-size: 8px;
+      color: var(--text-3);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .param-value {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-0);
+      letter-spacing: .01em;
+      line-height: 1.1;
+      margin-bottom: 3px;
+    }
+
+    .param-unit {
+      font-family: var(--font-data);
+      font-size: 8px;
+      color: var(--text-3);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    /* ── Accordion sections ────────────────────────────────────── */
+    .section-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border-hard);
+      border: 1px solid var(--border-hard);
+      margin-bottom: 44px;
+    }
+
+    .accordion { background: var(--surface-0); }
+
+    .accordion-btn {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 20px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background .15s;
+    }
+
+    .accordion-btn:hover { background: var(--surface-1); }
+
+    .accordion-btn.open {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border-hard);
+    }
+
+    .accordion-label-group {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .accordion-tag {
+      font-family: var(--font-data);
+      font-size: 8px;
+      color: var(--text-3);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      border: 1px solid var(--border-hard);
+      padding: 2px 6px;
+      flex-shrink: 0;
+    }
+
+    .accordion-btn.open .accordion-tag {
+      color: var(--red);
+      border-color: rgba(208,2,27,.3);
+    }
+
+    .accordion-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-2);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      text-align: left;
+      transition: color .15s;
+    }
+
+    .accordion-btn:hover .accordion-title,
+    .accordion-btn.open .accordion-title { color: var(--text-0); }
+
+    .accordion-icon {
+      font-family: var(--font-data);
+      font-size: 18px;
+      color: var(--text-3);
+      flex-shrink: 0;
+      transition: transform .2s, color .15s;
+      line-height: 1;
+    }
+
+    .accordion-btn.open .accordion-icon {
+      transform: rotate(45deg);
+      color: var(--red);
+    }
+
+    .accordion-body {
+      display: none;
+      padding: 28px 24px 32px;
+    }
+
+    .accordion-body.open { display: block; }
+
+    .accordion-body p {
+      font-size: 13px;
+      color: var(--text-1);
+      line-height: 1.75;
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+
+    .accordion-body p:last-child { margin-bottom: 0; }
+
+    .accordion-body strong {
+      color: var(--text-0);
+      font-weight: 500;
+    }
+
+    .body-subhead {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-3);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      margin-top: 22px;
+    }
+
+    .body-subhead:first-child { margin-top: 0; }
+
+    /* ── Event timeline ────────────────────────────────────────── */
+    .event-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 14px;
+      border-left: 1px solid var(--border-hard);
+      padding-left: 20px;
+    }
+
+    .event-item {
+      padding-bottom: 16px;
+      position: relative;
+    }
+
+    .event-item::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 5px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--text-3);
+    }
+
+    .event-item.critical::before {
+      background: var(--red);
+      box-shadow: 0 0 4px rgba(208,2,27,.4);
+    }
+
+    .event-date {
+      font-family: var(--font-data);
+      font-size: 9px;
+      color: var(--text-3);
+      letter-spacing: .1em;
+      margin-bottom: 3px;
+    }
+
+    .event-item.critical .event-date { color: rgba(208,2,27,.7); }
+
+    .event-desc {
+      font-size: 13px;
+      color: var(--text-1);
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    /* ── Phase list ────────────────────────────────────────────── */
+    .phase-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .phase-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .phase-num {
+      font-family: var(--font-data);
+      font-size: 8px;
+      color: var(--red);
+      border: 1px solid rgba(208,2,27,.3);
+      padding: 3px 7px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    .phase-desc {
+      font-size: 13px;
+      color: var(--text-1);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    .phase-desc strong {
+      color: var(--text-0);
+      font-weight: 500;
+    }
+
+    /* ── Module pipeline mini-grid ─────────────────────────────── */
+    .module-pipeline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border-hard);
+      margin-top: 22px;
+      border: 1px solid var(--border-hard);
+    }
+
+    .module-card {
+      background: var(--surface-1);
+      padding: 16px 18px;
+    }
+
+    .module-id {
+      font-family: var(--font-data);
+      font-size: 8px;
+      color: var(--text-3);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .module-name {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-0);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .module-tech {
+      font-family: var(--font-data);
+      font-size: 8.5px;
+      color: var(--red);
+      letter-spacing: .06em;
+      margin-bottom: 5px;
+    }
+
+    .module-desc {
+      font-size: 11px;
+      color: var(--text-2);
+      line-height: 1.5;
+      font-weight: 300;
+    }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    .doc-footer {
+      padding-top: 22px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .footer-analyst {
+      font-family: var(--font-data);
+      font-size: 9px;
+      color: var(--text-3);
+      letter-spacing: .08em;
+      line-height: 1.7;
+    }
+
+    .footer-analyst strong {
+      color: var(--text-2);
+      font-weight: 400;
+    }
+
+    .footer-ref {
+      font-family: var(--font-data);
+      font-size: 9px;
+      color: var(--text-3);
+      letter-spacing: .08em;
+      text-align: right;
+      line-height: 1.7;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page { animation: fade-in .35s ease both; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Document header -->
+  <header class="doc-header">
+    <div>
+      <span class="class-tag">Restricted</span>
+      <span class="doc-ref">NI-2026-NATO-001</span>
+    </div>
+    <div class="doc-meta-block">
+      <div class="doc-meta-row">Period &nbsp;<strong>1 Feb – 3 Apr 2026</strong></div>
+      <div class="doc-meta-row">Platform &nbsp;<strong>Twitter / X · English</strong></div>
+      <div class="doc-meta-row">Completed &nbsp;<strong>07 Apr 2026</strong></div>
+    </div>
+  </header>
+
+  <!-- Title block -->
+  <div class="title-block">
+    <div class="overline">Analytical Report · 4-Phase Pipeline</div>
+    <h1 class="main-title">Narrative<br/><span>Threat</span><br/>Assessment</h1>
+    <p class="sub-title">NATO Information Environment<br/>Iran Crisis &amp; Alliance Cohesion</p>
+    <div class="title-rule"></div>
+    <p class="abstract">
+      This report documents a four-phase analytical pipeline applied to the English-language Twitter/X discourse
+      surrounding NATO and the Iran crisis between 1 February and 3 April 2026. Covering 3,514 posts,
+      1,956 unique accounts and 178 million total views, the study maps the narrative structures that
+      circulated during this period, identifies threat-level framings targeting alliance cohesion, and
+      detects coordinated visual signal patterns in the information environment.
+    </p>
+  </div>
+
+  <!-- Study parameters -->
+  <div class="params-grid">
+    <div class="param-cell">
+      <div class="param-label">Study period</div>
+      <div class="param-value">62</div>
+      <div class="param-unit">Days · 1 Feb – 3 Apr 2026</div>
+    </div>
+    <div class="param-cell">
+      <div class="param-label">Corpus</div>
+      <div class="param-value">3,514</div>
+      <div class="param-unit">Posts · Twitter / X</div>
+    </div>
+    <div class="param-cell">
+      <div class="param-label">Total reach</div>
+      <div class="param-value">178M</div>
+      <div class="param-unit">Views</div>
+    </div>
+    <div class="param-cell">
+      <div class="param-label">Unique accounts</div>
+      <div class="param-value">1,956</div>
+      <div class="param-unit">Authors in corpus</div>
+    </div>
+    <div class="param-cell">
+      <div class="param-label">Engagements</div>
+      <div class="param-value">9.6M</div>
+      <div class="param-unit">Total interactions</div>
+    </div>
+    <div class="param-cell">
+      <div class="param-label">Narratives mapped</div>
+      <div class="param-value">21</div>
+      <div class="param-unit">Canonical narratives</div>
+    </div>
+  </div>
+
+  <!-- Expandable sections -->
+  <div class="section-list">
+
+    <!-- Section 01: Geopolitical Context -->
+    <div class="accordion">
+      <button class="accordion-btn" onclick="toggleAccordion(this)" aria-expanded="false">
+        <div class="accordion-label-group">
+          <span class="accordion-tag">01</span>
+          <span class="accordion-title">Geopolitical Context</span>
+        </div>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+
+        <div class="body-subhead">Strategic background</div>
+        <p>
+          From early 2026, the Trump administration intensified diplomatic and military pressure on Iran,
+          creating a cascading effect on NATO's internal cohesion. European allies faced simultaneous pressure
+          from Washington on burden-sharing obligations and the prospect of being drawn into a conflict outside
+          the alliance's traditional geographic scope.
+        </p>
+        <p>
+          The information environment around this crisis became a contested terrain where competing narrative
+          frames circulated at scale — some challenging the legitimacy of NATO's role, others contesting the
+          legal basis of allied military participation, and several directly targeting the reliability of the
+          United States as a security guarantor. The dominant narrative family (N18, 362 texts) framed Trump
+          as exerting coercive pressure to force European allies into a conflict they considered illegal
+          under international law.
+        </p>
+
+        <div class="body-subhead">Key events in the monitored period</div>
+        <ul class="event-list">
+          <li class="event-item">
+            <div class="event-date">20 FEB 2026</div>
+            <div class="event-desc">Trump publicly targets Iran — first discourse activation (+30% volume)</div>
+          </li>
+          <li class="event-item critical">
+            <div class="event-date">28 FEB 2026</div>
+            <div class="event-desc">US-Israeli strikes begin — volume surge +135%, first major cluster activation</div>
+          </li>
+          <li class="event-item">
+            <div class="event-date">16 MAR 2026</div>
+            <div class="event-desc">Escalation phase — European NATO framing intensifies (+148%)</div>
+          </li>
+          <li class="event-item critical">
+            <div class="event-date">25 MAR 2026</div>
+            <div class="event-desc">Trump publicly attacks NATO — 120 posts, +215% single-day surge</div>
+          </li>
+          <li class="event-item">
+            <div class="event-date">31 MAR 2026</div>
+            <div class="event-desc">Infrastructure ultimatum — 328 posts, continued escalation toward peak</div>
+          </li>
+          <li class="event-item critical">
+            <div class="event-date">01 APR 2026</div>
+            <div class="event-desc">Trump threatens NATO withdrawal — 485 posts (absolute peak), 26.5M views in a single day, amplification ×49 vs. baseline</div>
+          </li>
+        </ul>
+
+        <div class="body-subhead">Analytical scope</div>
+        <p>
+          The study focuses exclusively on English-language content on Twitter/X with a minimum engagement
+          threshold of 5 retweets. This filter retains only content that achieved measurable amplification,
+          eliminating noise while preserving the organic dynamics of narrative dissemination. The resulting
+          corpus captures the visible, amplified layer of the information environment — not its full volume,
+          but its most consequential signal.
+        </p>
+
+      </div>
+    </div>
+
+    <!-- Section 02: Scientific Methodology -->
+    <div class="accordion">
+      <button class="accordion-btn" onclick="toggleAccordion(this)" aria-expanded="false">
+        <div class="accordion-label-group">
+          <span class="accordion-tag">02</span>
+          <span class="accordion-title">Scientific Methodology</span>
+        </div>
+        <span class="accordion-icon">+</span>
+      </button>
+      <div class="accordion-body">
+
+        <div class="body-subhead">Analytical pipeline</div>
+        <p>
+          This study applies a sequential, multi-modal analytical pipeline. Each phase builds directly
+          on the previous, moving from raw corpus characterisation through semantic clustering, narrative
+          coding, and finally coordinated visual signal detection. The pipeline combines natural language
+          processing with computer vision, treating the information environment as both a textual and
+          visual phenomenon.
+        </p>
+
+        <ul class="phase-list">
+          <li class="phase-item">
+            <span class="phase-num">Phase 1</span>
+            <div class="phase-desc">
+              <strong>Descriptive Analysis —</strong> Corpus mapping, temporal dynamics, source
+              and account distribution. Identifies peak events, engagement concentration, and
+              the top amplification nodes in the network. Establishes the structural baseline
+              against which narrative analyses are interpreted.
+            </div>
+          </li>
+          <li class="phase-item">
+            <span class="phase-num">Phase 2</span>
+            <div class="phase-desc">
+              <strong>Topic Modeling —</strong> Semantic clustering using UMAP dimensionality
+              reduction and HDBSCAN unsupervised clustering (min_cluster_size = 15).
+              36 clusters identified from 3,510 posts. 69.4% classified; 30.6% noise —
+              a rate that reflects genuine narrative complexity, not a methodological artefact.
+            </div>
+          </li>
+          <li class="phase-item">
+            <span class="phase-num">Phase 3</span>
+            <div class="phase-desc">
+              <strong>Narrative Analysis —</strong> 21 canonical narratives coded and mapped
+              to a two-axis threat matrix (internal fracture vs. external threat ×
+              legitimacy vs. cohesion targeting). Temporal trajectories analysed over 7 periods.
+              Five mirror-narrative pairs identified. Similarity threshold: 0.70 cosine
+              (observed average: 0.730).
+            </div>
+          </li>
+          <li class="phase-item">
+            <span class="phase-num">Phase 4</span>
+            <div class="phase-desc">
+              <strong>Visual Analysis —</strong> Image clustering and visual coordination detection.
+              13 visual clusters identified. 9 significant coordination groups (score ≥ 0.90,
+              5+ posts). 82 accounts profiled across groups. Final score = visual similarity ×
+              temporal score. Priority group G04: 2 accounts, 7 posts, score 0.98–1.00.
+            </div>
+          </li>
+        </ul>
+
+        <div class="module-pipeline">
+          <div class="module-card">
+            <div class="module-id">Module 01</div>
+            <div class="module-name">Signal Landscape</div>
+            <div class="module-tech">Temporal · Distributional</div>
+            <div class="module-desc">Corpus characterisation, event mapping, source distribution, amplification nodes</div>
+          </div>
+          <div class="module-card">
+            <div class="module-id">Module 02</div>
+            <div class="module-name">Threat Clusters</div>
+            <div class="module-tech">UMAP + HDBSCAN · 36 clusters</div>
+            <div class="module-desc">Semantic topic segmentation, cluster activation sequences, temporal patterns</div>
+          </div>
+          <div class="module-card">
+            <div class="module-id">Module 03</div>
+            <div class="module-name">Narrative Matrix</div>
+            <div class="module-tech">NLP · Cosine similarity · 21 narratives</div>
+            <div class="module-desc">Canonical narrative coding, threat-level mapping, mirror-narrative analysis</div>
+          </div>
+          <div class="module-card">
+            <div class="module-id">Module 04</div>
+            <div class="module-name">Visual Intelligence</div>
+            <div class="module-tech">Computer vision · Image clustering</div>
+            <div class="module-desc">Coordination detection, asset tracking, account profiling across 9 groups</div>
+          </div>
+        </div>
+
+        <div class="body-subhead" style="margin-top: 22px;">Analytical limits</div>
+        <p>
+          The corpus is restricted to English-language content and excludes sub-threshold engagement.
+          Visual analysis covers image-bearing posts only. The 30.6% noise rate in Phase 2 reflects
+          the genuine heterogeneity of the information environment. No claim is made about the
+          intentionality of individual actors unless explicitly supported by multi-signal convergence.
+        </p>
+
+      </div>
+    </div>
+
+  </div><!-- /.section-list -->
+
+  <!-- Document footer -->
+  <footer class="doc-footer">
+    <div class="footer-analyst">
+      <strong>Anass El Basraoui</strong><br/>
+      Narrative Intelligence Analyst<br/>
+      Data Science · Strategic Analysis · Information Environment
+    </div>
+    <div class="footer-ref">
+      NI-2026-NATO-001<br/>
+      Restricted · NATO Information Environment<br/>
+      1 Feb – 3 Apr 2026
+    </div>
+  </footer>
+
+</div><!-- /.page -->
+
+<script>
+  'use strict';
+  function toggleAccordion(btn) {
+    const isOpen = btn.classList.contains('open');
+    const body   = btn.nextElementSibling;
+    if (isOpen) {
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      body.classList.remove('open');
+    } else {
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      body.classList.add('open');
+    }
+  }
+</script>
+
+</body>
+</html>
