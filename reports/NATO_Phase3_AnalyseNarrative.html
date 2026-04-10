@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NATO Narrative Intelligence - Phase 3 - Analyse Narrative</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0c10;--surface:#111318;--surface2:#181b22;--border:#232836;
+  --accent:#4d7cfe;--accent2:#fe4d4d;--accent3:#fec04d;--accent4:#4dfeba;
+  --purple:#a78bfa;--orange:#ff6b35;
+  --text:#e2e8f0;--muted:#6b7591;--dim:#3d4461;
+  --crit:#fe4d4d;--high:#fec04d;--mod:#4dfeba;--low:#4d7cfe;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;line-height:1.7;padding:48px 32px;max-width:1200px;margin:0 auto;}
+.report-header{border-left:3px solid var(--accent);padding-left:24px;margin-bottom:52px;}
+.report-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.report-title{font-size:28px;font-weight:600;color:#fff;line-height:1.2;margin-bottom:4px;}
+.report-subtitle{font-size:13px;color:var(--muted);font-weight:300;}
+.report-meta{display:flex;gap:28px;margin-top:16px;flex-wrap:wrap;}
+.meta-item{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+.meta-item span{color:var(--text);}
+.section{margin-bottom:60px;}
+.section-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.callout{border-left:3px solid var(--accent3);background:var(--surface);padding:14px 18px;margin:14px 0;font-size:12.5px;color:#8899bb;}
+.callout.blue{border-color:var(--accent);}.callout.red{border-color:var(--accent2);}.callout.green{border-color:var(--accent4);}.callout.grey{border-color:var(--dim);}.callout.purple{border-color:var(--purple);}
+.callout-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent3);margin-bottom:6px;}
+.callout.blue .callout-title{color:var(--accent);}.callout.red .callout-title{color:var(--accent2);}.callout.green .callout-title{color:var(--accent4);}.callout.grey .callout-title{color:var(--dim);}.callout.purple .callout-title{color:var(--purple);}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px;margin-bottom:28px;background:var(--border);border:1px solid var(--border);}
+.kpi-card{background:var(--surface);padding:16px 18px 12px;}
+.kpi-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.kpi-value{font-size:22px;font-weight:600;color:#fff;line-height:1;margin-bottom:3px;}
+.kpi-sub{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.threat-crit{background:rgba(254,77,77,.12);border:1px solid rgba(254,77,77,.4);color:var(--crit);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;display:inline-block;}
+.threat-high{background:rgba(254,192,77,.10);border:1px solid rgba(254,192,77,.4);color:var(--high);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;display:inline-block;}
+.threat-mod{background:rgba(77,254,186,.08);border:1px solid rgba(77,254,186,.3);color:var(--mod);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;display:inline-block;}
+.threat-low{background:rgba(77,124,254,.10);border:1px solid rgba(77,124,254,.3);color:var(--low);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;display:inline-block;}
+.nid{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--accent3);background:rgba(254,192,77,.08);border:1px solid rgba(254,192,77,.2);padding:1px 6px;display:inline-block;margin-right:4px;}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:2px;}
+.chart-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.data-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:20px;}
+.data-table th{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);font-weight:400;}
+.data-table td{padding:7px 10px;border-bottom:1px solid #1a1d27;color:#9aa8c4;vertical-align:middle;}
+.data-table tr:hover td{background:var(--surface2);}
+.data-table td.nid-cell{font-family:'IBM Plex Mono',monospace;color:var(--accent3);font-weight:600;white-space:nowrap;}
+.data-table td.vol-cell{font-family:'IBM Plex Mono',monospace;text-align:right;color:var(--text);}
+.vol-bar{display:inline-block;height:4px;background:var(--accent);vertical-align:middle;margin-left:6px;border-radius:1px;}
+.macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);margin-bottom:20px;}
+.macro-cell{background:var(--surface);padding:16px 18px;}
+.macro-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;font-weight:600;}
+.macro-body{font-size:12px;color:#8899bb;font-weight:300;line-height:1.65;margin-bottom:10px;}
+.macro-ids{display:flex;flex-wrap:wrap;gap:4px;}
+.mirror-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--purple);padding:18px 20px;margin-bottom:10px;}
+.mirror-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
+.mirror-vs{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);}
+.mirror-overlap{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--purple);background:rgba(167,139,250,.1);padding:2px 8px;border:1px solid rgba(167,139,250,.25);}
+.mirror-body{font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;}
+.rec-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 22px;margin-bottom:10px;}
+.rec-header{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.rec-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);background:rgba(77,124,254,.1);padding:2px 8px;border:1px solid rgba(77,124,254,.3);white-space:nowrap;}
+.rec-title{font-size:14px;font-weight:600;color:#fff;flex:1;}
+.rec-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:2px;background:var(--border);}
+.rec-field{background:var(--surface2);padding:10px 12px;}
+.rec-field-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;}
+.rec-field-val{font-size:12px;color:#9aa8c4;font-weight:300;}
+.finding-card{background:var(--surface);border-left:3px solid var(--accent2);padding:16px 20px;margin-bottom:8px;}
+.finding-num{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent2);margin-bottom:6px;letter-spacing:.1em;text-transform:uppercase;}
+.finding-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;}
+.finding-body{font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;}
+.matrix-legend{background:var(--surface);border:1px solid var(--border);padding:16px 18px;margin-bottom:12px;}
+.matrix-legend-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.matrix-legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.matrix-legend-item{font-size:12px;color:#8899bb;}
+.matrix-legend-item strong{color:var(--text);}
+.tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 6px;border:1px solid var(--border);color:var(--muted);margin:1px 2px 1px 0;}
+.annex-section{margin-bottom:36px;}
+.annex-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.limit-item{background:var(--surface);border-left:2px solid var(--dim);padding:7px 12px;margin-bottom:3px;font-size:12px;color:#8899bb;font-weight:300;}
+.report-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);}
+.footer-text{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);}
+p{color:#b0bcd4;margin-bottom:10px;font-weight:300;font-size:13px;}
+strong{color:var(--text);font-weight:600;}
+h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin-top:22px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+@media(max-width:768px){.macro-grid,.rec-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="report-header">
+  <div class="report-label">NATO Narrative Intelligence · Importation 696 · CONFIDENTIEL</div>
+  <div class="report-title">Rapport Phase 3 · Analyse Narrative</div>
+  <div class="report-subtitle">Paysage narratif · Dynamiques temporelles · Matrice de menace · Narratifs miroirs · Recommandations stratégiques</div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:4px;">Twitter/X · Anglais · 1 fév. – 3 avr. 2026 · 3 510 posts · 21 narratifs canoniques · analyse_id = 474</div>
+  <div class="report-meta">
+    <div class="meta-item">Narratifs identifiés <span>21</span></div>
+    <div class="meta-item">Textes couverts <span>1 075 · 30,6%</span></div>
+    <div class="meta-item">Textes multi-narratifs <span>602 · 17,2%</span></div>
+    <div class="meta-item">Paires miroirs <span>5 documentées</span></div>
+    <div class="meta-item">Produit le <span>07 avr. 2026</span></div>
+    <div class="meta-item" style="margin-left:auto;">par <strong style="color:var(--text);">Anass El Basraoui</strong>&nbsp;<a href="https://www.linkedin.com/in/el-basraoui/" target="_blank" style="color:var(--accent);text-decoration:none;font-family:'IBM Plex Mono',monospace;">LinkedIn</a></div>
+  </div>
+</div>
+
+<div style="border-left:3px solid var(--border);padding-left:20px;margin-bottom:48px;">
+  <p style="color:#8899bb;font-size:13px;line-height:1.8;margin:0;">Ce rapport est le troisième volet d'un programme de surveillance du débat en ligne autour du retrait potentiel des Etats-Unis de l'OTAN dans le contexte de la guerre en Iran. La Phase 3 entre dans le contenu : <strong>21 narratifs canoniques</strong> extraits du corpus, leur distribution, leurs dynamiques temporelles, leurs interactions et leurs implications stratégiques pour l'Alliance. Toutes les données chiffrées sont directement tracables aux tables de données fournies.</p>
+</div>
+
+<!-- SYNTH EXEC -->
+<div class="section">
+  <div class="section-title">SYNTHÈSE EXÉCUTIVE</div>
+
+  <div class="finding-card" style="border-left-color:#fe4d4d;">
+    <div class="finding-num">Finding 01 · Critique</div>
+    <div class="finding-title">Le narratif de coercition hégémonique est le plus puissant du corpus</div>
+    <div class="finding-body"><span class="nid">N18</span> "Trump se comporte comme un parrain mafieux" domine en volume (362 textes) et connaît une accélération documentée : 4 textes en semaine du 20-28 fév., 45 en 1-15 mars, 131 en 25-31 mars, 114 en 1-3 avril. Le 1er avril, il comptabilise 74 textes en une seule journée. Ce narratif n'est pas une réaction émotionnelle passagère : ses données temporelles montrent une croissance structurelle qui se maintient après le pic du 1er avril.</div>
+  </div>
+
+  <div class="finding-card" style="border-left-color:#fe4d4d;">
+    <div class="finding-num">Finding 02 · Critique</div>
+    <div class="finding-title">Le 1er avril 2026 : 20 narratifs sur 21 sont actifs le même jour</div>
+    <div class="finding-body">Les données montrent que le 1er avril, 20 des 21 narratifs enregistrent au moins un texte assigné (seul N03 compte 0 ce jour-là). Les 5 narratifs les plus actifs ce jour sont : <span class="nid">N18</span> 74, <span class="nid">N05</span> 69, <span class="nid">N02</span> 58, <span class="nid">N15</span> 51, <span class="nid">N21</span> 46. Ces cinq portent des cadrages contradictoires · certains pro-OTAN, d'autres anti-OTAN · mais tous atteignent leurs pics ce jour-là autour de la déclaration de Trump sur le retrait potentiel de l'OTAN.</div>
+  </div>
+
+  <div class="finding-card" style="border-left-color:#fec04d;">
+    <div class="finding-num">Finding 03 · Élevé</div>
+    <div class="finding-title">5 paires de narratifs miroirs : les mêmes faits lus en sens opposé</div>
+    <div class="finding-body">Le corpus contient 5 paires de narratifs miroirs structurels. La plus volumineuse est <span class="nid">N18</span>/<span class="nid">N21</span> avec 126 textes portant les deux lectures simultanément. Ce phénomène place l'Alliance dans un piège narratif : toute action ou déclaration alimente deux narratifs en parallèle. La paire <span class="nid">N15</span>/<span class="nid">N19</span> (106 co-occurrences) touche directement la définition du mandat de l'Alliance et est le cas le plus structurellement dangereux.</div>
+  </div>
+
+  <div class="finding-card" style="border-left-color:#fec04d;">
+    <div class="finding-num">Finding 04 · Élevé</div>
+    <div class="finding-title">La fracture principale est intra-occidentale, pas transatlantique</div>
+    <div class="finding-body">Les 7 narratifs les plus volumineux (<span class="nid">N18</span> 362, <span class="nid">N05</span> 324, <span class="nid">N15</span> 293, <span class="nid">N02</span> 281, <span class="nid">N21</span> 224, <span class="nid">N19</span> 211, <span class="nid">N10</span> 161) circulent exclusivement dans l'espace anglophone occidental. La menace narrative la plus sérieuse est endogène : elle se forme entre acteurs américains et européens, pas entre l'Occident et ses adversaires déclarés.</div>
+  </div>
+
+  <div class="finding-card" style="border-left-color:#4dfeba;">
+    <div class="finding-num">Finding 05 · Signal structurel</div>
+    <div class="finding-title">17,2% des textes portent plusieurs narratifs simultanément</div>
+    <div class="finding-body">602 textes sur 3 510 (17,2%) sont assignés à deux narratifs ou plus, avec une moyenne de 2,38 narratifs par texte assigné. Cette multi-appartenance n'est pas un artefact : elle reflète des posts qui naviguent volontairement entre plusieurs cadrages, ce qui est typique de comptes amplificateurs influents. Ce signal doit être croisé avec les données d'acteurs en Phase 4.</div>
+  </div>
+
+  <div class="callout" style="margin-top:20px;border-color:var(--accent);">
+    <div class="callout-title">Implications pour l'Alliance</div>
+    Ces cinq findings décrivent une crise narrative non linéaire. L'Alliance ne fait pas face à un récit hostile dominant qu'il suffirait de contrer : elle fait face à une saturation pluridirectionnelle où des narratifs opposés s'alimentent mutuellement. Le risque n'est pas une défaite sur un narratif spécifique, c'est l'érosion progressive de la capacité à produire des signaux non ambigus. Ce rapport quantifie cette érosion et propose des leviers d'action concrets.
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+  <div class="section-title">01 · Paysage narratif</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Narratifs canoniques</div><div class="kpi-value" style="color:var(--accent);">21</div><div class="kpi-sub">Extraits du corpus</div></div>
+    <div class="kpi-card"><div class="kpi-label">Textes couverts</div><div class="kpi-value">1 075</div><div class="kpi-sub">30,6% du corpus (3 510)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Narratif dominant</div><div class="kpi-value" style="color:var(--accent2);">N18</div><div class="kpi-sub">362 textes</div></div>
+    <div class="kpi-card"><div class="kpi-label">Total assignments</div><div class="kpi-value" style="color:var(--accent3);">2 561</div><div class="kpi-sub">Moy. 2,38 narratifs/texte</div></div>
+    <div class="kpi-card"><div class="kpi-label">Seuil similarité</div><div class="kpi-value" style="color:var(--accent4);">0,70</div><div class="kpi-sub">Cosinus · moy. 0,730</div></div>
+    <div class="kpi-card"><div class="kpi-label">Textes multi-narratifs</div><div class="kpi-value">602</div><div class="kpi-sub">17,2% du corpus</div></div>
+  </div>
+
+  <div class="chart-label">Distribution volumétrique des 21 narratifs (couleur = niveau de menace)</div>
+  <div class="chart-wrap"><div id="chart-vol" style="height:360px"></div></div>
+
+  <h3>Taxonomie en 5 macro-catégories stratégiques</h3>
+  <div class="macro-grid">
+    <div class="macro-cell">
+      <div class="macro-label" style="color:#fe4d4d;">CAT-A · Cohésion transatlantique</div>
+      <div class="macro-body">Narratifs centres sur la fissure US-Europe et la redéfinition des termes du partenariat. Volume dominant du corpus (1 044 textes combinés pour N02, N05, N06, N18). Ces narratifs ne visent pas la légitimité formelle de l'Alliance mais la confiance opérationnelle qui la sous-tend : si la protection américaine devient conditionnelle (N18, N02), ou si les alliés sont systématiquement présentés comme des passagers clandestins (N05, N21), la base psychologique de l'Article 5 s'effondre sans qu'aucun article du Traité ne soit formellement violé.</div>
+      <div class="macro-ids"><span class="nid">N02</span><span class="nid">N05</span><span class="nid">N06</span><span class="nid">N07</span><span class="nid">N17</span><span class="nid">N18</span><span class="nid">N21</span></div>
+    </div>
+    <div class="macro-cell">
+      <div class="macro-label" style="color:#ff6b35;">CAT-B · Repositionnement géopolitique</div>
+      <div class="macro-body">Narratifs qui redéfinissent positivement des postures agressives ou expansionnistes. N04 (libération de l'Iran via OTAN, 113 textes) élargit le mandat défensif en posture offensive. N08 (Israël comme bouclier américain, 16 textes) ancre une logique de proxy. Ces narratifs sont moins volumineux mais structurellement importants car ils normalisent une réinterprétation des obligations de l'Alliance.</div>
+      <div class="macro-ids"><span class="nid">N04</span><span class="nid">N08</span></div>
+    </div>
+    <div class="macro-cell">
+      <div class="macro-label" style="color:#fec04d;">CAT-C · Légitimité du refus allié</div>
+      <div class="macro-body">Narratifs qui justifient les non-participations européennes, soit par le droit (N14, N15), soit comme actes de souveraineté (N20), soit comme révélation que l'Alliance est creuse (N19). Caractérisée par la paire miroir N19/N20 : le même refus factuel lu comme trahison ou acte courageux selon le camp. La paire N15/N19 (106 co-occurrences) touche directement la définition du mandat.</div>
+      <div class="macro-ids"><span class="nid">N14</span><span class="nid">N15</span><span class="nid">N19</span><span class="nid">N20</span></div>
+    </div>
+    <div class="macro-cell">
+      <div class="macro-label" style="color:#a78bfa;">CAT-D · Fractures intra-alliées</div>
+      <div class="macro-body">Narratifs ciblant des divisions entre membres de l'Alliance. La paire miroir N10/N11 sur la Turquie (indispensable vs complice de l'Iran, 44 co-occurrences) est la plus documentée. Ces deux narratifs sont internes à l'Alliance : la Turquie est membre OTAN, et le débat sur son role est un débat intra-allié, pas une menace externe. N03 (Von der Leyen/Kallas, 10 textes) et N16 (Graham corrompu, 10 textes) ciblent des individus nominativement.</div>
+      <div class="macro-ids"><span class="nid">N03</span><span class="nid">N10</span><span class="nid">N11</span><span class="nid">N16</span></div>
+    </div>
+    <div class="macro-cell" style="grid-column:1/-1;">
+      <div class="macro-label" style="color:#4dfeba;">CAT-E · Reconfiguration de l'ordre mondial</div>
+      <div class="macro-body">Narratifs qui replacent la crise OTAN/Iran dans un cadre géopolitique plus large. N01 (Russie/Chine stabilisatrices, 90 textes) présente les puissances autoritaires comme les vrais garants de la stabilité. N12 (Israël manipulateur, 131 textes) est selon sa description canonique "heavily amplified by Iranian state media and anti-Zionist networks" : il circule dans l'espace occidental mais son amplification primaire vient d'acteurs adversaires, ce qui le distingue des narratifs CAT-A/D qui sont endogènes. N13 (Iran résistance anti-impérialiste) et N09 (fabrication du consentement) completent cette catégorie. Ces narratifs opèrent sur un horizon temporel long et cumulatif.</div>
+      <div class="macro-ids"><span class="nid">N01</span><span class="nid">N09</span><span class="nid">N12</span><span class="nid">N13</span></div>
+    </div>
+  </div>
+
+  <h3>Table récapitulative des 21 narratifs</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>ID</th><th>Narratif (synthèse)</th><th>Macro-cat.</th><th>Volume</th><th>Tendance</th><th>Niveau de menace</th><th>Cible</th></tr>
+    </thead>
+    <tbody id="narr-table-body"></tbody>
+  </table>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+  <div class="section-title">02 · Dynamiques temporelles</div>
+
+  <p style="color:#8899bb;margin-bottom:4px;">Les données présentées ici sont issues du croisement exact entre les indices de textes assignés à chaque narratif et les dates de publication issues de la table <em>chunk_created_at</em>. Les périodes hebdomadaires sont les suivantes : 1-8 fév · 9-19 fév · 20-28 fév · 1-15 mar · 16-24 mar · 25-31 mar · 1-3 avr. Les totaux par narratif correspondent aux volumes documentés en Section 1.</p>
+  <p style="color:#8899bb;margin-bottom:16px;">Les lignes verticales indiquent les événements géopolitiques clés identifiés en Phase 1 : 28/02 (frappes US-Israël sur l'Iran), 16/03 (escalade des frappes + refus européens officiels), 25/03 (Trump accuse les alliés de "lâcheté"), 01/04 (Trump déclare envisager le retrait OTAN).</p>
+
+  <div class="chart-label">Evolution hebdomadaire · 10 narratifs principaux (volume de textes par période)</div>
+  <div class="chart-wrap"><div id="chart-temporal" style="height:400px"></div></div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;" id="temporal-legend"></div>
+
+  <div class="callout" style="margin-top:14px;">
+    <div class="callout-title">Séquences d'activation documentées</div>
+    <strong>Phase 1 (1 fév. – 19 fév.) :</strong> Bruit de fond. Quasi tous les narratifs sont présents à l'état latent : N04, N12, N15 et N18 ont leur premier texte dès le 1er février. Seul N03 n'apparaît qu'à partir du 1er mars.
+    <br><br>
+    <strong>Phase 2 (20 fév. – 28 fév.) :</strong> Activation initiale. Les frappes US-Israël du 28 février déclenchent une première vague. N11 (Turquie/Iran, 10 textes sur la période) et N10 (Turquie indispensable, 13 textes) s'activent fort dès cette phase, signe que la question du flanc sud OTAN est immédiatement posée.
+    <br><br>
+    <strong>Phase 3 (1 mar. – 15 mar.) :</strong> Activation générale. N18 (45 textes), N05 (43), N15 (36), N02 (32) s'installent tous dans cette période.
+    <br><br>
+    <strong>Phase 4 (16 mar. – 24 mar.) :</strong> Emballement. Les données montrent un premier pic : N05 passe de 43 textes (1-15 mar.) à 65 textes, N18 de 45 à 59. Ce pic correspond à l'escalade des frappes US documentée en Phase 1 comme l'événement du 16 mars, et au rejet officiel par le Royaume-Uni, la France et l'Allemagne des demandes américaines de navires dans le Détroit. Plusieurs textes du corpus du 16-17 mars citent explicitement l'interview Trump au Financial Times où il déclare que l'OTAN "aura un très mauvais avenir" si les alliés ne rejoignent pas les opérations. C'est à cette même période que Keir Starmer a déclaré "this is not our war" : cette déclaration est documentée dans un article du Telegraph daté du 18 mars ("Starmer may have just broken NATO"), et apparaît dans les textes du corpus à partir du 16 mars.
+    <br><br>
+    <strong>Phase 5 (25 mar. – 3 avr.) :</strong> Saturation. N18 atteint 131 textes sur la semaine 25-31 mars, puis 114 en 1-3 avril. Tous les narratifs du top 10 atteignent leur pic sur cette période.
+  </div>
+
+  <div class="callout red">
+    <div class="callout-title">Narratifs RÉACTIFS vs STRUCTURELS</div>
+    <strong>Réactifs</strong> (pic bref corrélé à un événement précis, puis déclin) : <span class="nid">N11</span> (pic 20-28 fév. : 10 textes, puis stable), <span class="nid">N17</span> (pic 1-15 mars : 9 textes, puis 3-5 sur les périodes suivantes). Ces narratifs s'activent sur des événements précis et ne persistent pas.
+    <br><strong>Structurels</strong> (croissance continue, présents dans toutes les périodes) : <span class="nid">N18</span>, <span class="nid">N02</span>, <span class="nid">N15</span>, <span class="nid">N05</span>, <span class="nid">N21</span>. Ces narratifs ne décroissent pas et constituent le risque de long terme pour l'Alliance.
+  </div>
+
+  <div class="callout purple">
+    <div class="callout-title">1er avril 2026 : convergence de 20 narratifs sur 21</div>
+    Le 1er avril, 20 narratifs sur 21 enregistrent des textes. Les données exactes pour ce jour : N18 = 74, N05 = 69, N02 = 58, N15 = 51, N21 = 46, N19 = 49, N10 = 23, N12 = 23, N01 = 22, N04 = 21. Cette convergence simultanée de narratifs portés par des camps opposés autour du même événement (déclaration Trump sur le retrait OTAN) est un signal de saturation. Les données disponibles documentent la convergence mais ne permettent pas d'en expliquer la cause (amplification naturelle ou coordination) : l'analyse de réseau social est nécessaire pour trancher.
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+  <div class="section-title">03 · Evaluation de la menace</div>
+
+  <!-- MATRIX EXPLANATION -->
+  <div class="matrix-legend">
+    <div class="matrix-legend-title">Comment lire la matrice de menace</div>
+    <div class="matrix-legend-grid">
+      <div class="matrix-legend-item">
+        <strong>Axe horizontal (X)</strong><br>
+        Représente l'origine principale du narratif. A gauche : le narratif circule surtout dans le débat occidental interne (fracture endogène). A droite : le narratif est amplifié en premier lieu par des acteurs adversaires (Iran, Russie, Chine) selon leur description canonique. Ce positionnement est basé sur les descriptions canoniques des narratifs, pas sur une attribution acteur-par-acteur.
+      </div>
+      <div class="matrix-legend-item">
+        <strong>Axe vertical (Y)</strong><br>
+        Représente ce que le narratif cherche à éroder. En haut : la cohésion de l'Alliance (solidarité, confiance mutuelle, garanties mutuelles). En bas : la légitimité de l'Alliance (son droit à exister, son mandat, sa crédibilité juridique). Un narratif peut viser les deux simultanément.
+      </div>
+      <div class="matrix-legend-item">
+        <strong>Taille du point</strong><br>
+        Proportionnelle au volume de textes assignés au narratif. Plus le cercle est grand, plus le narratif est présent dans le corpus. N18 (362 textes) est le plus grand cercle, N03 et N09 (10 textes chacun) sont les plus petits.
+      </div>
+      <div class="matrix-legend-item">
+        <strong>Couleur du point</strong><br>
+        Niveau de menace évalué : rouge = Critique, jaune = Élevé, vert = Modéré, bleu = Faible. Ce niveau combine le volume, la tendance temporelle et l'impact potentiel sur l'Alliance documentés dans les données.
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-wrap"><div id="chart-matrix" style="height:520px"></div></div>
+
+  <div class="callout grey" style="margin-top:10px;">
+    <div class="callout-title">Note sur N10 et N12</div>
+    <strong>N10 (Turquie indispensable)</strong> est positionné côté fracture interne, à gauche : la Turquie est membre OTAN et le débat sur son role est un débat intra-allié. Bien que le narratif puisse aussi servir les intérets d'Ankara, son ancrage principal est le débat occidental sur la gestion d'un allié problématique.
+    <br><br>
+    <strong>N12 (Israël manipulateur)</strong> est positionné côté adversaires, à droite : sa description canonique indique qu'il est "heavily amplified by Iranian state media and anti-Zionist networks". Bien qu'il circule dans l'espace occidental, son amplification primaire vient d'acteurs adversaires. Il cible la légitimité du casus belli et, par extension, la légitimité de tout engagement futur de l'OTAN.
+  </div>
+
+  <h3>Evaluation par macro-catégorie</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);margin-bottom:20px;">
+    <div style="background:var(--surface);padding:18px 20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px;">CAT-A · Cohésion transatlantique · CRITIQUE</div>
+      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;">Volume combiné de N02, N05, N06, N07, N17, N18, N21 : 1 058 textes. La cible est la confiance opérationnelle dans l'Article 5, pas sa légalité formelle. La menace est critique et endogène : portée par des acteurs américains et européens.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-crit">CRITIQUE</span><span class="tag">Cible : COHÉSION</span></div>
+    </div>
+    <div style="background:var(--surface);padding:18px 20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px;">CAT-C · Légitimité du refus allié · CRITIQUE</div>
+      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;"><span class="nid">N15</span> (293 textes) justifie juridiquement le refus. <span class="nid">N19</span> (211 textes) en tire les conséquences institutionnelles. Les deux pincent la crédibilité de l'Article 5 par deux angles opposés. La paire miroir N15/N19 est le cas le plus structurellement dangereux du corpus.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-crit">CRITIQUE</span><span class="tag">Cible : CRÉDIBILITÉ</span></div>
+    </div>
+    <div style="background:var(--surface);padding:18px 20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:10px;">CAT-E · Reconfiguration de l'ordre mondial · ÉLEVÉ</div>
+      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;"><span class="nid">N01</span> (90 textes) s'appuie sur des faits partiels pour construire une comparaison valorisant les modeles autoritaires. <span class="nid">N12</span> (131 textes) affecte la crédibilité du casus belli. Ces narratifs opèrent sur un horizon cumulatif.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-high">ÉLEVÉ</span><span class="tag">Cible : LÉGITIMITÉ</span></div>
+    </div>
+    <div style="background:var(--surface);padding:18px 20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:10px;">CAT-D · Fractures intra-alliées · ÉLEVÉ</div>
+      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;">La paire miroir N10/N11 sur la Turquie amplifie l'image d'une Alliance fracturée dans les deux sens simultanément. N03 cible nominativement des responsables institutionnels · un levier d'amplification personnelle que les adversaires exploitent préférentiellement.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-high">ÉLEVÉ</span><span class="tag">Cible : COHÉSION</span></div>
+    </div>
+    <div style="background:var(--surface);padding:18px 20px;grid-column:1/-1;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">CAT-B · Repositionnement géopolitique · MODÉRÉ</div>
+      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;"><span class="nid">N04</span> (113 textes) crée un risque de second ordre en promouvant une réinterprétation offensive du mandat OTAN. La présence de @pahlavireza (8 mentions documentées en Phase 1) est le signal acteur le plus tangible d'une campagne de lobbying ciblant l'audience atlantiste. N08 (16 textes) ne présente pas de risque narratif autonome.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-mod">MODÉRÉ</span><span class="tag">Cible : CRÉDIBILITÉ</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+  <div class="section-title">04 · Narratifs miroirs et dynamiques d'instrumentalisation</div>
+
+  <p style="color:#8899bb;margin-bottom:16px;">Un narratif miroir est une paire portant des cadrages opposés du même événement factuel. L'existence de ces paires crée un mécanisme de piège narratif : toute réponse de l'Alliance à l'événement de référence alimente les deux narratifs simultanément. Les chiffres de co-occurrence sont issus du calcul exact d'intersection des ensembles d'indices.</p>
+
+  <div class="mirror-card">
+    <div class="mirror-header">
+      <span class="nid">N18</span><span class="mirror-vs">vs</span><span class="nid">N21</span>
+      <span class="mirror-overlap">126 textes en co-occurrence</span>
+      <span class="threat-crit" style="margin-left:auto;">Paire la plus volumineuse</span>
+    </div>
+    <div class="mirror-body">
+      <strong>Même objet :</strong> Trump menace de retrait OTAN et exige une contribution alliée à la crise iranienne.<br>
+      <strong>N18 :</strong> Comportement de parrain mafieux, coercition hégémonique, l'Alliance transformée en instrument de domination américaine.<br>
+      <strong>N21 :</strong> Restauration nécessaire de la dissuasion, alliés parasites rappelés à leurs obligations, America First comme discipline stratégique.<br>
+      <strong>Mécanisme :</strong> Toute déclaration de Trump sur l'OTAN alimente les deux narratifs en parallèle. Les 126 textes portant les deux cadres simultanément indiquent que des auteurs naviguent intentionnellement entre les deux lectures. Cette paire rend toute réponse OTAN auto-invalidante : un soutien à Trump amplifie N21, une critique amplifie N18.
+    </div>
+  </div>
+
+  <div class="mirror-card">
+    <div class="mirror-header">
+      <span class="nid">N19</span><span class="mirror-vs">vs</span><span class="nid">N20</span>
+      <span class="mirror-overlap">31 textes en co-occurrence</span>
+      <span class="threat-high" style="margin-left:auto;">Paire Starmer</span>
+    </div>
+    <div class="mirror-body">
+      <strong>Même objet :</strong> France, Espagne et Italie refusent l'usage de leurs bases et espaces aériens pour les frappes contre l'Iran.<br>
+      <strong>N19 :</strong> Trahison pure, confirmation que l'OTAN est creuse, les alliés ont abandonné les Etats-Unis.<br>
+      <strong>N20 :</strong> Acte de souveraineté principiée, refus légitime de participer à une agression illégale, preuve que l'Europe peut dire non.<br>
+      <strong>Lien Starmer :</strong> La déclaration "this is not our war" de Keir Starmer a produit exactement ce mécanisme à l'échelle d'un individu : elle a déclenché simultanément des discussions opérationnelles sur l'engagement militaire britannique (cluster C6, Phase 2) et des accusations de trahison, amplifiant N19 et N20 en même temps.
+    </div>
+  </div>
+
+  <div class="mirror-card">
+    <div class="mirror-header">
+      <span class="nid">N15</span><span class="mirror-vs">vs</span><span class="nid">N19</span>
+      <span class="mirror-overlap">106 textes en co-occurrence</span>
+      <span class="threat-crit" style="margin-left:auto;">Piège narratif sur l'Article 5</span>
+    </div>
+    <div class="mirror-body">
+      <strong>Même objet :</strong> Les refus alliés de soutenir les opérations US contre l'Iran au regard du droit OTAN.<br>
+      <strong>N15 :</strong> Ces refus sont juridiquement corrects, les membres agissent selon le Traité.<br>
+      <strong>N19 :</strong> Ces mêmes refus prouvent que l'Alliance est inutile.<br>
+      <strong>Piège :</strong> Si l'Alliance valide N15 (refus légitimes), elle alimente N19 (Alliance inutile). Si elle invalide les refus, elle viole son propre cadre juridique. C'est le cas le plus structurel du corpus car il touche directement la définition du mandat de l'Alliance. La sortie de ce piège ne peut pas être communicationnelle, elle doit être comportementale.
+    </div>
+  </div>
+
+  <div class="mirror-card">
+    <div class="mirror-header">
+      <span class="nid">N10</span><span class="mirror-vs">vs</span><span class="nid">N11</span>
+      <span class="mirror-overlap">44 textes en co-occurrence</span>
+      <span class="threat-high" style="margin-left:auto;">Fracture sur la Turquie</span>
+    </div>
+    <div class="mirror-body">
+      <strong>Même objet :</strong> Le role de la Turquie dans la crise iranienne et dans l'OTAN.<br>
+      <strong>N10 :</strong> La Turquie est indispensable sur le flanc sud, la marginaliser affaiblit l'Alliance.<br>
+      <strong>N11 :</strong> Erdogan a transformé la Turquie en complice de l'Iran et des mouvements islamistes.<br>
+      <strong>Signal opérationnel :</strong> Les données de Phase 2 confirment que la Turquie a généré ses propres clusters (C7 Turquie Iran, C8 Missiles iraniens avec co-occurrence du terme "turkish"). Ces deux narratifs sont internes à l'Alliance, ce qui les distingue des narratifs CAT-E.
+    </div>
+  </div>
+
+  <div class="mirror-card">
+    <div class="mirror-header">
+      <span class="nid">N02</span><span class="mirror-vs">vs</span><span class="nid">N21</span>
+      <span class="mirror-overlap">94 textes en co-occurrence</span>
+      <span class="threat-high" style="margin-left:auto;">Fracture sur la fiabilité américaine</span>
+    </div>
+    <div class="mirror-body">
+      <strong>Même objet :</strong> Le comportement américain vis-à-vis de l'Alliance dans la crise iranienne.<br>
+      <strong>N02 :</strong> Les Etats-Unis sont un allié peu fiable dont les menaces érodent la valeur de l'Article 5.<br>
+      <strong>N21 :</strong> Les Etats-Unis appliquent la pression nécessaire pour forcer les alliés à assumer leurs responsabilités.<br>
+      <strong>Impact :</strong> La fracture interprétative documentée dans le cluster Donald Trump (Phase 2 : "victory vs. trap") a une traduction directe au niveau narratif. Les 94 textes en co-occurrence confirment que les deux lectures coexistent chez des acteurs qui amplifieront simultanément les deux cadres.
+    </div>
+  </div>
+
+  <div class="callout red" style="margin-top:14px;">
+    <div class="callout-title">Evaluation du risque de piège narratif</div>
+    Les 5 paires miroirs identifiées créent collectivement un environnement où l'OTAN ne peut pas communiquer sans alimenter simultanément un narratif hostile. Le cas le plus critique est la paire N15/N19 : elle piège l'Alliance sur la définition même de son mandat. La sortie de ce piège ne peut pas être communicationnelle, elle doit être comportementale : montrer de façon opérationnelle que les garanties de l'Alliance s'appliquent, sans débat sur leur périmètre.
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+  <div class="section-title">05 · Acteurs et chaines d'amplification</div>
+
+  <p style="color:#8899bb;margin-bottom:16px;">Le croisement narratif x acteur est contraint par les données disponibles : les données de Phase 1 identifient les acteurs par volume et engagement, mais ne permettent pas de lier directement un acteur à un narratif spécifique sans analyse de réseau. Ce qui suit est directement tracable aux données de Phase 1.</p>
+
+  <div class="callout blue">
+    <div class="callout-title">ZeroHedge · URL n°1 du corpus (Phase 1) · Compatible N18, N19</div>
+    ZeroHedge a généré 6 posts, 2 702 engagements et 372 308 vues documentés en Phase 1. Les titres documentés ("paper tiger", "Trump calls exit beyond reconsideration", "France, Italy break ranks") sont sémantiquement compatibles avec N18 et N19. L'article "paper tiger" est directement tracable au cluster Retrait OTAN (C18, Phase 2). Evaluation à confiance modérée : ZeroHedge amplifie préférentiellement les narratifs de rupture CAT-A et CAT-C, mais l'attribution à une IO étatique n'est pas supportée par les données.
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">AMG News (Telegram + site miroir) · Infrastructure de double diffusion · Compatible N18, N19</div>
+    AMG News a produit deux URLs avec métriques identiques (5 255 engagements, 179 486 vues chacune) documentées en Phase 1. La double diffusion Telegram/web et la qualification "source de désinformation connue, antérieurement alignée sur des positions pro-russes" (Phase 1) constituent un profil compatible avec les méthodes documentées d'IO de soutien au narratif de dissolution de l'Alliance. Aucune attribution directe ne peut être faite sur la base des seules métriques disponibles.
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">@microinteracti1 (Gandalv) · Noeud central, double présence · Non attribuable</div>
+    15 posts, 4,3M vues, et 9 mentions (44 145 engagements générés) documentés en Phase 1. Ce profil de double présence émetteur/cible est le signal acteur le plus anormal du corpus. Les narratifs amplifiés ne sont pas identifiables sans analyse de réseau. Priorité n°1 pour Phase 4.
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">@pahlavireza (Reza Pahlavi) · 8 mentions documentées · Tracable N04</div>
+    8 mentions, 18 839 engagements documentés en Phase 1. Le narratif N04 est le seul du corpus à mentionner explicitement un individu politique comme figure de proue d'une initiative militaire. Le cluster Résistance iranienne (C23, Phase 2 : mots-clés maryam_rajavi, wesley clark) confirme une campagne de lobbying ciblant l'audience atlantiste.
+  </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+  <div class="section-title">06 · Implications stratégiques pour l'Alliance</div>
+
+  <h3>Le narratif le plus dangereux</h3>
+  <div class="callout red">
+    <div class="callout-title">N18 + N02 · La conditionnalité de la protection américaine</div>
+    N18 (362 textes, dominant en volume) et N02 (281 textes, similarité maximale observée à 0,813) constituent ensemble la menace narrative la plus sérieuse parce qu'ils ne visent pas l'OTAN comme institution : ils visent la psychologie de la garantie. Si suffisamment d'alliés européens internalisent que la protection américaine est devenue conditionnelle, le déclenchement automatique de l'Article 5 devient discutable, même sans qu'aucun texte du Traité ne soit modifié.
+  </div>
+
+  <h3>Vulnérabilité structurelle commune</h3>
+  <p style="color:#8899bb;">Les 21 narratifs exploitent une vulnérabilité partagée : l'ambiguité du mandat offensif vs défensif de l'OTAN. Sept des 21 narratifs (N02, N14, N15, N18, N19, N20, N21) se positionnent explicitement sur la question "l'OTAN était-elle obligée d'aider les Etats-Unis en Iran ?" avec des réponses contradictoires. Cette question est devenue le terrain de bataille narratif central, et l'Alliance n'a pas de réponse officielle unifiée dans l'espace public.</p>
+
+  <h3>Le débat est durablement installé</h3>
+  <p style="color:#8899bb;">La décélération du 2-3 avril documentée en Phase 1 (–54% le 02/04, –63% le 03/04) concerne le volume total de posts. Les données montrent que N05 et N21 maintiennent des niveaux élevés les 2 et 3 avril (respectivement 16 et 18 textes le 02/04, 26 et 18 le 03/04). Le sujet a basculé dans la conversation permanente.</p>
+
+  <h3>Impact sur la crédibilité de l'Article 5</h3>
+  <p style="color:#8899bb;">La paire miroir N15/N19 (106 textes en co-occurrence) est le signal le plus direct d'une remise en question de l'Article 5. N15 construit un précédent juridique du refus ; N19 en tire les conséquences institutionnelles. Le cluster Article 5 (C31, Phase 2 : mots-clés czech, north, armed, pact) confirme que des experts juridiques et militaires participent à ce débat, lui donnant une légitimité analytique qui dépasse la simple polémique politique.</p>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+  <div class="section-title">07 · Recommandations</div>
+
+  <div class="rec-card">
+    <div class="rec-header">
+      <span class="rec-num">REC-01</span>
+      <div class="rec-title">Produire une doctrine publique unifiée sur le périmètre d'application de l'Article 5</div>
+      <span class="threat-crit">CRITIQUE</span>
+    </div>
+    <div class="rec-grid">
+      <div class="rec-field"><div class="rec-field-label">QUOI</div><div class="rec-field-val">Document officiel OTAN précisant les cas d'application et de non-application de l'Article 5, avec exemples historiques, accessible à un public non-spécialisé anglophone.</div></div>
+      <div class="rec-field"><div class="rec-field-label">POURQUOI</div><div class="rec-field-val">Adresse directement la paire miroir N15/N19 (106 co-occurrences) et N02 (281 textes). Comble le vide doctrinal exploité par 7 narratifs simultanément.</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUI</div><div class="rec-field-val">NAC + StratCom + Division Affaires Publiques OTAN</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUAND</div><div class="rec-field-val">Immédiat (72h). Le débat juridique est actif.</div></div>
+    </div>
+  </div>
+
+  <div class="rec-card">
+    <div class="rec-header">
+      <span class="rec-num">REC-02</span>
+      <div class="rec-title">Contre-narratif économique sur Hormuz : l'OTAN comme garant des flux mondiaux</div>
+      <span class="threat-crit">CRITIQUE</span>
+    </div>
+    <div class="rec-grid">
+      <div class="rec-field"><div class="rec-field-label">QUOI</div><div class="rec-field-val">Campagne de communication sur le role concret de l'OTAN dans la sécurisation des chaines d'approvisionnement mondiales, avec Hormuz comme cas pratique.</div></div>
+      <div class="rec-field"><div class="rec-field-label">POURQUOI</div><div class="rec-field-val">Le cluster Détroit d'Hormuz (C13, Phase 2, 226 textes) est le plus dense du corpus. La Phase 2 établit que le cadrage dominant est économique, pas sécuritaire. N05 et N18 exploitent l'absence d'un discours OTAN sur les flux économiques.</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUI</div><div class="rec-field-val">StratCom OTAN + Public Diplomacy Division + partenaires du Golfe</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUAND</div><div class="rec-field-val">Court terme (1-2 semaines). La fenêtre d'attention sur Hormuz reste ouverte.</div></div>
+    </div>
+  </div>
+
+  <div class="rec-card">
+    <div class="rec-header">
+      <span class="rec-num">REC-03</span>
+      <div class="rec-title">Qualifier @microinteracti1 (Gandalv) et cartographier son réseau de diffusion</div>
+      <span class="threat-high">ÉLEVÉ</span>
+    </div>
+    <div class="rec-grid">
+      <div class="rec-field"><div class="rec-field-label">QUOI</div><div class="rec-field-val">Analyse de réseau ciblée : identifier les narratifs amplifiés, les comptes amplificateurs, détecter d'éventuels signaux de coordination.</div></div>
+      <div class="rec-field"><div class="rec-field-label">POURQUOI</div><div class="rec-field-val">15 posts, 4,3M vues, 9 mentions avec 44 145 engagements (Phase 1). Double présence émetteur/cible non expliquée.</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUI</div><div class="rec-field-val">StratCom COE Riga + équipes OSINT NATO</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUAND</div><div class="rec-field-val">Court terme (1 semaine).</div></div>
+    </div>
+  </div>
+
+  <div class="rec-card">
+    <div class="rec-header">
+      <span class="rec-num">REC-04</span>
+      <div class="rec-title">Isoler N01 (Russie/Chine stabilisatrices) avant qu'il ne structure durablement l'opinion</div>
+      <span class="threat-high">ÉLEVÉ</span>
+    </div>
+    <div class="rec-grid">
+      <div class="rec-field"><div class="rec-field-label">QUOI</div><div class="rec-field-val">Réfutation factuelle du narratif N01 ciblant les audiences Twitter/X anglophones, documentant le role de Moscou et Pékin comme fournisseurs d'armes et de renseignement à l'Iran.</div></div>
+      <div class="rec-field"><div class="rec-field-label">POURQUOI</div><div class="rec-field-val">N01 croit de façon continue : 1-2 textes en février, 30 textes au 1er avril. Son profil temporel est structurel. Compatible avec les méthodes documentées d'IO pro-russes (AMG News, ZeroHedge, Phase 1).</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUI</div><div class="rec-field-val">StratCom East + East StratCom Task Force (SEAE)</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUAND</div><div class="rec-field-val">Court terme (2-3 semaines).</div></div>
+    </div>
+  </div>
+
+  <div class="rec-card">
+    <div class="rec-header">
+      <span class="rec-num">REC-05</span>
+      <div class="rec-title">Monitorer le ratio N15/N19 comme indicateur de radicalisation narrative</div>
+      <span class="threat-high">ÉLEVÉ</span>
+    </div>
+    <div class="rec-grid">
+      <div class="rec-field"><div class="rec-field-label">QUOI</div><div class="rec-field-val">Indicateur hebdomadaire : si le volume de N19 dépasse N15, la majorité des textes sur les refus alliés les interprète comme trahison plutôt que respect du droit.</div></div>
+      <div class="rec-field"><div class="rec-field-label">POURQUOI</div><div class="rec-field-val">Paire miroir documentée, 106 co-occurrences. Ratio actuel : N15 = 293 textes vs N19 = 211. Ce ratio est réversible si les refus alliés persistent sans communication.</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUI</div><div class="rec-field-val">StratCom OTAN · veille narrative permanente</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUAND</div><div class="rec-field-val">Immédiat · Revue hebdomadaire</div></div>
+    </div>
+  </div>
+
+  <div class="rec-card">
+    <div class="rec-header">
+      <span class="rec-num">REC-06</span>
+      <div class="rec-title">Briefer les capitales alliées sur les pièges narratifs pour calibrer leurs communications</div>
+      <span class="threat-crit">CRITIQUE</span>
+    </div>
+    <div class="rec-grid">
+      <div class="rec-field"><div class="rec-field-label">QUOI</div><div class="rec-field-val">Document classifié documentant les 5 paires miroirs et leurs mécanismes, avec recommandations de formulation pour éviter d'alimenter deux narratifs opposés simultanément.</div></div>
+      <div class="rec-field"><div class="rec-field-label">POURQUOI</div><div class="rec-field-val">La déclaration Starmer a alimenté simultanément N15, N19, N18 et N20. Ce mécanisme se reproduira à chaque déclaration sur l'Iran et l'OTAN sans guidance explicite.</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUI</div><div class="rec-field-val">StratCom OTAN + Représentations permanentes nationales</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUAND</div><div class="rec-field-val">Court terme (1 semaine). Avant toute prise de parole publique d'un allié sur l'Iran ou l'OTAN.</div></div>
+    </div>
+  </div>
+
+  <div class="rec-card">
+    <div class="rec-header">
+      <span class="rec-num">REC-07</span>
+      <div class="rec-title">Phase 4 : analyse de réseau social + clustering d'images + détection de mèmes</div>
+      <span class="threat-mod">MOYEN TERME</span>
+    </div>
+    <div class="rec-grid">
+      <div class="rec-field"><div class="rec-field-label">QUOI</div><div class="rec-field-val">Phase 4 articulée en trois axes : (1) collecte des données de graphe social (qui retweete qui), (2) clustering des images partagées + analyse des annotations visuelles, (3) détection des mèmes et de leur propagation en réseau.</div></div>
+      <div class="rec-field"><div class="rec-field-label">POURQUOI</div><div class="rec-field-val">Les 602 textes multi-narratifs et @microinteracti1 sont inexploités sans graphe. Une vidéo BitChute à 8 251 engagements (Phase 1) n'a jamais été analysée. Les images peuvent porter des narratifs non capturés par l'analyse textuelle.</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUI</div><div class="rec-field-val">Equipe d'analyse narrative + StratCom COE Riga</div></div>
+      <div class="rec-field"><div class="rec-field-label">QUAND</div><div class="rec-field-val">Moyen terme (1-3 mois). Collecte immédiate pour éviter perte de données.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ANNEXE A -->
+<div class="section">
+  <div class="section-title">ANNEXE A · Table canonique complète des 21 narratifs</div>
+  <table class="data-table">
+    <thead>
+      <tr><th>ID</th><th>Narratif (formulation canonique)</th><th>Cat.</th><th>Vol.</th><th>Menace</th><th>Cible</th><th>Piste contre-narratif</th></tr>
+    </thead>
+    <tbody id="annexe-table-body"></tbody>
+  </table>
+</div>
+
+<!-- ANNEXE B -->
+<div class="section">
+  <div class="section-title">ANNEXE B · Note méthodologique</div>
+  <div style="background:var(--surface);border:1px solid var(--border);padding:20px 24px;">
+    <p style="color:#8899bb;margin-bottom:12px;"><strong>Pipeline de traitement :</strong> Les textes bruts (3 510 posts, filtrés à min_retweets = 5) sont transformés en vecteurs sémantiques par un modèle d'embeddings. Ces vecteurs sont réduits à 2D via UMAP, puis regroupés par HDBSCAN (36 clusters, Phase 2). Pour la Phase 3, 21 narratifs canoniques ont été extraits et formulés à partir du corpus avec assistance LLM. Chaque texte est assigné aux narratifs dont la similarité cosinus dépasse 0,70. La moyenne observée est 0,730, le max 0,879 (N18), le min 0,653 (N03).</p>
+    <p style="color:#8899bb;margin-bottom:0;"><strong>Limites principales :</strong> (1) Plateforme unique : Twitter/X anglophone uniquement. (2) Filtre min_retweets = 5 : signaux faibles exclus. (3) Période de 62 jours. (4) Pas d'analyse d'images/vidéos (dont la vidéo BitChute à fort impact de Phase 1). (5) Bruit de 30,6% non narrativisé. (6) Le positionnement dans la matrice de menace est analytique, basé sur les descriptions canoniques, pas sur une attribution acteur-par-acteur vérifiée. (7) Les croisements narratif x engagement et narratif x acteur nécessitent un graphe social non disponible dans ce corpus.</p>
+  </div>
+</div>
+
+<div class="report-footer">
+  <div class="footer-text">NATO Narrative Intelligence · Phase 3 · Analyse Narrative · 07.04.2026 · CONFIDENTIEL</div>
+</div>
+
+<script>
+const NARRATIVES = [
+  {id:"N01",vol:90,label:"Russie/Chine : puissances stabilisatrices, OTAN dépassée",macro:"CAT-E",threat:"Élevé",target:"LÉGITIMITÉ",trend:"Croissant",counter:"Documenter le role de Moscou et Pékin comme fournisseurs d'armes et renseignement à l'Iran."},
+  {id:"N02",vol:281,label:"Etats-Unis : allié peu fiable, Article 5 vidé de sens",macro:"CAT-A",threat:"Critique",target:"COHÉSION",trend:"Accéléré",counter:"Rappel historique de l'invocation de l'Article 5 post-9/11 par l'OTAN au soutien des Etats-Unis."},
+  {id:"N03",vol:10,label:"Von der Leyen et Kallas trahissent l'Europe pour les marchands d'armes",macro:"CAT-D",threat:"Modéré",target:"LÉGITIMITÉ",trend:"Marginal",counter:"Communication proactive sur les décisions prises au bénéfice de la sécurité européenne."},
+  {id:"N04",vol:113,label:"L'OTAN doit soutenir Reza Pahlavi et libérer l'Iran",macro:"CAT-B",threat:"Modéré",target:"CRÉDIBILITÉ",trend:"Stable",counter:"Clarifier la doctrine OTAN : mandat défensif, pas d'engagement dans des opérations de changement de régime."},
+  {id:"N05",vol:324,label:"Les alliés européens sont des passagers clandestins exploitant la protection américaine",macro:"CAT-A",threat:"Critique",target:"COHÉSION",trend:"Accéléré",counter:"Mettre en avant les données réelles de dépenses de défense européennes avec trajectoires croissantes."},
+  {id:"N06",vol:76,label:"L'Europe choisit les prix du pétrole et les sondages plutôt que l'Iran et l'Ukraine",macro:"CAT-A",threat:"Élevé",target:"COHÉSION",trend:"Croissant",counter:"Démontrer que le cout économique de la fermeture d'Hormuz sur l'Europe justifie l'engagement, pas l'abstention."},
+  {id:"N07",vol:62,label:"L'Europe doit construire son autonomie stratégique face à un allié américain imprévisible",macro:"CAT-A",threat:"Modéré",target:"COHÉSION",trend:"Croissant",counter:"Positionner l'autonomie stratégique comme complément de l'Alliance, pas comme alternative."},
+  {id:"N08",vol:16,label:"Soutenir Israël est un devoir stratégique américain car il protège les Etats-Unis",macro:"CAT-B",threat:"Faible",target:"CRÉDIBILITÉ",trend:"Marginal",counter:"Non prioritaire (16 textes)."},
+  {id:"N09",vol:10,label:"Les néocons et les médias mainstream vendent une guerre frauduleuse contre l'Iran",macro:"CAT-E",threat:"Modéré",target:"LÉGITIMITÉ",trend:"Marginal",counter:"Non prioritaire en volume. Surveiller si croissance en Phase 4."},
+  {id:"N10",vol:161,label:"L'OTAN ne peut se permettre de marginaliser la Turquie face à la défaillance européenne",macro:"CAT-D",threat:"Élevé",target:"COHÉSION",trend:"Stable",counter:"Communication sur les mécanismes de consultation OTAN pour gérer les tensions intra-membres."},
+  {id:"N11",vol:55,label:"Erdogan a transformé la Turquie en complice de l'Iran et des mouvements islamistes",macro:"CAT-D",threat:"Élevé",target:"COHÉSION",trend:"Stable",counter:"Distinguer la politique d'Erdogan des obligations institutionnelles de la Turquie comme membre OTAN."},
+  {id:"N12",vol:131,label:"Israël manipule les Etats-Unis et l'OTAN pour une guerre imprudente contre l'Iran",macro:"CAT-E",threat:"Élevé",target:"LÉGITIMITÉ",trend:"Croissant",counter:"Documenter le processus de décision américain indépendant d'Israël dans les opérations contre l'Iran."},
+  {id:"N13",vol:30,label:"L'Iran : avant-garde anti-impérialiste face aux puissances US-Israël-OTAN",macro:"CAT-E",threat:"Modéré",target:"LÉGITIMITÉ",trend:"Stable",counter:"Documenter les violations du droit international et les actions iraniennes contre des acteurs neutres."},
+  {id:"N14",vol:20,label:"L'Article 5 ne contraint pas l'Espagne dans une guerre offensive",macro:"CAT-C",threat:"Modéré",target:"CRÉDIBILITÉ",trend:"Stable",counter:"Clarification juridique officielle sur les cas d'application de l'Article 5 (cf. REC-01)."},
+  {id:"N15",vol:293,label:"L'OTAN doit refuser de suivre les Etats-Unis dans une agression illégale contre l'Iran",macro:"CAT-C",threat:"Critique",target:"COHÉSION",trend:"Accéléré",counter:"Distinguer entre le refus de participation offensive (légitime) et l'absence de solidarité active (qui affaiblit l'Alliance)."},
+  {id:"N16",vol:10,label:"Des élus républicains choisissent une autre guerre au Moyen-Orient pour leurs financeurs",macro:"CAT-D",threat:"Faible",target:"CRÉDIBILITÉ",trend:"Marginal",counter:"Non prioritaire en volume."},
+  {id:"N17",vol:28,label:"Trump a trahi America First en entrainant les Etats-Unis dans une guerre néocon en Iran",macro:"CAT-A",threat:"Modéré",target:"COHÉSION",trend:"Déclinant",counter:"Si N17 décline et N21 croit, la droite américaine se consolide sur un narratif pro-Trump/anti-OTAN. Signal secondaire à surveiller."},
+  {id:"N18",vol:362,label:"Trump se comporte comme un parrain mafieux menaçant l'Europe de retrait OTAN",macro:"CAT-A",threat:"Critique",target:"COHÉSION",trend:"Accéléré",counter:"Communication proactive sur les mécanismes de consultation et de décision collective OTAN."},
+  {id:"N19",vol:211,label:"France, Espagne et Italie ont trahi les Etats-Unis et prouvé que l'OTAN est inutile",macro:"CAT-C",threat:"Critique",target:"CRÉDIBILITÉ",trend:"Accéléré",counter:"Mettre en avant les formes de soutien apportées (AWACS déployés C1 Phase 2, consultations Rutte) sans registre défensif."},
+  {id:"N20",vol:54,label:"L'Espagne, l'Italie et la France affirment leur souveraineté en refusant la guerre américaine",macro:"CAT-C",threat:"Élevé",target:"COHÉSION",trend:"Croissant",counter:"Distinguer le droit de refus souverain de l'absence de solidarité active, qui affaiblit l'Alliance à long terme."},
+  {id:"N21",vol:224,label:"Trump force les alliés OTAN à cesser le parasitisme et à faire face à l'Iran",macro:"CAT-A",threat:"Élevé",target:"COHÉSION",trend:"Accéléré",counter:"Distinguer la contribution réelle à la sécurité collective des accusations de parasitisme réfutables avec les données de dépenses."},
+];
+
+// VERIFIED weekly counts from data
+const WEEKLY = {
+  N01:[1,2,3,14,15,25,30],N02:[1,6,1,32,41,107,93],N03:[0,0,0,2,2,5,1],
+  N04:[1,6,6,20,20,34,26],N05:[1,5,4,43,65,95,111],N06:[1,1,0,10,17,28,19],
+  N07:[1,0,2,7,9,27,16],N08:[0,1,3,2,1,6,3],N09:[0,1,0,1,1,5,2],
+  N10:[0,3,13,32,24,47,42],N11:[0,2,10,13,7,15,8],N12:[2,4,10,31,23,31,30],
+  N13:[0,3,1,2,7,8,9],N14:[0,0,1,2,7,7,3],N15:[1,6,13,36,42,102,93],
+  N16:[0,0,0,1,3,5,1],N17:[1,2,3,9,5,5,3],N18:[3,6,4,45,59,131,114],
+  N19:[0,3,3,26,28,74,77],N20:[0,1,2,7,10,15,19],N21:[1,5,5,26,34,71,82]
+};
+const WEEKS=["1-8 fév","9-19 fév","20-28 fév","1-15 mar","16-24 mar","25-31 mar","1-3 avr"];
+
+// CORRECTED threat matrix
+// N10 (Turkey = NATO member) -> fracture interne (left) side
+// N12 (Israel) -> adversaires (right) side per canonical description
+const THREAT_MATRIX={
+  N18:{x:-0.85,y:0.80},N05:{x:-0.50,y:0.75},N02:{x:-0.70,y:0.90},
+  N15:{x:0.10,y:-0.80},N19:{x:-0.30,y:-0.70},N21:{x:-0.40,y:0.60},
+  N01:{x:-0.75,y:-0.60},N06:{x:-0.20,y:0.50},
+  N10:{x:-0.35,y:0.40}, // CORRECTED: Turkey = NATO member = fracture interne
+  N11:{x:-0.25,y:0.55}, // CORRECTED: same, internal debate
+  N12:{x:0.60,y:-0.50}, // CORRECTED: amplified by Iranian state media = adversaires
+  N20:{x:0.20,y:-0.50},N07:{x:0.40,y:0.30},N04:{x:0.60,y:-0.30},
+  N13:{x:0.65,y:-0.40}, // anti-imperialist = adversaire framing
+  N03:{x:-0.40,y:0.25},N09:{x:-0.45,y:-0.30},N14:{x:0.15,y:-0.35},
+  N17:{x:-0.10,y:0.20},N08:{x:0.80,y:0.10},N16:{x:-0.20,y:0.10}
+};
+
+const THREAT_COLORS={"Critique":"#fe4d4d","Élevé":"#fec04d","Modéré":"#4dfeba","Faible":"#4d7cfe"};
+const MACRO_COLORS={"CAT-A":"#fe4d4d","CAT-B":"#ff6b35","CAT-C":"#fec04d","CAT-D":"#a78bfa","CAT-E":"#4dfeba"};
+const TS_KEYS=['N18','N05','N15','N02','N21','N19','N10','N12','N01','N04'];
+const TS_COLORS={N18:'#fe4d4d',N05:'#ff6b35',N15:'#fec04d',N02:'#a78bfa',N21:'#4dfeba',N19:'#4d7cfe',N10:'#f59e0b',N12:'#ec4899',N01:'#38bdf8',N04:'#6366f1'};
+
+const BASE={
+  paper_bgcolor:'#111318',plot_bgcolor:'#111318',
+  font:{family:'IBM Plex Mono, monospace',color:'#6b7591',size:10},
+  hoverlabel:{bgcolor:'#181b22',bordercolor:'#232836',font:{size:11,color:'#e2e8f0'}}
+};
+
+// VOLUME BAR
+const sorted=[...NARRATIVES].sort((a,b)=>b.vol-a.vol);
+Plotly.newPlot('chart-vol',[{
+  type:'bar',x:sorted.map(n=>n.id),y:sorted.map(n=>n.vol),
+  marker:{color:sorted.map(n=>THREAT_COLORS[n.threat]),opacity:.85,line:{width:0}},
+  customdata:sorted.map(n=>[n.label,n.macro,n.threat]),
+  hovertemplate:'<b>%{x}</b> · %{customdata[0]}<br>Volume : %{y} textes · %{customdata[1]} · Menace : %{customdata[2]}<extra></extra>'
+}],{
+  ...BASE,
+  xaxis:{gridcolor:'transparent',linecolor:'#232836',tickfont:{size:9,color:'#9aa8c4'}},
+  yaxis:{gridcolor:'#1a1e2a',linecolor:'#232836',tickfont:{size:9,color:'#9aa8c4'},title:{text:'Textes assignés',font:{size:9,color:'#6b7591'}}},
+  bargap:.3,margin:{t:20,b:40,l:55,r:20},hovermode:'closest'
+},{responsive:true,displayModeBar:false});
+
+// TEMPORAL
+const shapes=[
+  {type:'line',x0:'20-28 fév',x1:'20-28 fév',y0:0,y1:1,yref:'paper',line:{color:'rgba(254,77,77,.7)',width:1.5,dash:'dot'}},
+  {type:'line',x0:'16-24 mar',x1:'16-24 mar',y0:0,y1:1,yref:'paper',line:{color:'rgba(167,139,250,.7)',width:1.5,dash:'dot'}},
+  {type:'line',x0:'25-31 mar',x1:'25-31 mar',y0:0,y1:1,yref:'paper',line:{color:'rgba(254,77,77,.85)',width:1.5,dash:'dot'}},
+  {type:'line',x0:'1-3 avr',x1:'1-3 avr',y0:0,y1:1,yref:'paper',line:{color:'rgba(254,77,77,1)',width:1.8,dash:'dot'}},
+];
+const anns=[
+  {x:'20-28 fév',y:.98,yref:'paper',text:'Frappes 28/02',showarrow:false,font:{size:8,color:'rgba(254,77,77,.8)',family:'IBM Plex Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
+  {x:'16-24 mar',y:.98,yref:'paper',text:'16/03 Escalade',showarrow:false,font:{size:8,color:'rgba(167,139,250,.8)',family:'IBM Plex Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
+  {x:'25-31 mar',y:.98,yref:'paper',text:'25/03 Rupture',showarrow:false,font:{size:8,color:'rgba(254,77,77,.9)',family:'IBM Plex Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
+  {x:'1-3 avr',y:.98,yref:'paper',text:'01/04 Trump retrait',showarrow:false,font:{size:8,color:'rgba(254,77,77,1)',family:'IBM Plex Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
+];
+
+const traces=TS_KEYS.map(k=>({
+  x:WEEKS,y:WEEKLY[k],type:'scatter',mode:'lines+markers',name:k,
+  line:{color:TS_COLORS[k],width:2},marker:{size:4,color:TS_COLORS[k]},
+  hovertemplate:'<b>%{x}</b> · '+k+' : %{y} textes<extra></extra>'
+}));
+Plotly.newPlot('chart-temporal',traces,{
+  ...BASE,
+  xaxis:{gridcolor:'#1a1e2a',linecolor:'#232836',tickfont:{size:9,color:'#9aa8c4'}},
+  yaxis:{gridcolor:'#1a1e2a',linecolor:'#232836',tickfont:{size:9,color:'#9aa8c4'},rangemode:'tozero',title:{text:'Textes / période',font:{size:9,color:'#6b7591'}}},
+  shapes,annotations:anns,
+  legend:{bgcolor:'rgba(17,19,24,.9)',bordercolor:'#232836',borderwidth:1,font:{size:9,color:'#9aa8c4'},x:.01,y:.99},
+  margin:{t:30,b:50,l:55,r:20},hovermode:'x unified'
+},{responsive:true,displayModeBar:false});
+
+// Legend
+const leg=document.getElementById('temporal-legend');
+TS_KEYS.forEach(k=>{
+  const el=document.createElement('div');
+  el.style.cssText='display:flex;align-items:center;gap:5px;';
+  el.innerHTML='<div style="width:18px;height:2px;background:'+TS_COLORS[k]+';flex-shrink:0;"></div><span style="font-family:IBM Plex Mono,monospace;font-size:8.5px;color:'+TS_COLORS[k]+';">'+k+'</span>';
+  leg.appendChild(el);
+});
+
+// THREAT MATRIX
+const matrixTraces=[];
+for(const[tName,tColor] of Object.entries({"Critique":"#fe4d4d","Élevé":"#fec04d","Modéré":"#4dfeba","Faible":"#4d7cfe"})){
+  const ns=NARRATIVES.filter(n=>n.threat===tName);
+  matrixTraces.push({
+    x:ns.map(n=>(THREAT_MATRIX[n.id]||{x:0}).x),
+    y:ns.map(n=>(THREAT_MATRIX[n.id]||{y:0}).y),
+    text:ns.map(n=>n.id),
+    mode:'markers+text',type:'scatter',name:tName,
+    textposition:'top center',
+    textfont:{size:9,color:tColor,family:'IBM Plex Mono, monospace'},
+    marker:{
+      size:ns.map(n=>Math.sqrt(n.vol)*1.5+5),
+      color:tColor,opacity:.75,
+      line:{width:1,color:'rgba(0,0,0,.3)'}
+    },
+    customdata:ns.map(n=>[n.label,n.vol,n.macro]),
+    hovertemplate:'<b>%{text}</b> · %{customdata[0]}<br>Volume : %{customdata[1]} textes (taille du cercle) · %{customdata[2]}<extra></extra>'
+  });
+}
+
+Plotly.newPlot('chart-matrix',matrixTraces,{
+  ...BASE,
+  xaxis:{
+    range:[-1.1,1.1],gridcolor:'#232836',linecolor:'#3d4461',
+    zeroline:true,zerolinecolor:'rgba(77,124,254,.3)',zerolinewidth:1,
+    tickfont:{size:9,color:'#3d4461'},
+    title:{text:'← Fracture interne (débat occidental)          Menace externe / adversaires →',font:{size:9,color:'#4d7cfe'}}
+  },
+  yaxis:{
+    range:[-1.1,1.1],gridcolor:'#232836',linecolor:'#3d4461',
+    zeroline:true,zerolinecolor:'rgba(77,124,254,.3)',zerolinewidth:1,
+    tickfont:{size:9,color:'#3d4461'},
+    title:{text:'Cible = Légitimité ↓    ↑ Cible = Cohésion',font:{size:9,color:'#4d7cfe'}}
+  },
+  legend:{bgcolor:'rgba(17,19,24,.9)',bordercolor:'#232836',borderwidth:1,font:{size:9,color:'#9aa8c4'}},
+  margin:{t:20,b:70,l:100,r:20},hovermode:'closest',
+  shapes:[
+    {type:'rect',x0:-1.1,x1:0,y0:0,y1:1.1,fillcolor:'rgba(254,77,77,.03)',line:{width:0}},
+    {type:'rect',x0:0,x1:1.1,y0:0,y1:1.1,fillcolor:'rgba(254,192,77,.02)',line:{width:0}},
+    {type:'rect',x0:-1.1,x1:0,y0:-1.1,y1:0,fillcolor:'rgba(77,124,254,.03)',line:{width:0}},
+    {type:'rect',x0:0,x1:1.1,y0:-1.1,y1:0,fillcolor:'rgba(77,254,186,.02)',line:{width:0}},
+  ],
+  annotations:[
+    {x:-0.55,y:1.06,text:'Fracture interne · Cible cohésion',showarrow:false,font:{size:8,color:'rgba(254,77,77,.4)',family:'IBM Plex Mono'}},
+    {x:0.55,y:1.06,text:'Adversaires · Cible cohésion',showarrow:false,font:{size:8,color:'rgba(254,192,77,.4)',family:'IBM Plex Mono'}},
+    {x:-0.55,y:-1.07,text:'Fracture interne · Cible légitimité',showarrow:false,font:{size:8,color:'rgba(77,124,254,.4)',family:'IBM Plex Mono'}},
+    {x:0.55,y:-1.07,text:'Adversaires · Cible légitimité',showarrow:false,font:{size:8,color:'rgba(77,254,186,.4)',family:'IBM Plex Mono'}},
+  ]
+},{responsive:true,displayModeBar:false});
+
+// NARRATIVE TABLE
+const tBody=document.getElementById('narr-table-body');
+[...NARRATIVES].sort((a,b)=>b.vol-a.vol).forEach(n=>{
+  const maxVol=362;
+  const barW=Math.round(n.vol/maxVol*80);
+  const tClass={'Critique':'threat-crit','Élevé':'threat-high','Modéré':'threat-mod','Faible':'threat-low'}[n.threat];
+  const mColor=MACRO_COLORS[n.macro]||'#6b7591';
+  const tIcon={'Accéléré':'↑↑','Croissant':'↑','Stable':'→','Déclinant':'↓','Marginal':'·'}[n.trend]||'';
+  const tColor={'Accéléré':'#fe4d4d','Croissant':'#fec04d','Déclinant':'#4d7cfe','Stable':'#6b7591','Marginal':'#3d4461'}[n.trend]||'#6b7591';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td class="nid-cell">${n.id}</td>
+    <td style="color:var(--text);font-size:12px;">${n.label}</td>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:${mColor};">${n.macro}</td>
+    <td class="vol-cell">${n.vol}<span class="vol-bar" style="width:${barW}px;opacity:.5;background:${THREAT_COLORS[n.threat]||'var(--accent)'};"></span></td>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:${tColor};">${tIcon} ${n.trend}</td>
+    <td><span class="${tClass}">${n.threat}</span></td>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);">${n.target}</td>`;
+  tBody.appendChild(tr);
+});
+
+// ANNEXE A TABLE
+const annexBody=document.getElementById('annexe-table-body');
+NARRATIVES.forEach(n=>{
+  const tClass={'Critique':'threat-crit','Élevé':'threat-high','Modéré':'threat-mod','Faible':'threat-low'}[n.threat];
+  const mColor=MACRO_COLORS[n.macro]||'#6b7591';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td class="nid-cell">${n.id}</td>
+    <td style="color:var(--text);font-size:11.5px;">${n.label}</td>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:${mColor};white-space:nowrap;">${n.macro}</td>
+    <td class="vol-cell">${n.vol}</td>
+    <td><span class="${tClass}">${n.threat}</span></td>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);white-space:nowrap;">${n.target}</td>
+    <td style="font-size:11.5px;color:#8899bb;">${n.counter}</td>`;
+  annexBody.appendChild(tr);
+});
+</script>
+</body>
+</html>

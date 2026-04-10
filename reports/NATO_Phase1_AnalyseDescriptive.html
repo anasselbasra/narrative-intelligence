@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NATO Narrative Intelligence — Rapport Phase 1</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0c10;--surface:#111318;--surface2:#181b22;--border:#232836;--accent:#4d7cfe;--accent2:#fe4d4d;--accent3:#fec04d;--accent4:#4dfeba;--text:#e2e8f0;--muted:#6b7591;--dim:#3d4461;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;line-height:1.7;padding:48px 32px;max-width:1140px;margin:0 auto;}
+
+  /* HEADER */
+  .report-header{border-left:3px solid var(--accent);padding-left:24px;margin-bottom:48px;}
+  .report-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+  .report-title{font-size:26px;font-weight:600;color:#fff;line-height:1.2;margin-bottom:4px;}
+  .report-subtitle{font-size:13px;color:var(--muted);font-weight:300;margin-bottom:2px;}
+  .report-meta{display:flex;gap:28px;margin-top:16px;flex-wrap:wrap;}
+  .meta-item{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+  .meta-item span{color:var(--text);}
+
+  /* SECTIONS */
+  .section{margin-bottom:52px;}
+  .section-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+  h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin-top:22px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+  p{color:#b0bcd4;margin-bottom:10px;font-weight:300;font-size:13px;}
+  strong{color:var(--text);font-weight:600;}
+
+  /* KPI */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:2px;margin-bottom:28px;background:var(--border);border:1px solid var(--border);}
+  .kpi-card{background:var(--surface);padding:18px 18px 14px;}
+  .kpi-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+  .kpi-value{font-size:24px;font-weight:600;color:#fff;line-height:1;margin-bottom:3px;}
+  .kpi-sub{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+  .kpi-value.a{color:var(--accent);}.kpi-value.b{color:var(--accent2);}.kpi-value.c{color:var(--accent3);}.kpi-value.d{color:var(--accent4);}
+
+  /* CALLOUT */
+  .callout{border-left:3px solid var(--accent3);background:var(--surface);padding:14px 18px;margin:16px 0;font-size:12.5px;color:#8899bb;}
+  .callout.red{border-color:var(--accent2);}.callout.blue{border-color:var(--accent);}.callout.green{border-color:var(--accent4);}
+  .callout-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent3);margin-bottom:6px;}
+  .callout.red .callout-title{color:var(--accent2);}.callout.blue .callout-title{color:var(--accent);}.callout.green .callout-title{color:var(--accent4);}
+
+  /* TABLE */
+  .data-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:20px;}
+  .data-table th{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-align:left;padding:9px 11px;border-bottom:1px solid var(--border);font-weight:400;}
+  .data-table td{padding:8px 11px;border-bottom:1px solid #1a1d27;color:#9aa8c4;vertical-align:middle;}
+  .data-table tr:hover td{background:var(--surface2);}
+  .data-table td.name{color:var(--text);font-weight:500;}
+  .data-table td.num{font-family:'IBM Plex Mono',monospace;color:var(--text);text-align:right;}
+  .data-table td.num-hi{font-family:'IBM Plex Mono',monospace;color:var(--accent3);text-align:right;}
+  .data-table td.num-red{font-family:'IBM Plex Mono',monospace;color:var(--accent2);text-align:right;}
+  .data-table td.num-grn{font-family:'IBM Plex Mono',monospace;color:var(--accent4);text-align:right;}
+
+  /* TAG */
+  .tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 6px;border:1px solid var(--border);color:var(--muted);margin:1px 2px 1px 0;}
+  .tag.flag{border-color:var(--accent2);color:var(--accent2);}
+  .tag.info{border-color:var(--accent);color:var(--accent);}
+  .tag.warn{border-color:var(--accent3);color:var(--accent3);}
+  .tag.green{border-color:var(--accent4);color:var(--accent4);}
+  .tag.alt{border-color:#ff6b35;color:#ff6b35;}
+
+  /* CHART */
+  .chart-block{margin-bottom:36px;}
+  .chart-wrap{background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:2px;}
+  .chart-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+  .chart-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* TIMELINE */
+  .timeline{position:relative;padding-left:28px;}
+  .timeline::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:1px;background:var(--border);}
+  .tl-event{position:relative;margin-bottom:24px;}
+  .tl-event::before{content:'';position:absolute;left:-25px;top:7px;width:7px;height:7px;border-radius:50%;background:var(--dim);border:1px solid var(--border);}
+  .tl-event.hot::before{background:var(--accent2);box-shadow:0 0 8px var(--accent2);}
+  .tl-event.warm::before{background:var(--accent3);}
+  .tl-event.peak::before{background:var(--accent);box-shadow:0 0 12px var(--accent);width:10px;height:10px;left:-26px;top:5px;}
+  .tl-date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);margin-bottom:3px;}
+  .tl-title{font-size:13.5px;font-weight:600;color:#fff;margin-bottom:5px;}
+  .tl-body{color:#8899bb;font-size:12.5px;font-weight:300;}
+  .tl-stats{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
+  .tl-stat{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 7px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);}
+  .tl-stat.up{border-color:var(--accent2);color:var(--accent2);}
+  .tl-stat.peak-tag{border-color:var(--accent);color:var(--accent);}
+
+  /* URL BLOCK */
+  .url-block-wrap{border:1px solid var(--border);}
+  .url-row{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;padding:12px 14px;border-bottom:1px solid #1a1d27;background:var(--surface);}
+  .url-row:hover{background:var(--surface2);}
+  .url-row:last-child{border-bottom:none;}
+  .url-title{color:var(--text);font-weight:500;font-size:12px;margin-bottom:4px;}
+  .url-desc{color:var(--muted);font-size:11.5px;font-weight:300;margin-bottom:5px;line-height:1.5;}
+  .url-metrics{text-align:right;white-space:nowrap;min-width:100px;}
+  .url-eng{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--text);line-height:1;}
+  .url-views{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;}
+  .url-posts{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:1px;}
+  .peak-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:8px;padding:1px 5px;background:rgba(254,77,77,.1);border:1px solid rgba(254,77,77,.3);color:var(--accent2);margin-left:6px;vertical-align:middle;}
+
+  /* NARRATIVE MATRIX */
+  .narrative-matrix{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:24px;}
+  .nm-cell{background:var(--surface);padding:11px 9px;text-align:center;}
+  .nm-label{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+  .nm-value{font-size:21px;font-weight:600;color:#fff;margin-bottom:3px;}
+  .nm-sub{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--dim);line-height:1.4;}
+  .nm-value.rupture{color:var(--accent2)}.nm-value.frag{color:#ff8c42}.nm-value.inst{color:var(--accent)}.nm-value.main{color:#a78bfa}.nm-value.osint{color:var(--accent4)}.nm-value.hors{color:var(--dim)}
+
+  /* GRID */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:20px;}
+  .insight-box{background:var(--surface);border:1px solid var(--border);padding:18px;}
+  .insight-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .insight-val{font-size:19px;font-weight:600;color:#fff;margin-bottom:5px;}
+  .insight-body{font-size:11.5px;color:#6b7591;font-weight:300;line-height:1.5;}
+
+  /* EVENTS LEGEND */
+  .events-legend{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
+  .ev-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid var(--border);color:var(--muted);}
+  .ev-tag.peak{border-color:var(--accent2);color:var(--accent2);}
+  .ev-tag.hot{border-color:var(--accent3);color:var(--accent3);}
+
+  /* FOOTER */
+  .report-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .footer-text{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);}
+  .footer-author{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:16px;}
+  .footer-author a{color:var(--accent);text-decoration:none;}
+  .footer-author a:hover{color:var(--text);}
+  .divider{border:none;border-top:1px solid var(--border);margin:36px 0;}
+  ul{padding-left:18px;margin-bottom:10px;}
+  li{color:#8899bb;font-weight:300;margin-bottom:4px;font-size:12.5px;}
+  li strong{color:#b0bcd4;}
+  @media(max-width:720px){.grid2,.narrative-matrix{grid-template-columns:1fr 1fr;}.narrative-matrix{grid-template-columns:repeat(3,1fr);}.url-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ HEADER -->
+<div class="report-header">
+  <div class="report-label">NATO Narrative Intelligence · Importation 696 · CONFIDENTIEL</div>
+  <div class="report-title">Rapport Phase 1 — Analyse Complète</div>
+  <div class="report-subtitle">Tensions transatlantiques & crise iranienne</div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:4px;">Twitter / X · Anglais · 1 février – 3 avril 2026 · min_retweets = 5 · scope : débat retrait USA / OTAN</div>
+  <div class="report-meta">
+    <div class="meta-item">Période <span>62 jours</span></div>
+    <div class="meta-item">Posts <span>3 514</span></div>
+    <div class="meta-item">URLs uniques <span>531 / 195 domaines</span></div>
+    <div class="meta-item">Produit le <span>04 avril 2026</span></div>
+    <div class="meta-item" style="margin-left:auto;">par <strong style="color:var(--text);">Anass El Basraoui</strong> &nbsp;<a href="https://www.linkedin.com/in/el-basraoui/" target="_blank" style="color:var(--accent);text-decoration:none;font-family:'IBM Plex Mono',monospace;">LinkedIn</a> &nbsp;<a href="https://github.com/anasselbasra" target="_blank" style="color:var(--accent);text-decoration:none;font-family:'IBM Plex Mono',monospace;">GitHub</a></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ INTRO -->
+<div style="border-left:3px solid var(--border);padding-left:20px;margin-bottom:44px;">
+  <p style="color:#8899bb;font-size:13px;line-height:1.8;margin:0;">Ce rapport présente une <strong>analyse descriptive de phase 1</strong> d'un corpus de 3 514 posts Twitter collectés entre le 1er février et le 3 avril 2026, sur la discussion autour d'un éventuel retrait des États-Unis de l'OTAN dans le contexte de la guerre en Iran. Il couvre le volume, la temporalité, les sources, les acteurs et les hashtags — sans encore entrer dans le contenu des posts eux-mêmes. L'objectif est de cartographier <em>qui parle, quand, depuis quelles sources, et avec quelle portée</em>, avant l'analyse narrative approfondie de la Phase 2.</p>
+</div>
+
+<!-- ══════════════════════════════════════ COVERAGE CHART -->
+<div class="section">
+  <div class="section-title">01 — Coverage & Resonance</div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:20px;background:var(--border);border:1px solid var(--border);">
+    <div style="background:var(--surface);padding:14px 14px 12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Facteur amplification</div><div style="font-size:22px;font-weight:600;color:var(--accent3);">×49</div><div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;">baseline → sommet</div></div>
+    <div style="background:var(--surface);padding:14px 14px 12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Jour le + actif</div><div style="font-size:22px;font-weight:600;color:var(--accent2);">485 posts</div><div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;">01 avril 2026</div></div>
+    <div style="background:var(--surface);padding:14px 14px 12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Eng. max / jour</div><div style="font-size:22px;font-weight:600;color:var(--accent4);">410 021</div><div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;">01/04</div></div>
+    <div style="background:var(--surface);padding:14px 14px 12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Posts / jour (moy.)</div><div style="font-size:22px;font-weight:600;color:#fff;">56,7</div><div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;">médiane : 29</div></div>
+  </div>
+
+  <div class="events-legend">
+    <span class="ev-tag">20/02 — Montée de ton Trump</span>
+    <span class="ev-tag hot">28/02 — Début de la guerre</span>
+    <span class="ev-tag hot">16/03 — Frappes US + Hormuz</span>
+    <span class="ev-tag peak">25/03 — Rupture OTAN</span>
+    <span class="ev-tag hot">30/03 — Signaux contradictoires</span>
+    <span class="ev-tag hot">31/03 — Menaces infrastr.</span>
+    <span class="ev-tag peak">01/04 — Trump envisage retrait OTAN</span>
+  </div>
+
+  <div class="chart-block">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-weight:300;">Barres bleues = posts/jour (axe gauche) · Ligne rouge = engagements (axe droit) · Lignes verticales = événements géopolitiques</div>
+    <div class="chart-wrap"><div id="chart-coverage" style="height:400px"></div></div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Lecture</div>
+    <strong>Trois régimes :</strong> baseline (~6 posts/j) → activation progressive (16 fév.–24 mars) → emballement exponentiel (25 mars–1er avr., jusqu'à 485/j). Facteur ×49. Le 08/03 illustre un pic de <em>résonance unitaire</em> : 191K eng pour seulement 28 posts (6 831 eng/post) — quelques posts viraux à fort impact vs. la diffusion généraliste du 01/04 (485 posts, 846 eng/post). <strong>La courbe rouge précède ou amplifie les barres bleues</strong> à chaque pic : l'engagement viral déclenche le volume, pas l'inverse.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ 02 — CHRONOLOGIE -->
+<div class="section">
+  <div class="section-title">02 — Chronologie géopolitique annotée</div>
+
+  <div class="timeline">
+    <div class="tl-event">
+      <div class="tl-date">1 – 19 février 2026 / BASELINE</div>
+      <div class="tl-title">Bruit de fond — débat OTAN confiné aux cercles spécialisés</div>
+      <div class="tl-body">0–5 posts/j. Seul Bloomberg (24/02) capte une surveillance OTAN discrète sur la montée des tensions US-Iran.</div>
+    </div>
+    <div class="tl-event warm">
+      <div class="tl-date">20 février 2026</div>
+      <div class="tl-title">Premier signal — Trump met l'Iran en ligne de mire</div>
+      <div class="tl-body">Trump accuse l'Iran de "préparer quelque chose de très dangereux", évoque une réponse militaire. Premier lien public entre menace iranienne et posture américaine.</div>
+      <div class="tl-stats"><span class="tl-stat">26 posts</span><span class="tl-stat up">↑ +30% / J–1</span></div>
+    </div>
+    <div class="tl-event hot">
+      <div class="tl-date">28 février 2026</div>
+      <div class="tl-title">Début des frappes américano-israéliennes sur l'Iran</div>
+      <div class="tl-body">Premier pic significatif. L'action militaire active immédiatement le débat sur les implications OTAN — pas seulement la guerre elle-même. L'Iran ferme le détroit d'Hormuz le 2 mars.</div>
+      <div class="tl-stats"><span class="tl-stat">33 posts</span><span class="tl-stat up">↑ +135% / J–1</span></div>
+    </div>
+    <div class="tl-event hot">
+      <div class="tl-date">16 mars 2026</div>
+      <div class="tl-title">Escalade + premier cadrage européen de l'OTAN</div>
+      <div class="tl-body">Frappes US atteignent une intensité inédite. Vague d'alertes OSINT. Premier jour où des analystes européens évoquent massivement un rôle potentiel de l'OTAN. La fermeture du détroit d'Hormuz devient plausible selon les signaux iraniens.</div>
+      <div class="tl-stats"><span class="tl-stat up">↑ +148% / J–1</span><span class="tl-stat">Signal OSINT fort</span></div>
+    </div>
+    <div class="tl-event hot">
+      <div class="tl-date">25 mars 2026 — PIC MAJEUR</div>
+      <div class="tl-title">Trump attaque frontalement l'OTAN après l'échec de la coalition Hormuz</div>
+      <div class="tl-body">Accuse les alliés de "lâcheté". L'Iran tire des missiles de croisière vers l'USS Abraham Lincoln. C'est le moment où le narratif du retrait OTAN entre dans le débat mainstream. ZeroHedge publie "paper tiger" — l'article le plus partagé du corpus.</div>
+      <div class="tl-stats"><span class="tl-stat">120 posts</span><span class="tl-stat up">↑ +215% / J–1</span></div>
+    </div>
+    <div class="tl-event warm">
+      <div class="tl-date">30 mars 2026</div>
+      <div class="tl-title">Signaux contradictoires — Washington parle de négociations, Téhéran dément</div>
+      <div class="tl-body">Incertitude diplomatique maximale. Axios révèle que les républicains envisagent des coupes santé (~$30B) pour financer $200B de budget de guerre — signal majeur : le coût domestique de la guerre amplifie la pression sur les alliés OTAN.</div>
+      <div class="tl-stats"><span class="tl-stat">189 posts</span><span class="tl-stat up">↑ +133% / J–1</span></div>
+    </div>
+    <div class="tl-event hot">
+      <div class="tl-date">31 mars 2026</div>
+      <div class="tl-title">Ultimatum Trump — Menace sur les infrastructures iraniennes</div>
+      <div class="tl-body">Menace de détruire ponts et centrales électriques. Politico révèle (6 sources) que Trump va déclarer victoire et rejeter la responsabilité d'Hormuz sur les alliés. WSJ Opinion amplifie massivement (11 051 eng).</div>
+      <div class="tl-stats"><span class="tl-stat">328 posts</span><span class="tl-stat up">↑ +73% / J–1</span></div>
+    </div>
+    <div class="tl-event peak">
+      <div class="tl-date">1er avril 2026 — SOMMET ABSOLU</div>
+      <div class="tl-title">Trump envisage publiquement de retirer les États-Unis de l'OTAN</div>
+      <div class="tl-body"><strong>"Trump says he may try to pull U.S. out of NATO since allies weren't there for us in Iran war"</strong> — C'est l'événement pour lequel ce corpus a été conçu. Tous les narratifs convergent simultanément : rupture, mainstream, OSINT, institutionnel.</div>
+      <div class="tl-stats"><span class="tl-stat peak-tag">485 posts — SOMMET</span><span class="tl-stat up">↑ +48% / J–1</span><span class="tl-stat">410K eng · 26,5M vues</span></div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">2 – 3 avril 2026</div>
+      <div class="tl-title">Décélération mécanique — mais le sujet est installé</div>
+      <div class="tl-body">–54% le 02/04, –63% le 03/04 en l'absence de nouveau catalyseur. Mais 177 posts le 03/04 vs ~6 en février : le sujet a basculé dans le débat permanent. L'engagement reste à 220K le 03/04.</div>
+      <div class="tl-stats"><span class="tl-stat">177 posts le 03/04</span><span class="tl-stat up">↓ –63% / 01/04</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ 03 — CORPUS -->
+<div class="section">
+  <div class="section-title">03 — Vue d'ensemble du corpus</div>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Posts totaux</div><div class="kpi-value a">3 514</div><div class="kpi-sub">orig + comment + quote</div></div>
+    <div class="kpi-card"><div class="kpi-label">Comptes uniques</div><div class="kpi-value">1 956</div><div class="kpi-sub">1 791 hors quotes</div></div>
+    <div class="kpi-card"><div class="kpi-label">Engagements</div><div class="kpi-value c">9,6M</div><div class="kpi-sub">4,0M hors quotes</div></div>
+    <div class="kpi-card"><div class="kpi-label">Vues totales</div><div class="kpi-value c">178M</div><div class="kpi-sub">26,5M le 01/04 seul</div></div>
+    <div class="kpi-card"><div class="kpi-label">Posts originaux</div><div class="kpi-value">2 672</div><div class="kpi-sub">76% du corpus</div></div>
+    <div class="kpi-card"><div class="kpi-label">Quotes</div><div class="kpi-value">612</div><div class="kpi-sub">17% · 58% de l'engagement</div></div>
+    <div class="kpi-card"><div class="kpi-label">Comments</div><div class="kpi-value">359</div><div class="kpi-sub">10% · indicateur polarisation</div></div>
+    <div class="kpi-card"><div class="kpi-label">Eng. moy / post</div><div class="kpi-value d">2 737</div><div class="kpi-sub">confirme filtre min_rt=5</div></div>
+  </div>
+  <div class="callout blue">
+    <div class="callout-title">Lecture du corpus</div>
+    Volume modeste en absolu mais engagement moyen exceptionnel (2 737/post). <strong>Les quotes (17%) génèrent 58% de l'engagement total</strong> — c'est le vecteur central des guerres narratives sur Twitter : chaque quote est une prise de position sur le contenu d'autrui.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ 04 — ENGAGEMENT -->
+<div class="section">
+  <div class="section-title">04 — Structure de l'engagement</div>
+  <div class="grid2">
+    <div class="insight-box">
+      <div class="insight-label">Quotes → part de l'engagement</div>
+      <div class="insight-val" style="color:var(--accent)">58%</div>
+      <div class="insight-body">Les quotes génèrent ~5,6M des 9,6M d'engagements. La quote est le mécanisme des guerres narratives : elle révèle qui encadre quoi et dans quel sens.</div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-label">Ratio shares / engagements</div>
+      <div class="insight-val" style="color:var(--accent4)">16%</div>
+      <div class="insight-body">La dynamique est davantage réaction (likes, comments) que pur partage — signe d'un débat polarisé plutôt que d'un consensus amplifié.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ 05 — SOURCES & URLs -->
+<div class="section">
+  <div class="section-title">05 — Sources & URLs — signaux narratifs</div>
+
+  <p style="margin-bottom:16px;">531 URLs uniques · 195 domaines. Analyse complète des 20 URLs les plus partagées.</p>
+
+  <!-- MATRICE NARRATIVE -->
+  <h3>Répartition narrative des 20 URLs</h3>
+  <div class="narrative-matrix">
+    <div class="nm-cell"><div class="nm-label">Rupture</div><div class="nm-value rupture">4</div><div class="nm-sub">ZeroHedge ×2<br>Telegraph · Politico.eu</div></div>
+    <div class="nm-cell"><div class="nm-label">Fragmentation</div><div class="nm-value frag">3</div><div class="nm-sub">ZeroHedge FR/IT<br>FoxNews Turquie<br>Telegram AMG</div></div>
+    <div class="nm-cell"><div class="nm-label">Institutionnel</div><div class="nm-value inst">5</div><div class="nm-sub">Politico.eu DE<br>Stripes · Bloomberg<br>RSC · Politico.com</div></div>
+    <div class="nm-cell"><div class="nm-label">Mainstream</div><div class="nm-value main">3</div><div class="nm-sub">WSJ · Politico.com<br>Axios GOP</div></div>
+    <div class="nm-cell"><div class="nm-label">OSINT / Analyse</div><div class="nm-value osint">3</div><div class="nm-sub">x.com broadcast<br>Shanaka Substack<br>YouTube Souda Base</div></div>
+    <div class="nm-cell"><div class="nm-label">Alt. / Hors scope</div><div class="nm-value hors">4</div><div class="nm-sub">Merchants AI<br>Cal Thomas<br>BitChute · amg-news</div></div>
+  </div>
+
+  <!-- CHART URLs engagement + views -->
+  <div class="chart-block">
+    <div class="chart-label">Top 20 URLs — Engagements & Vues</div>
+    <div style="font-size:11.5px;color:var(--muted);margin-bottom:12px;font-weight:300;">Barres = engagements (axe gauche) · Losanges = vues (axe droit) · Couleur = narratif</div>
+    <div class="chart-wrap"><div id="chart-url-combined" style="height:520px"></div></div>
+  </div>
+
+  <!-- TOP 20 URLs DETAIL -->
+  <h3>Détail des 20 URLs — qualification & ancrage géopolitique</h3>
+  <div class="url-block-wrap">
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">WSJ Opinion — <em>Trump's speech, Iran war, Strait of Hormuz, oil, Israel, NATO</em><span class="peak-badge">30/03 · 31/03</span></div>
+        <div class="url-desc">Opinion éditoriale WSJ — Trump peut clôturer le conflit sans rouvrir Hormuz, délégation aux alliés. <strong>1er en engagement de toute la liste.</strong> Lectorat financier et conservateur US — fort vecteur du narratif mainstream "sortie propre / délégation".</div>
+        <div><span class="tag warn">MAINSTREAM US</span><span class="tag warn">ENG RECORD</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng" style="color:var(--accent2)">11 051</div><div class="url-views">172 450 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Axios — <em>GOP weighs healthcare cuts to pay for Iran war</em><span class="peak-badge">30/03</span></div>
+        <div class="url-desc">Scoop Axios : les républicains envisagent ~$30B de coupes ACA pour financer $200B de budget de guerre. Réactions en chaîne (Newsom, Rand Paul, Boebert). <strong>Signal politique fort</strong> : le coût domestique de la guerre alimente directement la pression sur les alliés OTAN.</div>
+        <div><span class="tag warn">BACKLASH DOMESTIQUE</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng" style="color:var(--accent2)">9 639</div><div class="url-views">21 727 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">BitChute — <em>Vidéo l4MsjZNp65Xl</em><span class="peak-badge">⚠ ALERTE</span></div>
+        <div class="url-desc">Plateforme alternative connue pour héberger des contenus refusés par YouTube. <strong>8 251 eng / 124 921 vues pour 2 posts seulement</strong> — ratio exceptionnel suggérant un contenu viral dans des cercles alternatifs ciblés. Contenu non identifiable directement mais le profil de la plateforme + métriques indiquent un narratif anti-OTAN ou conspirationniste. → Priorité analyse réseau : qui amplifie ce contenu ?</div>
+        <div><span class="tag flag">ALT. MEDIA — FORT ENG</span><span class="tag flag">SOURCE INCONNUE</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng" style="color:var(--accent2)">8 251</div><div class="url-views">124 921 vues</div><div class="url-posts">2 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Shanaka Anslem Perera (Substack) — <em>The Nitrogen Trap</em><span class="peak-badge">SIGNAL FORT</span></div>
+        <div class="url-desc">Analyse géostratégique indépendante : Hormuz transporte 43–49% des exportations mondiales d'urée, 20% du GNL, un tiers de l'hélium. Perera cartographie le rôle de la Chine (SMIC → Iran → missiles) et de Pakistan comme médiateur. <strong>Record absolu de vues (1 057 339)</strong> pour 2 posts. Communauté analytique à très forte audience invisible aux radars médiatiques classiques.</div>
+        <div><span class="tag green">OSINT ANALYTIQUE</span><span class="tag green">RECORD VUES</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng" style="color:var(--accent4)">6 660</div><div class="url-views" style="color:var(--accent4)">1 057 339 vues</div><div class="url-posts">2 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">t.me/AMGNEWS2022 + amg-news.com — <em>AMG News (Telegram + site miroir)</em><span class="peak-badge">⚠ ALERTE</span></div>
+        <div class="url-desc">Source de désinformation connue. Les deux URLs ont des <strong>métriques identiques</strong> (5 255 eng, 179 486 vues) — même contenu diffusé simultanément sur Telegram et son site miroir. Canal spécialisé dans les narratifs anti-OTAN, antérieurement aligné sur des positions pro-russes. → Signal de coordination artificielle à tracer.</div>
+        <div><span class="tag flag">DÉSINFORMATION</span><span class="tag flag">DOUBLE DIFFUSION TELEGRAM/WEB</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng" style="color:var(--accent2)">5 255</div><div class="url-views">179 486 vues</div><div class="url-posts">2+2 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">The Merchants News (Substack) — <em>What is the world not seeing in AI?</em></div>
+        <div class="url-desc">Analyse de l'impact de la crise Iran sur la chaîne d'approvisionnement de l'IA (hélium, data centers, cloud). Hors scope direct mais <strong>engagement très élevé (3 497)</strong> pour 3 posts — révèle une communauté tech/IA qui suit les implications systémiques de la crise et peut porter des narratifs sur la fragilité occidentale.</div>
+        <div><span class="tag">HORS SCOPE — SIGNAL TECH</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng" style="color:var(--accent3)">3 497</div><div class="url-views">190 971 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">ZeroHedge — <em>UAE Poised to Join Anti-Iran Ops, Trump Rips NATO "Paper Tiger", Says Exit "Beyond Reconsideration"</em><span class="peak-badge">25/03 · 01/04</span></div>
+        <div class="url-desc">Trump qualifie l'OTAN de "paper tiger" et déclare que son retrait est "beyond reconsideration". <strong>URL la plus partagée du corpus</strong> (6 posts). ZeroHedge présente le retrait comme la conséquence logique et légitime du refus européen — cadrage maximaliste anti-institution.</div>
+        <div><span class="tag flag">RUPTURE</span><span class="tag flag">URL #1 PAR POSTS</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">2 702</div><div class="url-views">372 308 vues</div><div class="url-posts">6 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Politico.com — <em>Trump to declare Iran war "winding down", scapegoat NATO allies on Hormuz</em><span class="peak-badge">01/04</span></div>
+        <div class="url-desc">Article phare du 1er avril (6 sources anonymes). Trump va déclarer victoire et rejeter la responsabilité d'Hormuz sur les alliés. <strong>4 citations dans le corpus — record absolu</strong>. Bannon confirme : "He's dumping on the NATO allies — it's their issue." Déclencheur identifié du pic du 01/04.</div>
+        <div><span class="tag warn">MAINSTREAM</span><span class="tag flag">DÉCLENCHEUR 01/04</span><span class="tag flag">4 CITATIONS</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">1 809</div><div class="url-views">14 244 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">The Telegraph — <em>Starmer may have just broken NATO</em> (18 mars)<span class="peak-badge">16/03</span></div>
+        <div class="url-desc">Le Telegraph (conservateur britannique) cadre la déclaration "this is not our war" de Starmer comme un moment fondateur de rupture. Angle distinct : la responsabilité britannique dans la fracture — pas uniquement Trump. Ratio vues/post parmi les plus élevés du corpus.</div>
+        <div><span class="tag flag">RUPTURE — ANGLE BRITANNIQUE</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">1 353</div><div class="url-views">14 065 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Politico.eu — <em>Donald Trump's anger at NATO allies — Europe united against him</em><span class="peak-badge">01/04</span></div>
+        <div class="url-desc">Réunions secrètes des leaders européens (Helsinki, dîners privés à Bruxelles) pour discuter du retrait US. L'Europe se soude contre Trump mais pas contre l'OTAN — cadrage rupture avec perspective européenne institutionnelle.</div>
+        <div><span class="tag flag">RUPTURE / RÉACTION EU</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">1 341</div><div class="url-views">34 924 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">ZeroHedge — <em>France, Italy are latest NATO allies to break ranks, block US military flights</em><span class="peak-badge">16/03 · 30/03</span></div>
+        <div class="url-desc">Événements factuels (confirmés par RAI, CNN) cadrés par ZeroHedge comme une "fracture" de l'OTAN. Omet le contexte juridique — absence de résolution ONU, Article 5 non invocable. Amplification du narratif de fragmentation.</div>
+        <div><span class="tag flag">FRAGMENTATION OTAN</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">1 031</div><div class="url-views">116 535 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Fox News — <em>Turkey's NATO role under scrutiny — Hamas, Muslim Brotherhood ties</em></div>
+        <div class="url-desc">Fox News cible la Turquie comme "maillon faible" de l'OTAN. Cadrage fragmentant : l'Alliance présentée comme infiltrée par des acteurs problématiques — narratif qui justifie indirectement un retrait ou une réforme radicale. Lectorat pro-Trump.</div>
+        <div><span class="tag flag">FRAGMENTATION — ANGLE TURQUIE</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">723</div><div class="url-views">21 424 vues</div><div class="url-posts">2 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">x.com/i/broadcasts/1dKrPEMmqOnJX — <em>Twitter Space live</em><span class="peak-badge">16/03</span></div>
+        <div class="url-desc">Broadcast live X — probablement un Twitter Space sur la crise OTAN/Iran (au vu des patterns d'audience, potentiellement @marionawfal ou @microinteracti1). Fort ratio vues/posts (24 483/post). Les broadcasts live sont caractéristiques des épisodes d'escalade OSINT. → À identifier lors de l'analyse réseau.</div>
+        <div><span class="tag warn">OSINT / LIVE — À IDENTIFIER</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">559</div><div class="url-views">73 449 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">YouTube — <em>Tour of NATO's Souda Base in Greece: HQ of War on Iran</em></div>
+        <div class="url-desc">Reportage de Laith Marouf depuis la base OTAN de Souda (Crète), filmé en novembre 2025. Des militants locaux témoignent de l'utilisation historique de la base (Libye, Yougoslavie, Liban, Gaza) et de son rôle de quartier général pour la guerre en Iran. Cadrage anti-OTAN explicite, perspective activiste — contenu <strong>directement dans le scope</strong> du débat sur le rôle et la légitimité de l'Alliance.</div>
+        <div><span class="tag green">OSINT / ANTI-OTAN</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">307</div><div class="url-views">2 638 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Bloomberg — <em>NATO said to step up Iran surveillance as tensions with US mount</em> (24 fév.)</div>
+        <div class="url-desc">Signal précoce (24 fév.) : l'OTAN surveille discrètement les tensions US-Iran — l'Alliance est déjà en mode gestion de crise avant le début officiel des hostilités. Cadrage institutionnel neutre, source de référence pour les analystes.</div>
+        <div><span class="tag info">INSTITUTIONNEL — SIGNAL PRÉCOCE</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">370</div><div class="url-views">17 588 vues</div><div class="url-posts">2+3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Politico.eu — <em>Germany to Trump: "This is not a NATO war" — Strait of Hormuz</em></div>
+        <div class="url-desc">L'Allemagne pose une ligne rouge explicite : Hormuz n'est pas une obligation OTAN. Scholz/Pistorius refusent de traiter le conflit comme relevant de l'Article 5. Signal institutionnel de la principale puissance militaire européenne.</div>
+        <div><span class="tag info">INSTITUTIONNEL / LIGNE ROUGE</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">130</div><div class="url-views">11 359 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Stars and Stripes — <em>NATO's Rutte defends support for Iran war amid criticism</em> (26 mars)</div>
+        <div class="url-desc">Rutte défend la position de l'Alliance après les attaques de Trump du 25 mars. Journal militaire américain — lectorat prioritairement forces armées US en Europe. Rutte cherche à maintenir la cohésion face aux accusations trumpistes.</div>
+        <div><span class="tag info">INSTITUTIONNEL / MILITAIRE US</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">77</div><div class="url-views">7 799 vues</div><div class="url-posts">3 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Responsible Statecraft — <em>Is the Iran War breaking NATO forever?</em></div>
+        <div class="url-desc">Quincy Institute for Responsible Statecraft (réalisme / anti-interventionnisme américain). Ni pro-rupture ni pro-alliance inconditionnelle. Signal d'un narratif réaliste alternatif aux deux pôles dominants du corpus. Faible engagement (69) mais source think-tank de qualité.</div>
+        <div><span class="tag info">INSTITUTIONNEL / RÉALISTE</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">69</div><div class="url-views">2 561 vues</div><div class="url-posts">2 posts</div></div>
+    </div>
+
+    <div class="url-row">
+      <div>
+        <div class="url-title">Cal Thomas — <em>Colonne conservatrice</em></div>
+        <div class="url-desc">Chroniqueur conservateur américain, audience et engagement marginaux (51 eng). Présent uniquement grâce au seuil min_rt=5. Signal non structurant.</div>
+        <div><span class="tag">CONSERVATEUR US — MARGINAL</span></div>
+      </div>
+      <div class="url-metrics"><div class="url-eng">51</div><div class="url-views">498 vues</div><div class="url-posts">2 posts</div></div>
+    </div>
+
+  </div><!-- /url-block-wrap -->
+
+  <!-- PICS → URLS -->
+  <h3>URLs responsables des pics</h3>
+  <table class="data-table">
+    <thead><tr><th>Pic</th><th>Événement</th><th>URLs actives</th><th>Narratif dominant</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="name" style="white-space:nowrap">16/03 · +148%</td>
+        <td style="color:#8899bb;font-size:11.5px;">Frappes US + signaux Hormuz + premiers cadrages OTAN européens</td>
+        <td><span class="tag flag">ZeroHedge FR/IT</span><span class="tag warn">x.com broadcast</span><span class="tag flag">Telegraph Starmer</span></td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#ff8c42;">FRAGMENTATION + OSINT</td>
+      </tr>
+      <tr>
+        <td class="name" style="white-space:nowrap">25/03 · +215%</td>
+        <td style="color:#8899bb;font-size:11.5px;">Trump attaque l'OTAN, échec coalition Hormuz</td>
+        <td><span class="tag flag">ZeroHedge UAE/NATO</span><span class="tag info">Stripes Rutte</span><span class="tag info">Politico.eu Germany</span></td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent2);">RUPTURE</td>
+      </tr>
+      <tr>
+        <td class="name" style="white-space:nowrap">30/03 · +133%</td>
+        <td style="color:#8899bb;font-size:11.5px;">Signaux diplomatiques contradictoires</td>
+        <td><span class="tag warn">Axios GOP healthcare</span><span class="tag warn">WSJ Opinion</span><span class="tag flag">AMG/Telegram</span><span class="tag flag">BitChute</span></td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#a78bfa;">MAINSTREAM + ALT. MEDIA</td>
+      </tr>
+      <tr>
+        <td class="name" style="white-space:nowrap">31/03 · +73%</td>
+        <td style="color:#8899bb;font-size:11.5px;">Trump menace les infrastructures iraniennes</td>
+        <td><span class="tag warn">Politico.com (4 cit.)</span><span class="tag warn">WSJ Opinion</span><span class="tag flag">Politico.eu Trump anger</span></td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#a78bfa;">MAINSTREAM PEAK</td>
+      </tr>
+      <tr>
+        <td class="name" style="white-space:nowrap">01/04 — SOMMET</td>
+        <td style="color:#8899bb;font-size:11.5px;">Trump dit envisager le retrait de l'OTAN</td>
+        <td><span class="tag flag">ZeroHedge UAE</span><span class="tag warn">Politico.com</span><span class="tag flag">Politico.eu</span><span class="tag warn">WSJ</span><span class="tag green">Shanaka Substack</span></td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent2);">TOUS NARRATIFS CONVERGENTS</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SIGNAUX CLÉS -->
+  <div class="callout red">
+    <div class="callout-title">Signal #1 — ZeroHedge surreprésenté</div>
+    URL la plus partagée (6 posts) + 2e URL (ZeroHedge FR/IT) + domaine top 8 = <strong>triple présence dans un corpus filtré à min_rt=5</strong>. Articles anti-OTAN de ZeroHedge trouvent une résonance réelle — pas confinée à des bulles marginales. Question clé pour la Phase 2 : les comptes qui partagent ZeroHedge forment-ils un cluster cohérent ou sont-ils distribués dans plusieurs communautés ?
+  </div>
+  <div class="callout red">
+    <div class="callout-title">Signal #2 — Cluster alternatif à fort potentiel de coordination</div>
+    BitChute (8 251 eng, source inconnue) + AMG/Telegram (double diffusion simultanée web+Telegram, métriques identiques) = infrastructure de diffusion alternative active. Ces deux sources partagent un cadrage anti-OTAN cohérent. → Priorité analyse réseau Phase 2.
+  </div>
+  <div class="callout green">
+    <div class="callout-title">Signal #3 — Shanaka Substack : communauté analytique invisible</div>
+    1,05M de vues pour 2 posts. Cette communauté géostratégique indépendante (dizaines de milliers d'abonnés Substack) échappe aux radars des médias classiques tout en générant une portée massive. Contenu de haute qualité analytique sur les implications systémiques (Chine, Pakistan, fertilisants, LNG) — potentiel de structuration des débats dans les cercles think-tank.
+  </div>
+  <div class="callout">
+    <div class="callout-title">Signal #4 — Telegraph : portée maximale avec volume minimal</div>
+    <strong>2,6M de vues pour 13 posts</strong> sur l'ensemble du domaine (201 000 vues/post — ratio le plus élevé du corpus). Les articles du Telegraph sont partagés par des comptes à très forte audience. L'article "Starmer broke NATO" porte un cadrage unique : la responsabilité britannique dans la fracture, distinct du narratif Trump-centré dominant.
+  </div>
+
+  <!-- TOP DOMAINES -->
+  <h3>Top Domaines — poids & portée</h3>
+  <table class="data-table">
+    <thead><tr><th>Domaine</th><th>Posts</th><th>Vues</th><th>Réactions</th><th>Profil</th></tr></thead>
+    <tbody>
+      <tr><td class="name">twitter.com</td><td class="num">14</td><td class="num-red">3 590 304</td><td class="num">22 448</td><td><span class="tag info">AUTO-RÉFÉRENCE — RATIO MAXIMAL</span></td></tr>
+      <tr><td class="name">x.com</td><td class="num">38</td><td class="num-hi">2 266 026</td><td class="num">14 432</td><td><span class="tag info">AUTO-RÉFÉRENCE</span></td></tr>
+      <tr><td class="name">telegraph.co.uk</td><td class="num">13</td><td class="num-hi">2 618 145</td><td class="num">5 472</td><td><span class="tag warn">CONSERVATEUR — 201K vues/post</span></td></tr>
+      <tr><td class="name">youtube.com</td><td class="num">43</td><td class="num">945 052</td><td class="num">9 977</td><td><span class="tag info">VIDÉO / DÉBAT</span></td></tr>
+      <tr><td class="name">theatlantic.com</td><td class="num">13</td><td class="num">480 116</td><td class="num">6 454</td><td><span class="tag">MAINSTREAM US LIBÉRAL</span></td></tr>
+      <tr><td class="name">zerohedge.com</td><td class="num">13</td><td class="num">684 615</td><td class="num">4 214</td><td><span class="tag flag">ALERTE NARRATIVE</span></td></tr>
+      <tr><td class="name">politico.eu</td><td class="num">17</td><td class="num">292 554</td><td class="num">4 646</td><td><span class="tag">MAINSTREAM EU</span></td></tr>
+      <tr><td class="name">bloomberg.com</td><td class="num">18</td><td class="num">291 386</td><td class="num">2 544</td><td><span class="tag">MAINSTREAM FINANCE</span></td></tr>
+    </tbody>
+  </table>
+  <p style="color:var(--muted);font-size:12px;">Twitter/X combiné (x.com + twitter.com) = 52 posts, <strong>5,86M vues</strong> — 1er domaine en portée réelle. L'auto-référencement massif est caractéristique d'une bulle de débat endogène : les acteurs clés se citent entre eux, amplifiant les narratifs dans un écosystème fermé.</p>
+</div>
+
+<!-- ══════════════════════════════════════ 06 — HASHTAGS -->
+<div class="section">
+  <div class="section-title">06 — Hashtags — cartographie sémantique</div>
+  <table class="data-table">
+    <thead><tr><th>Hashtag</th><th>Posts</th><th>Engagements</th><th>Vues</th><th>Lecture</th></tr></thead>
+    <tbody>
+      <tr><td class="name">#iran</td><td class="num">83</td><td class="num-red">82 292</td><td class="num-red">3 478 258</td><td>Ancre principale — le déclencheur, pas le scope primaire</td></tr>
+      <tr><td class="name">#nato</td><td class="num">61</td><td class="num-hi">16 935</td><td class="num-hi">715 032</td><td>Cœur du scope</td></tr>
+      <tr><td class="name">#trump</td><td class="num">34</td><td class="num">9 295</td><td class="num">456 385</td><td>Acteur central — ses déclarations structurent le corpus</td></tr>
+      <tr><td class="name">#iranwar</td><td class="num">33</td><td class="num">11 497</td><td class="num">547 673</td><td>Cadrage guerrier — présuppose une guerre totale</td></tr>
+      <tr><td class="name">#ukraine</td><td class="num">11</td><td class="num">902</td><td class="num">111 221</td><td><strong>Narratif comparaison</strong> — "abandon Ukraine = futur abandon OTAN"</td></tr>
+      <tr><td class="name">#turkey</td><td class="num">9</td><td class="num">922</td><td class="num">96 986</td><td>Membre OTAN ambivalent — acteur charnière Hormuz</td></tr>
+    </tbody>
+  </table>
+  <div class="callout red">
+    <div class="callout-title">#iran génère 4,9× plus d'engagements que #nato</div>
+    82 292 vs 16 935 pour seulement 1,4× plus de posts. L'audience large réagit à Iran (choc émotionnel) ; le débat OTAN est porté par des acteurs spécialisés. <strong>#ukraine dans ce corpus</strong> est le signal mémoriel le plus important : narratif d'abandon récurrent utilisé comme preuve de crédibilité défaillante américaine.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ 07 — ACTEURS -->
+<div class="section">
+  <div class="section-title">07 — Acteurs — production & amplification</div>
+
+  <h3>Top Producteurs</h3>
+  <table class="data-table">
+    <thead><tr><th>Compte</th><th>Posts</th><th>Engag.</th><th>Vues</th><th>Profil</th></tr></thead>
+    <tbody>
+      <tr><td class="name">@furkangozukara</td><td class="num">44</td><td class="num">95 895</td><td class="num">3 038 866</td><td><span class="tag warn">FORT VOLUME — À QUALIFIER</span></td></tr>
+      <tr><td class="name">@marionawfal</td><td class="num">43</td><td class="num">45 922</td><td class="num-red">13 529 875</td><td><span class="tag flag">AMPLIFICATEUR MASSIF — 314K vues/post</span></td></tr>
+      <tr><td class="name">@sprinterpress</td><td class="num">33</td><td class="num">9 101</td><td class="num">533 210</td><td><span class="tag info">AGRÉGATEUR PRESSE</span></td></tr>
+      <tr><td class="name">@matth_4america</td><td class="num">18</td><td class="num">41 142</td><td class="num">520 743</td><td><span class="tag warn">COMPTE POLITIQUE US — MAGA ?</span></td></tr>
+      <tr><td class="name">@microinteracti1 (Gandalv)</td><td class="num">15</td><td class="num">47 927</td><td class="num-hi">4 310 456</td><td><span class="tag flag">NŒUD CENTRAL — DOUBLE PRÉSENCE</span></td></tr>
+      <tr><td class="name">@zerohedge</td><td class="num">14</td><td class="num">9 288</td><td class="num">1 489 672</td><td><span class="tag flag">ALERTE NARRATIVE</span></td></tr>
+      <tr><td class="name">@mylovanov</td><td class="num">13</td><td class="num">2 348</td><td class="num">204 705</td><td><span class="tag info">EXPERT UKRAINE / DÉFENSE</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Top Comptes mentionnés</h3>
+  <table class="data-table">
+    <thead><tr><th>Compte</th><th>Mentions</th><th>Eng. générés</th><th>Lecture</th></tr></thead>
+    <tbody>
+      <tr><td class="name">@nato</td><td class="num">30</td><td class="num">22 687</td><td>L'institution elle-même interpellée — débat sur sa légitimité</td></tr>
+      <tr><td class="name">@potus</td><td class="num">23</td><td class="num-hi">46 853</td><td>Trump officiel — interpellations directes</td></tr>
+      <tr><td class="name">@realdonaldtrump</td><td class="num">13</td><td class="num-hi">51 856</td><td>Trump personnel — forte réactivité (3 985 eng/mention)</td></tr>
+      <tr><td class="name">@secrubio</td><td class="num">11</td><td class="num">5 198</td><td>Secrétaire d'État Rubio — acteur diplomatique clé</td></tr>
+      <tr><td class="name">@keir_starmer</td><td class="num">10</td><td class="num">1 749</td><td>Lié au narratif "Starmer broke NATO"</td></tr>
+      <tr><td class="name">@microinteracti1</td><td class="num">9</td><td class="num-red">44 145</td><td>Non-institutionnel le + mentionné — nœud coordinateur ?</td></tr>
+      <tr><td class="name">@pahlavireza</td><td class="num">8</td><td class="num">18 839</td><td>Reza Pahlavi — opposition iranienne en exil · signal régime change</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout red">
+    <div class="callout-title">Trump : 36 mentions combinées, ~100K engagements</div>
+    @potus + @realdonaldtrump = <strong>36 mentions, ~100K eng</strong>. Ce corpus est avant tout un débat <em>sur Trump</em> — ses intentions, sa fiabilité, les conséquences de ses décisions pour l'Alliance.
+  </div>
+  <div class="callout">
+    <div class="callout-title">@microinteracti1 (Gandalv) — double présence, profil à qualifier en urgence</div>
+    Top producteur (15 posts, 4,3M vues) ET top mentionné (9 mentions, 44 145 eng) → <strong>nœud central</strong> : émetteur influent et cible fréquente. À qualifier en Phase 2 : compte OSINT légitime ou coordinateur d'amplification ?
+  </div>
+  <div class="callout">
+    <div class="callout-title">@pahlavireza — signal régime change</div>
+    La présence de Reza Pahlavi (fils du Shah) parmi les comptes mentionnés indique que le corpus capture un <strong>narratif iranien de régime change</strong> : le retrait US de l'OTAN vu comme affaiblissant la pression sur Téhéran — ou inversement comme opportunité pour l'opposition iranienne.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ 08 — SYNTHÈSE -->
+<div class="section">
+  <div class="section-title">08 — Synthèse</div>
+  <div class="callout blue">
+    <div class="callout-title">H1 — Deux régimes narratifs distincts</div>
+    <strong>Narratif institutionnel</strong> (OTAN comme nécessité — Politico/Bloomberg/Atlantic) vs. <strong>narratif de rupture</strong> (retrait légitime — ZeroHedge/Telegraph). Le WSJ domine en engagement unitaire (11 051 eng) mais ZeroHedge domine en densité de diffusion (6 posts pour une URL).
+  </div>
+  <div class="callout red">
+    <div class="callout-title">H2 — Cluster alternatif : infrastructure de désinformation possible</div>
+    ZeroHedge + AMG/Telegram (double diffusion) + BitChute (fort eng, source inconnue) = trois sources partageant un cadrage anti-OTAN cohérent dans un corpus filtré à min_rt=5.
+  </div>
+  <div class="callout">
+    <div class="callout-title">H3 — Coût domestique comme amplificateur</div>
+    L'article Axios (coupes santé / $200B budget guerre, 9 639 eng — record) révèle que le débat OTAN se greffe sur un mécontentement domestique américain. Si les US financent seuls la guerre, la pression sur les alliés devient argument de politique intérieure.
+  </div>
+  <div class="callout">
+    <div class="callout-title">H4 — #ukraine comme pont mémoriel</div>
+    "#ukraine = précédent d'abandon" transcende le scope Iran/OTAN et active des mémoires géopolitiques plus larges — vecteur narratif à isoler dans le clustering.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ CONCLUSION -->
+<div class="section">
+  <div class="section-title">— Prochaine étape</div>
+  <div style="border-left:3px solid var(--border);padding-left:20px;">
+    <p style="color:#8899bb;font-size:13px;line-height:1.8;margin:0;">Cette analyse descriptive pose le cadre : volume, temporalité, sources, acteurs et hashtags sont maintenant cartographiés et ancrés dans la chronologie géopolitique réelle. L'étape suivante consiste à entrer en profondeur dans le <strong>contenu des posts</strong> — extraire et classer les narratifs structurants, analyser les images et vidéos partagées, reconstituer les chaînes de propagation et identifier les acteurs qui fabriquent ou amplifient chaque récit. L'objectif : comprendre non plus <em>combien</em> de gens ont parlé de l'OTAN, mais <em>ce qu'ils en ont dit</em> — et dans quel sens ce débat a orienté la perception publique de l'Alliance.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="report-footer">
+  <div class="footer-text">NATO Narrative Intelligence · Importation 696 · 04.04.2026 · CONFIDENTIEL</div>
+</div>
+
+<!-- ══════════════════════════════════════ SCRIPTS PLOTLY -->
+<script>
+// ── TEMPORAL DATA ─────────────────────────────────────────────────────────────
+const raw=[
+["2026-02-01",10,2363,158873],["2026-02-02",3,389,24285],["2026-02-03",4,7155,240926],
+["2026-02-04",6,2072,71948],["2026-02-05",9,4338,102980],["2026-02-06",5,5212,91352],
+["2026-02-07",3,4236,42404],["2026-02-08",3,1164,59412],["2026-02-09",3,1957,82176],
+["2026-02-10",5,5101,82503],["2026-02-11",5,1479,14331],["2026-02-12",1,206,20276],
+["2026-02-13",13,26018,225049],["2026-02-14",5,19812,175264],["2026-02-15",3,4067,66686],
+["2026-02-16",4,1618,57042],["2026-02-17",11,2957,321339],["2026-02-18",10,98098,5519407],
+["2026-02-19",20,68136,1656972],["2026-02-20",26,33398,4249066],["2026-02-21",19,19356,2491305],
+["2026-02-22",15,29330,1682685],["2026-02-23",18,7713,505493],["2026-02-24",22,17335,455959],
+["2026-02-25",24,27012,508104],["2026-02-26",9,6941,223308],["2026-02-27",14,44842,12465767],
+["2026-02-28",33,23986,1898170],["2026-03-01",28,124578,3425335],["2026-03-02",33,108244,3747698],
+["2026-03-03",30,34151,1172985],["2026-03-04",35,16349,895999],["2026-03-05",36,36056,1874326],
+["2026-03-06",24,25908,512036],["2026-03-07",26,15813,631876],["2026-03-08",28,191297,10363739],
+["2026-03-09",29,21998,1308992],["2026-03-10",28,21449,1536740],["2026-03-11",30,29869,1232914],
+["2026-03-12",27,12424,714406],["2026-03-13",25,30283,665629],["2026-03-14",27,108660,1514887],
+["2026-03-15",29,42214,2613110],["2026-03-16",72,101862,2938871],["2026-03-17",67,62588,2455875],
+["2026-03-18",40,41838,1679043],["2026-03-19",34,19898,1324423],["2026-03-20",40,24049,1545545],
+["2026-03-21",75,90035,3501176],["2026-03-22",63,357335,9580677],["2026-03-23",45,56687,1605977],
+["2026-03-24",38,18723,1113244],["2026-03-25",120,105635,7210693],["2026-03-26",66,65697,2375672],
+["2026-03-27",51,37914,4213359],["2026-03-28",94,110206,3264218],["2026-03-29",81,142451,6687810],
+["2026-03-30",189,219594,10191848],["2026-03-31",328,396110,14655364],["2026-04-01",485,410021,26505691],
+["2026-04-02",228,259122,14333916],["2026-04-03",177,220894,6823511]
+];
+const dates=raw.map(r=>r[0]),posts=raw.map(r=>r[1]),eng=raw.map(r=>r[2]);
+
+const events=[
+  {date:"2026-02-20",label:"20/02",color:"rgba(254,192,77,.9)"},
+  {date:"2026-02-28",label:"28/02",color:"rgba(254,77,77,.9)"},
+  {date:"2026-03-16",label:"16/03",color:"rgba(254,77,77,.9)"},
+  {date:"2026-03-25",label:"25/03",color:"rgba(254,77,77,1)"},
+  {date:"2026-03-30",label:"30/03",color:"rgba(254,192,77,.9)"},
+  {date:"2026-03-31",label:"31/03",color:"rgba(254,77,77,.9)"},
+  {date:"2026-04-01",label:"01/04",color:"rgba(254,77,77,1)"}
+];
+const baseLayout={paper_bgcolor:"#111318",plot_bgcolor:"#111318",font:{family:"IBM Plex Mono, monospace",color:"#6b7591",size:10},hoverlabel:{bgcolor:"#181b22",bordercolor:"#232836",font:{size:10,color:"#e2e8f0"}}};
+const shapes=events.map(ev=>({type:"line",x0:ev.date,x1:ev.date,y0:0,y1:1,yref:"paper",line:{color:ev.color,width:1.2,dash:"dot"}}));
+const annotations=events.map(ev=>({x:ev.date,y:0.98,yref:"paper",xanchor:"left",text:ev.label,showarrow:false,font:{size:8,color:ev.color,family:"IBM Plex Mono, monospace"},textangle:-90,yanchor:"top"}));
+
+// COVERAGE & RESONANCE (replicating the image)
+Plotly.newPlot("chart-coverage",[
+  {x:dates,y:posts,type:"bar",name:"posts",marker:{color:"#4d7cfe",opacity:.75,line:{width:0}},yaxis:"y",hovertemplate:"<b>%{x}</b><br>Posts: %{y}<extra></extra>"},
+  {x:dates,y:eng,type:"scatter",mode:"lines+markers",name:"engagements",line:{color:"#fe4d4d",width:2},marker:{size:4,color:"#fe4d4d",symbol:"circle",line:{width:0}},yaxis:"y2",hovertemplate:"<b>%{x}</b><br>Eng: %{y:,}<extra></extra>"}
+],{
+  ...baseLayout,
+  shapes,annotations,
+  xaxis:{gridcolor:"#1a1e2a",linecolor:"#232836",tickfont:{size:9,color:"#4a5568"},tickangle:-30,title:{text:"Date",font:{size:9,color:"#3d4461"}}},
+  yaxis:{gridcolor:"#1a1e2a",linecolor:"#232836",tickfont:{size:9,color:"#4d7cfe"},title:{text:"posts",font:{size:9,color:"#4d7cfe"}},rangemode:"tozero"},
+  yaxis2:{overlaying:"y",side:"right",gridcolor:"transparent",tickfont:{size:9,color:"#fe4d4d"},title:{text:"engagements",font:{size:9,color:"#fe4d4d"}},rangemode:"tozero"},
+  legend:{bgcolor:"rgba(0,0,0,0)",font:{size:10,color:"#9aa8c4"},x:.01,y:.99,orientation:"h"},
+  margin:{t:30,b:60,l:60,r:70},
+  bargap:.2,
+  hovermode:"x unified"
+},{responsive:true,displayModeBar:false});
+
+// ── URL DATA ──────────────────────────────────────────────────────────────────
+const urlData=[
+  {short:"WSJ Opinion",eng:11051,views:172450,color:"#a78bfa"},
+  {short:"Axios: GOP healthcare",eng:9639,views:21727,color:"#a78bfa"},
+  {short:"BitChute: vidéo",eng:8251,views:124921,color:"#ff6b35"},
+  {short:"Shanaka: Nitrogen Trap",eng:6660,views:1057339,color:"#4dfeba"},
+  {short:"AMG News (Telegram+web)",eng:5255,views:179486,color:"#ff6b35"},
+  {short:"Merchants News: AI",eng:3497,views:190971,color:"#3d4461"},
+  {short:"ZeroHedge: paper tiger",eng:2702,views:372308,color:"#fe4d4d"},
+  {short:"Politico.com: winding down",eng:1809,views:14244,color:"#a78bfa"},
+  {short:"Telegraph: Starmer",eng:1353,views:14065,color:"#fe4d4d"},
+  {short:"Politico.eu: Trump anger",eng:1341,views:34924,color:"#fe4d4d"},
+  {short:"ZeroHedge: FR/IT",eng:1031,views:116535,color:"#ff8c42"},
+  {short:"Fox News: Turkey",eng:723,views:21424,color:"#ff8c42"},
+  {short:"x.com: broadcast live",eng:559,views:73449,color:"#4dfeba"},
+  {short:"Bloomberg: NATO surv.",eng:370,views:17588,color:"#4d7cfe"},
+  {short:"Politico.eu: Germany",eng:130,views:11359,color:"#4d7cfe"},
+  {short:"YouTube: Souda Base",eng:307,views:2638,color:"#4dfeba"},
+  {short:"Stripes: Rutte",eng:77,views:7799,color:"#4d7cfe"},
+  {short:"Resp. Statecraft",eng:69,views:2561,color:"#4d7cfe"},
+  {short:"Cal Thomas",eng:51,views:498,color:"#232836"},
+  {short:"amg-news.com (miroir)",eng:5255,views:179486,color:"#ff6b35"},
+].sort((a,b)=>b.eng-a.eng);
+
+// Combined chart: bars for eng + line for views
+Plotly.newPlot("chart-url-combined",[
+  {y:urlData.map(d=>d.short),x:urlData.map(d=>d.eng),type:"bar",orientation:"h",name:"Engagements",
+   marker:{color:urlData.map(d=>d.color),opacity:.85,line:{width:0}},
+   hovertemplate:"<b>%{y}</b><br>Eng: %{x:,}<extra></extra>"},
+  {y:urlData.map(d=>d.short),x:urlData.map(d=>d.views),type:"scatter",mode:"markers",name:"Vues",
+   xaxis:"x2",marker:{symbol:"diamond",size:9,color:urlData.map(d=>d.color),opacity:.7,line:{color:"#0a0c10",width:1}},
+   hovertemplate:"<b>%{y}</b><br>Vues: %{x:,}<extra></extra>"}
+],{
+  ...baseLayout,
+  xaxis:{gridcolor:"#1a1e2a",linecolor:"#232836",tickfont:{size:9},title:{text:"Engagements",font:{size:9,color:"#9aa8c4"}},domain:[0,0.58]},
+  xaxis2:{gridcolor:"transparent",linecolor:"#232836",tickfont:{size:9,color:"#4dfeba"},title:{text:"Vues",font:{size:9,color:"#4dfeba"}},domain:[0.62,1],type:"log"},
+  yaxis:{tickfont:{size:9.5,color:"#9aa8c4"},autorange:"reversed"},
+  legend:{bgcolor:"rgba(0,0,0,0)",font:{size:9,color:"#9aa8c4"},x:.62,y:.02},
+  margin:{t:20,b:50,l:185,r:20},
+  hovermode:"closest",
+  annotations:[{x:0.30,y:1.02,xref:"paper",yref:"paper",text:"← Engagements",showarrow:false,font:{size:9,color:"#9aa8c4"}},{x:0.80,y:1.02,xref:"paper",yref:"paper",text:"Vues (log scale) ◆",showarrow:false,font:{size:9,color:"#4dfeba"}}]
+},{responsive:true,displayModeBar:false});
+</script>
+</body>
+</html>
