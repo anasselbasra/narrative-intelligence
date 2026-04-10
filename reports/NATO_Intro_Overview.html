@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NATO Narrative Intelligence — Project Overview</title>
+  <title>NATO Narrative Intelligence — Vue d'ensemble</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -77,9 +77,7 @@
       letter-spacing: .1em;
     }
 
-    .doc-meta-block {
-      text-align: right;
-    }
+    .doc-meta-block { text-align: right; }
 
     .doc-meta-row {
       font-family: var(--font-data);
@@ -89,19 +87,16 @@
       line-height: 1.9;
     }
 
-    .doc-meta-row strong {
-      color: var(--text-2);
-      font-weight: 400;
-    }
+    .doc-meta-row strong { color: var(--text-2); font-weight: 400; }
 
     /* ── Title block ───────────────────────────────────────────── */
-    .title-block {
-      margin-bottom: 44px;
-    }
+    .title-block { margin-bottom: 44px; }
 
+    /* Overline : Barlow Condensed pour lisibilité maximale */
     .overline {
-      font-family: var(--font-data);
-      font-size: 9px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
       color: var(--red);
       letter-spacing: .2em;
       text-transform: uppercase;
@@ -288,10 +283,7 @@
 
     .accordion-body p:last-child { margin-bottom: 0; }
 
-    .accordion-body strong {
-      color: var(--text-0);
-      font-weight: 500;
-    }
+    .accordion-body strong { color: var(--text-0); font-weight: 500; }
 
     .body-subhead {
       font-family: var(--font-display);
@@ -390,10 +382,7 @@
       font-weight: 300;
     }
 
-    .phase-desc strong {
-      color: var(--text-0);
-      font-weight: 500;
-    }
+    .phase-desc strong { color: var(--text-0); font-weight: 500; }
 
     /* ── Module pipeline mini-grid ─────────────────────────────── */
     .module-pipeline {
@@ -450,7 +439,7 @@
       border-top: 1px solid var(--border-soft);
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       gap: 24px;
     }
 
@@ -459,12 +448,37 @@
       font-size: 9px;
       color: var(--text-3);
       letter-spacing: .08em;
-      line-height: 1.7;
+      line-height: 1.8;
     }
 
-    .footer-analyst strong {
+    .footer-analyst strong { color: var(--text-1); font-weight: 500; font-size: 10px; }
+
+    .footer-analyst .analyst-role {
       color: var(--text-2);
       font-weight: 400;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .footer-link {
+      font-family: var(--font-data);
+      font-size: 8.5px;
+      color: var(--text-3);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 1px;
+      transition: color .15s, border-color .15s;
+    }
+
+    .footer-link:hover {
+      color: var(--text-1);
+      border-color: var(--text-3);
     }
 
     .footer-ref {
@@ -495,187 +509,191 @@
       <span class="doc-ref">NI-2026-NATO-001</span>
     </div>
     <div class="doc-meta-block">
-      <div class="doc-meta-row">Period &nbsp;<strong>1 Feb – 3 Apr 2026</strong></div>
-      <div class="doc-meta-row">Platform &nbsp;<strong>Twitter / X · English</strong></div>
-      <div class="doc-meta-row">Completed &nbsp;<strong>07 Apr 2026</strong></div>
+      <div class="doc-meta-row">Période &nbsp;<strong>1 Feb – 3 Apr 2026</strong></div>
+      <div class="doc-meta-row">Plateforme &nbsp;<strong>Twitter / X · English</strong></div>
+      <div class="doc-meta-row">Finalisé le &nbsp;<strong>07 Apr 2026</strong></div>
     </div>
   </header>
 
-  <!-- Title block -->
+  <!-- Title block — kept in English per project specification -->
   <div class="title-block">
     <div class="overline">Analytical Report · 4-Phase Pipeline</div>
     <h1 class="main-title">Narrative<br/><span>Threat</span><br/>Assessment</h1>
     <p class="sub-title">NATO Information Environment<br/>Iran Crisis &amp; Alliance Cohesion</p>
     <div class="title-rule"></div>
     <p class="abstract">
-      This report documents a four-phase analytical pipeline applied to the English-language Twitter/X discourse
-      surrounding NATO and the Iran crisis between 1 February and 3 April 2026. Covering 3,514 posts,
-      1,956 unique accounts and 178 million total views, the study maps the narrative structures that
-      circulated during this period, identifies threat-level framings targeting alliance cohesion, and
-      detects coordinated visual signal patterns in the information environment.
+      Ce rapport documente un pipeline analytique en quatre phases appliqué au discours anglophone sur
+      Twitter/X autour de l'OTAN et de la crise iranienne, entre le 1er février et le 3 avril 2026.
+      Portant sur 3 514 posts, 1 956 comptes uniques et 178 millions de vues, l'étude cartographie
+      les structures narratives en circulation, identifie les cadres de menace ciblant la cohésion
+      de l'alliance, et détecte les signaux visuels coordonnés dans l'environnement informationnel.
     </p>
   </div>
 
   <!-- Study parameters -->
   <div class="params-grid">
     <div class="param-cell">
-      <div class="param-label">Study period</div>
+      <div class="param-label">Période d'étude</div>
       <div class="param-value">62</div>
-      <div class="param-unit">Days · 1 Feb – 3 Apr 2026</div>
+      <div class="param-unit">Jours · 1 fév. – 3 avr. 2026</div>
     </div>
     <div class="param-cell">
       <div class="param-label">Corpus</div>
-      <div class="param-value">3,514</div>
+      <div class="param-value">3 514</div>
       <div class="param-unit">Posts · Twitter / X</div>
     </div>
     <div class="param-cell">
-      <div class="param-label">Total reach</div>
+      <div class="param-label">Portée totale</div>
       <div class="param-value">178M</div>
-      <div class="param-unit">Views</div>
+      <div class="param-unit">Vues</div>
     </div>
     <div class="param-cell">
-      <div class="param-label">Unique accounts</div>
-      <div class="param-value">1,956</div>
-      <div class="param-unit">Authors in corpus</div>
+      <div class="param-label">Comptes uniques</div>
+      <div class="param-value">1 956</div>
+      <div class="param-unit">Auteurs dans le corpus</div>
     </div>
     <div class="param-cell">
       <div class="param-label">Engagements</div>
-      <div class="param-value">9.6M</div>
-      <div class="param-unit">Total interactions</div>
+      <div class="param-value">9,6M</div>
+      <div class="param-unit">Interactions totales</div>
     </div>
     <div class="param-cell">
-      <div class="param-label">Narratives mapped</div>
+      <div class="param-label">Narratifs identifiés</div>
       <div class="param-value">21</div>
-      <div class="param-unit">Canonical narratives</div>
+      <div class="param-unit">Narratifs canoniques</div>
     </div>
   </div>
 
   <!-- Expandable sections -->
   <div class="section-list">
 
-    <!-- Section 01: Geopolitical Context -->
+    <!-- Section 01: Contexte géopolitique -->
     <div class="accordion">
       <button class="accordion-btn" onclick="toggleAccordion(this)" aria-expanded="false">
         <div class="accordion-label-group">
           <span class="accordion-tag">01</span>
-          <span class="accordion-title">Geopolitical Context</span>
+          <span class="accordion-title">Contexte géopolitique</span>
         </div>
         <span class="accordion-icon">+</span>
       </button>
       <div class="accordion-body">
 
-        <div class="body-subhead">Strategic background</div>
+        <div class="body-subhead">Cadre stratégique</div>
         <p>
-          From early 2026, the Trump administration intensified diplomatic and military pressure on Iran,
-          creating a cascading effect on NATO's internal cohesion. European allies faced simultaneous pressure
-          from Washington on burden-sharing obligations and the prospect of being drawn into a conflict outside
-          the alliance's traditional geographic scope.
+          À partir du début 2026, l'administration Trump a intensifié la pression diplomatique et
+          militaire sur l'Iran, générant un effet cascade sur la cohésion interne de l'OTAN. Les alliés
+          européens ont été soumis simultanément à une pression américaine sur leurs obligations de
+          burden-sharing et au risque d'être entraînés dans un conflit hors du périmètre géographique
+          traditionnel de l'alliance.
         </p>
         <p>
-          The information environment around this crisis became a contested terrain where competing narrative
-          frames circulated at scale — some challenging the legitimacy of NATO's role, others contesting the
-          legal basis of allied military participation, and several directly targeting the reliability of the
-          United States as a security guarantor. The dominant narrative family (N18, 362 texts) framed Trump
-          as exerting coercive pressure to force European allies into a conflict they considered illegal
-          under international law.
+          L'environnement informationnel autour de cette crise est devenu un terrain de compétition
+          narrative à grande échelle : certains cadres contestaient la légitimité du rôle de l'OTAN,
+          d'autres remettaient en cause la base juridique de la participation militaire alliée,
+          plusieurs ciblaient directement la fiabilité des États-Unis comme garant de sécurité.
+          Le narratif dominant (N18, 362 textes) présentait Trump comme exerçant une pression coercitive
+          pour contraindre les alliés européens à s'engager dans un conflit qu'ils considéraient illégal
+          au regard du droit international.
         </p>
 
-        <div class="body-subhead">Key events in the monitored period</div>
+        <div class="body-subhead">Chronologie de la période d'observation</div>
         <ul class="event-list">
           <li class="event-item">
             <div class="event-date">20 FEB 2026</div>
-            <div class="event-desc">Trump publicly targets Iran — first discourse activation (+30% volume)</div>
+            <div class="event-desc">Trump cible publiquement l'Iran : première activation discursive (+30% de volume)</div>
           </li>
           <li class="event-item critical">
             <div class="event-date">28 FEB 2026</div>
-            <div class="event-desc">US-Israeli strikes begin — volume surge +135%, first major cluster activation</div>
+            <div class="event-desc">Début des frappes américano-israéliennes : hausse de volume +135%, première activation majeure des clusters</div>
           </li>
           <li class="event-item">
             <div class="event-date">16 MAR 2026</div>
-            <div class="event-desc">Escalation phase — European NATO framing intensifies (+148%)</div>
+            <div class="event-desc">Phase d'escalade : intensification du cadrage OTAN/Europe (+148%)</div>
           </li>
           <li class="event-item critical">
             <div class="event-date">25 MAR 2026</div>
-            <div class="event-desc">Trump publicly attacks NATO — 120 posts, +215% single-day surge</div>
+            <div class="event-desc">Trump s'attaque publiquement à l'OTAN : 120 posts, +215% en une journée</div>
           </li>
           <li class="event-item">
             <div class="event-date">31 MAR 2026</div>
-            <div class="event-desc">Infrastructure ultimatum — 328 posts, continued escalation toward peak</div>
+            <div class="event-desc">Ultimatum sur les infrastructures : 328 posts, escalade continue vers le pic</div>
           </li>
           <li class="event-item critical">
             <div class="event-date">01 APR 2026</div>
-            <div class="event-desc">Trump threatens NATO withdrawal — 485 posts (absolute peak), 26.5M views in a single day, amplification ×49 vs. baseline</div>
+            <div class="event-desc">Trump menace de retrait de l'OTAN : 485 posts (pic absolu), 26,5M de vues en une seule journée, amplification x49 par rapport au niveau de base</div>
           </li>
         </ul>
 
-        <div class="body-subhead">Analytical scope</div>
+        <div class="body-subhead">Périmètre analytique</div>
         <p>
-          The study focuses exclusively on English-language content on Twitter/X with a minimum engagement
-          threshold of 5 retweets. This filter retains only content that achieved measurable amplification,
-          eliminating noise while preserving the organic dynamics of narrative dissemination. The resulting
-          corpus captures the visible, amplified layer of the information environment — not its full volume,
-          but its most consequential signal.
+          L'étude se concentre exclusivement sur les contenus en anglais publiés sur Twitter/X,
+          avec un seuil minimal d'engagement de 5 retweets. Ce filtre ne retient que les contenus
+          ayant atteint une amplification mesurable, en éliminant le bruit tout en préservant les
+          dynamiques organiques de diffusion narrative. Le corpus ainsi constitué capture la couche
+          visible et amplifiée de l'environnement informationnel — non pas son volume total,
+          mais ses signaux à plus forte portée.
         </p>
 
       </div>
     </div>
 
-    <!-- Section 02: Scientific Methodology -->
+    <!-- Section 02: Méthodologie scientifique -->
     <div class="accordion">
       <button class="accordion-btn" onclick="toggleAccordion(this)" aria-expanded="false">
         <div class="accordion-label-group">
           <span class="accordion-tag">02</span>
-          <span class="accordion-title">Scientific Methodology</span>
+          <span class="accordion-title">Méthodologie scientifique</span>
         </div>
         <span class="accordion-icon">+</span>
       </button>
       <div class="accordion-body">
 
-        <div class="body-subhead">Analytical pipeline</div>
+        <div class="body-subhead">Pipeline analytique</div>
         <p>
-          This study applies a sequential, multi-modal analytical pipeline. Each phase builds directly
-          on the previous, moving from raw corpus characterisation through semantic clustering, narrative
-          coding, and finally coordinated visual signal detection. The pipeline combines natural language
-          processing with computer vision, treating the information environment as both a textual and
-          visual phenomenon.
+          Cette étude applique un pipeline analytique séquentiel et multi-modal. Chaque phase s'appuie
+          directement sur la précédente, en progressant de la caractérisation brute du corpus jusqu'à
+          la détection de signaux visuels coordonnés, en passant par le clustering sémantique et le
+          codage narratif. Le pipeline combine traitement automatique du langage naturel (NLP) et vision
+          par ordinateur, en traitant l'environnement informationnel à la fois comme un phénomène
+          textuel et visuel.
         </p>
 
         <ul class="phase-list">
           <li class="phase-item">
             <span class="phase-num">Phase 1</span>
             <div class="phase-desc">
-              <strong>Descriptive Analysis —</strong> Corpus mapping, temporal dynamics, source
-              and account distribution. Identifies peak events, engagement concentration, and
-              the top amplification nodes in the network. Establishes the structural baseline
-              against which narrative analyses are interpreted.
+              <strong>Analyse descriptive :</strong> cartographie du corpus, dynamiques temporelles,
+              distribution des sources et des comptes. Identification des événements pics,
+              de la concentration d'engagement et des principaux noeuds d'amplification du réseau.
+              Établissement de la baseline structurelle servant de référence aux analyses narratives.
             </div>
           </li>
           <li class="phase-item">
             <span class="phase-num">Phase 2</span>
             <div class="phase-desc">
-              <strong>Topic Modeling —</strong> Semantic clustering using UMAP dimensionality
-              reduction and HDBSCAN unsupervised clustering (min_cluster_size = 15).
-              36 clusters identified from 3,510 posts. 69.4% classified; 30.6% noise —
-              a rate that reflects genuine narrative complexity, not a methodological artefact.
+              <strong>Topic Modeling :</strong> clustering sémantique par réduction dimensionnelle UMAP
+              et clustering non supervisé HDBSCAN (min_cluster_size = 15).
+              36 clusters identifiés sur 3 510 posts. 69,4% classifiés ; 30,6% de bruit,
+              un taux qui reflète la complexité narrative réelle et non un artefact méthodologique.
             </div>
           </li>
           <li class="phase-item">
             <span class="phase-num">Phase 3</span>
             <div class="phase-desc">
-              <strong>Narrative Analysis —</strong> 21 canonical narratives coded and mapped
-              to a two-axis threat matrix (internal fracture vs. external threat ×
-              legitimacy vs. cohesion targeting). Temporal trajectories analysed over 7 periods.
-              Five mirror-narrative pairs identified. Similarity threshold: 0.70 cosine
-              (observed average: 0.730).
+              <strong>Analyse narrative :</strong> 21 narratifs canoniques codés et positionnés
+              sur une matrice de menace à deux axes (fracture interne vs menace externe x
+              ciblage de légitimité vs ciblage de cohésion). Trajectoires temporelles analysées
+              sur 7 périodes. Cinq paires de narratifs miroirs identifiées.
+              Seuil de similarité : 0,70 cosinus (moyenne observée : 0,730).
             </div>
           </li>
           <li class="phase-item">
             <span class="phase-num">Phase 4</span>
             <div class="phase-desc">
-              <strong>Visual Analysis —</strong> Image clustering and visual coordination detection.
-              13 visual clusters identified. 9 significant coordination groups (score ≥ 0.90,
-              5+ posts). 82 accounts profiled across groups. Final score = visual similarity ×
-              temporal score. Priority group G04: 2 accounts, 7 posts, score 0.98–1.00.
+              <strong>Analyse visuelle :</strong> clustering d'images et détection de coordination visuelle.
+              13 clusters visuels identifiés. 9 groupes de coordination significatifs (score >= 0,90,
+              5 posts minimum). 82 comptes profilés. Score final = similarité visuelle x score temporel.
+              Groupe prioritaire G04 : 2 comptes, 7 posts, score 0,98-1,00.
             </div>
           </li>
         </ul>
@@ -685,34 +703,34 @@
             <div class="module-id">Module 01</div>
             <div class="module-name">Signal Landscape</div>
             <div class="module-tech">Temporal · Distributional</div>
-            <div class="module-desc">Corpus characterisation, event mapping, source distribution, amplification nodes</div>
+            <div class="module-desc">Caractérisation du corpus, cartographie des événements, distribution des sources, noeuds d'amplification</div>
           </div>
           <div class="module-card">
             <div class="module-id">Module 02</div>
             <div class="module-name">Threat Clusters</div>
             <div class="module-tech">UMAP + HDBSCAN · 36 clusters</div>
-            <div class="module-desc">Semantic topic segmentation, cluster activation sequences, temporal patterns</div>
+            <div class="module-desc">Segmentation sémantique, séquences d'activation des clusters, patterns temporels</div>
           </div>
           <div class="module-card">
             <div class="module-id">Module 03</div>
             <div class="module-name">Narrative Matrix</div>
-            <div class="module-tech">NLP · Cosine similarity · 21 narratives</div>
-            <div class="module-desc">Canonical narrative coding, threat-level mapping, mirror-narrative analysis</div>
+            <div class="module-tech">NLP · Cosine similarity · 21 narratifs</div>
+            <div class="module-desc">Codage des narratifs canoniques, positionnement sur matrice de menace, analyse des narratifs miroirs</div>
           </div>
           <div class="module-card">
             <div class="module-id">Module 04</div>
             <div class="module-name">Visual Intelligence</div>
             <div class="module-tech">Computer vision · Image clustering</div>
-            <div class="module-desc">Coordination detection, asset tracking, account profiling across 9 groups</div>
+            <div class="module-desc">Détection de coordination, suivi des assets, profilage des comptes sur 9 groupes</div>
           </div>
         </div>
 
-        <div class="body-subhead" style="margin-top: 22px;">Analytical limits</div>
+        <div class="body-subhead" style="margin-top: 22px;">Limites analytiques</div>
         <p>
-          The corpus is restricted to English-language content and excludes sub-threshold engagement.
-          Visual analysis covers image-bearing posts only. The 30.6% noise rate in Phase 2 reflects
-          the genuine heterogeneity of the information environment. No claim is made about the
-          intentionality of individual actors unless explicitly supported by multi-signal convergence.
+          Le corpus est restreint aux contenus en anglais et exclut les posts sous le seuil d'engagement.
+          L'analyse visuelle couvre uniquement les posts comportant des images. Le taux de bruit de 30,6%
+          en phase 2 reflète l'hétérogénéité réelle de l'environnement informationnel. Aucune affirmation
+          n'est faite sur l'intentionnalité des acteurs individuels sans convergence multi-signal explicite.
         </p>
 
       </div>
@@ -724,8 +742,21 @@
   <footer class="doc-footer">
     <div class="footer-analyst">
       <strong>Anass El Basraoui</strong><br/>
-      Narrative Intelligence Analyst<br/>
-      Data Science · Strategic Analysis · Information Environment
+      <span class="analyst-role">
+        Narrative Intelligence Analyst<br/>
+        Data Science · Strategic Analysis · Information Environment
+      </span>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/el-basraoui/"
+           target="_blank" rel="noopener noreferrer"
+           class="footer-link">LinkedIn</a>
+        <a href="https://github.com/opinionscience"
+           target="_blank" rel="noopener noreferrer"
+           class="footer-link">GitHub</a>
+        <a href="https://elbasraoui.engineer/"
+           target="_blank" rel="noopener noreferrer"
+           class="footer-link">Portfolio</a>
+      </div>
     </div>
     <div class="footer-ref">
       NI-2026-NATO-001<br/>

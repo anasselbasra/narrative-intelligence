@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Narrative Intelligence — NATO Information Environment</title>
@@ -517,25 +518,31 @@
     /* Sidebar toggle button */
     .sidebar-toggle {
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
+      border-radius: 2px;
       cursor: pointer;
-      padding: 6px 8px;
+      padding: 5px 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-3);
-      transition: color .15s;
+      color: var(--text-2);
+      transition: color .15s, background .15s, border-color .15s;
       flex-shrink: 0;
+      margin-right: 4px;
     }
 
-    .sidebar-toggle:hover { color: var(--text-1); }
+    .sidebar-toggle:hover {
+      color: var(--text-0);
+      background: var(--surface-2);
+      border-color: var(--border-hard);
+    }
 
     .sidebar-toggle svg {
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       fill: none;
       stroke: currentColor;
-      stroke-width: 1.5;
+      stroke-width: 1.6;
       stroke-linecap: round;
     }
 
@@ -845,7 +852,7 @@
           <div class="nav-inner">
             <div class="nav-accent"></div>
             <div class="nav-body">
-              <div class="nav-index">Intro — Overview</div>
+              <div class="nav-index">Intro · Overview</div>
               <div class="nav-title-text">Project Overview</div>
               <div class="nav-scope">Context · Scientific methodology</div>
             </div>
@@ -863,7 +870,7 @@
           <div class="nav-inner">
             <div class="nav-accent"></div>
             <div class="nav-body">
-              <div class="nav-index">Module 01 — Descriptive</div>
+              <div class="nav-index">Module 01 · Descriptive</div>
               <div class="nav-title-text">Signal Landscape</div>
               <div class="nav-scope">3,514 posts · Temporal dynamics · Source mapping</div>
             </div>
@@ -881,7 +888,7 @@
           <div class="nav-inner">
             <div class="nav-accent"></div>
             <div class="nav-body">
-              <div class="nav-index">Module 02 — Clustering</div>
+              <div class="nav-index">Module 02 · Clustering</div>
               <div class="nav-title-text">Threat Clusters</div>
               <div class="nav-scope">UMAP + HDBSCAN · 36 clusters identified</div>
             </div>
@@ -892,7 +899,6 @@
 
       <li role="none">
         <button class="nav-btn" role="menuitem"
-<<<<<<< HEAD
                 data-src="reports/NATO_Phase3_AnalyseNarrative.html"
                 data-label="Narrative Matrix"
                 data-phase="2"
@@ -900,7 +906,7 @@
           <div class="nav-inner">
             <div class="nav-accent"></div>
             <div class="nav-body">
-              <div class="nav-index">Module 03 — Critical</div>
+              <div class="nav-index">Module 03 · Critical</div>
               <div class="nav-title-text">Narrative Matrix</div>
               <div class="nav-scope">21 canonical narratives · Threat-level mapping</div>
             </div>
@@ -913,16 +919,12 @@
         <button class="nav-btn" role="menuitem"
                 data-src="reports/NATO_Phase4_AnalyseVisuelle.html"
                 data-label="Visual Intelligence"
-=======
-                data-src="reports/NATO_Phase4_AnalyseVisuelle.html"
-                data-label="Imagery Intelligence"
->>>>>>> 8e7d2b2ee8072a94f25b1123857eb7370483080b
                 data-phase="3"
                 onclick="loadReport(this)">
           <div class="nav-inner">
             <div class="nav-accent"></div>
             <div class="nav-body">
-              <div class="nav-index">Module 04 — Visual</div>
+              <div class="nav-index">Module 04 · Visual</div>
               <div class="nav-title-text">Visual Intelligence</div>
               <div class="nav-scope">13 image clusters · 9 coordination groups · 82 accounts</div>
             </div>
@@ -983,7 +985,7 @@
         <span class="banner-label">▸ Critical Cohesion Risk</span>
         <span class="banner-divider"></span>
         <span class="banner-message">
-          N18 dominant — Alliance fracture / US withdrawal framing · 362 texts · peak 1 Apr 2026 · 9.6M total engagements
+          N18 dominant · Alliance fracture / US withdrawal framing · 362 texts · peak 1 Apr 2026 · 9.6M total engagements
         </span>
         <span class="banner-ref">NI-2026-N18</span>
       </div>
