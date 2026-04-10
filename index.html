@@ -3,43 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Narrative Intelligence — narrative-intelligence.systems</title>
+  <title>Narrative Intelligence — NATO Information Environment</title>
 
-  <!-- Barlow Condensed: military/editorial authority -->
-  <!-- DM Mono: precision data display -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
     /* ═══════════════════════════════════════════════════════════════
-       TOKENS — Black authority. One red. That's it.
+       DESIGN TOKENS
     ═══════════════════════════════════════════════════════════════ */
     :root {
-      --void:         #000000;
-      --surface-0:    #080808;
-      --surface-1:    #0f0f0f;
-      --surface-2:    #161616;
-      --surface-3:    #1e1e1e;
+      --void:        #000000;
+      --surface-0:   #080808;
+      --surface-1:   #0f0f0f;
+      --surface-2:   #161616;
+      --surface-3:   #1e1e1e;
 
-      --border-hard:  #2a2a2a;
-      --border-soft:  #1a1a1a;
+      --border-hard: #2a2a2a;
+      --border-soft: #1a1a1a;
 
-      --red:          #d0021b;
-      --red-dim:      rgba(208, 2, 27, 0.15);
-      --red-glow:     rgba(208, 2, 27, 0.06);
+      --red:         #d0021b;
+      --red-dim:     rgba(208, 2, 27, 0.15);
+      --red-glow:    rgba(208, 2, 27, 0.06);
 
-      --text-0:       #ffffff;
-      --text-1:       #c8c8c8;
-      --text-2:       #787878;
-      --text-3:       #404040;
+      --text-0:      #ffffff;
+      --text-1:      #c8c8c8;
+      --text-2:      #787878;
+      --text-3:      #404040;
 
       --font-display: 'Barlow Condensed', sans-serif;
       --font-body:    'Barlow', sans-serif;
       --font-data:    'DM Mono', monospace;
 
-      --sidebar-w:    280px;
-      --bar-h:        38px;
+      --sidebar-w:   280px;
+      --bar-h:       38px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -59,6 +57,11 @@
       grid-template-columns: var(--sidebar-w) 1fr;
       grid-template-rows: 1fr var(--bar-h);
       height: 100vh;
+      transition: grid-template-columns .3s ease;
+    }
+
+    #shell.sidebar-closed {
+      grid-template-columns: 0px 1fr;
     }
 
     /* ═══════════════════════════════════════════════════════════════
@@ -72,9 +75,15 @@
       flex-direction: column;
       overflow: hidden;
       position: relative;
+      transition: opacity .3s ease;
     }
 
-    /* Top redaction bar — the "classified" signal */
+    #shell.sidebar-closed #sidebar {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Redaction bar */
     .redaction-bar {
       height: 4px;
       background: var(--red);
@@ -84,15 +93,24 @@
 
     /* ── Wordmark ────────────────────────────────────────────────── */
     .wordmark {
-      padding: 24px 24px 20px;
+      padding: 20px 24px 18px;
       border-bottom: 1px solid var(--border-soft);
+      flex-shrink: 0;
     }
 
     .wm-classification {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+    }
+
+    /* NATO compass rose — inline SVG, 20×20 */
+    .wm-nato {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      opacity: .8;
     }
 
     .wm-class-tag {
@@ -110,7 +128,7 @@
       flex: 1;
       height: 1px;
       background: linear-gradient(to right, var(--red), transparent);
-      opacity: .4;
+      opacity: .35;
     }
 
     .wm-title {
@@ -123,26 +141,26 @@
       text-transform: uppercase;
     }
 
-    .wm-title span {
-      color: var(--red);
-    }
+    .wm-title span { color: var(--red); }
 
     .wm-sub {
       margin-top: 6px;
       font-family: var(--font-data);
-      font-size: 9px;
+      font-size: 8.5px;
       color: var(--text-3);
-      letter-spacing: .12em;
+      letter-spacing: .1em;
       text-transform: uppercase;
+      line-height: 1.5;
     }
 
-    /* ── Document metadata block ─────────────────────────────────── */
+    /* ── Document metadata ───────────────────────────────────────── */
     .doc-meta {
-      padding: 16px 24px;
+      padding: 14px 24px;
       border-bottom: 1px solid var(--border-soft);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
+      flex-shrink: 0;
     }
 
     .meta-row {
@@ -153,7 +171,7 @@
 
     .meta-key {
       font-family: var(--font-data);
-      font-size: 9px;
+      font-size: 8.5px;
       color: var(--text-3);
       letter-spacing: .1em;
       text-transform: uppercase;
@@ -161,30 +179,37 @@
 
     .meta-val {
       font-family: var(--font-data);
-      font-size: 9px;
+      font-size: 8.5px;
       color: var(--text-2);
       letter-spacing: .04em;
     }
 
     .meta-val.alert { color: var(--red); }
 
-    /* ── Nav ─────────────────────────────────────────────────────── */
+    /* ── Navigation ──────────────────────────────────────────────── */
     .nav-header {
-      padding: 20px 24px 10px;
+      padding: 18px 24px 9px;
       font-family: var(--font-data);
-      font-size: 8.5px;
+      font-size: 8px;
       color: var(--text-3);
       letter-spacing: .18em;
       text-transform: uppercase;
+      flex-shrink: 0;
     }
 
     .nav-list {
       list-style: none;
-      padding: 0 12px;
+      padding: 0 12px 8px;
       display: flex;
       flex-direction: column;
       gap: 2px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      scrollbar-width: none;
     }
+
+    .nav-list::-webkit-scrollbar { display: none; }
 
     .nav-btn {
       width: 100%;
@@ -217,7 +242,6 @@
       border-left-color: var(--red);
     }
 
-    /* The thick left accent on active */
     .nav-accent {
       width: 3px;
       background: transparent;
@@ -228,7 +252,7 @@
     .nav-btn.active .nav-accent { background: var(--red); }
 
     .nav-body {
-      padding: 12px 14px;
+      padding: 10px 12px;
       flex: 1;
       min-width: 0;
     }
@@ -238,16 +262,19 @@
       font-size: 8px;
       color: var(--text-3);
       letter-spacing: .14em;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       text-transform: uppercase;
       transition: color .15s;
     }
 
     .nav-btn.active .nav-index { color: var(--red); }
 
+    /* Overview item gets a slightly different index label treatment */
+    .nav-btn--overview .nav-index { letter-spacing: .1em; }
+
     .nav-title-text {
       font-family: var(--font-display);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text-2);
       letter-spacing: .04em;
@@ -260,8 +287,8 @@
     .nav-btn.active .nav-title-text { color: var(--text-0); }
 
     .nav-scope {
-      margin-top: 4px;
-      font-size: 11px;
+      margin-top: 3px;
+      font-size: 10.5px;
       color: var(--text-3);
       font-weight: 300;
       transition: color .15s;
@@ -270,9 +297,8 @@
 
     .nav-btn:hover .nav-scope { color: var(--text-2); }
 
-    /* Status dot */
     .nav-status {
-      padding: 12px 14px 12px 0;
+      padding: 10px 12px 10px 0;
       display: flex;
       align-items: center;
       flex-shrink: 0;
@@ -294,24 +320,25 @@
 
     @keyframes dot-pulse {
       0%, 100% { opacity: 1; }
-      50% { opacity: .3; }
+      50%       { opacity: .3; }
     }
 
-    /* ── KPI block ───────────────────────────────────────────────── */
-    .kpi-block {
-      margin-top: auto;
+    /* ── Bottom section (KPI + analyst) ─────────────────────────── */
+    .bottom-section {
+      flex-shrink: 0;
       border-top: 1px solid var(--border-hard);
     }
 
+    /* KPI grid */
     .kpi-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
     }
 
     .kpi-cell {
-      padding: 18px 20px;
+      padding: 16px 20px;
       border-right: 1px solid var(--border-soft);
-      border-bottom: none;
+      border-bottom: 1px solid var(--border-soft);
     }
 
     .kpi-cell:last-child { border-right: none; }
@@ -322,22 +349,20 @@
       color: var(--text-3);
       letter-spacing: .14em;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .kpi-number {
       font-family: var(--font-display);
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 800;
       line-height: 1;
       letter-spacing: -.02em;
+      color: var(--text-0);
     }
-
-    .kpi-number.neutral { color: var(--text-0); }
-    .kpi-number.danger  { color: var(--red); }
 
     .kpi-unit {
-      margin-top: 4px;
+      margin-top: 3px;
       font-family: var(--font-data);
       font-size: 8px;
       color: var(--text-3);
@@ -345,29 +370,56 @@
       text-transform: uppercase;
     }
 
-    /* ── Corner classification stamp ─────────────────────────────── */
-    .corner-stamp {
-      padding: 12px 24px;
+    /* Analyst block */
+    .analyst-block {
+      padding: 14px 24px 16px;
       border-top: 1px solid var(--border-soft);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
     }
 
-    .stamp-text {
+    .analyst-tag {
       font-family: var(--font-data);
       font-size: 8px;
+      color: var(--text-3);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .analyst-name {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-0);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .analyst-role {
+      font-size: 10.5px;
+      color: var(--text-2);
+      line-height: 1.45;
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
+
+    .analyst-links {
+      display: flex;
+      gap: 14px;
+    }
+
+    .analyst-link {
+      font-family: var(--font-data);
+      font-size: 8.5px;
       color: var(--text-3);
       letter-spacing: .1em;
       text-transform: uppercase;
+      text-decoration: none;
+      transition: color .15s;
     }
 
-    .stamp-id {
-      font-family: var(--font-data);
-      font-size: 8px;
-      color: var(--text-3);
-      letter-spacing: .06em;
-    }
+    .analyst-link:hover { color: var(--text-1); }
 
     /* ═══════════════════════════════════════════════════════════════
        MAIN
@@ -380,16 +432,15 @@
       background: var(--void);
     }
 
-    /* ── Threat banner ───────────────────────────────────────────── */
-    #threat-banner {
+    /* ── Narrative signal banner ─────────────────────────────────── */
+    #signal-banner {
       background: var(--red);
       flex-shrink: 0;
       position: relative;
       overflow: hidden;
     }
 
-    /* Diagonal line texture on the banner */
-    #threat-banner::before {
+    #signal-banner::before {
       content: '';
       position: absolute;
       inset: 0;
@@ -414,7 +465,7 @@
 
     .banner-label {
       font-family: var(--font-display);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       color: #fff;
       letter-spacing: .14em;
@@ -432,9 +483,9 @@
 
     .banner-message {
       font-family: var(--font-data);
-      font-size: 10.5px;
+      font-size: 10px;
       color: rgba(255,255,255,.9);
-      letter-spacing: .05em;
+      letter-spacing: .04em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -444,7 +495,7 @@
       margin-left: auto;
       flex-shrink: 0;
       font-family: var(--font-data);
-      font-size: 9px;
+      font-size: 8.5px;
       color: rgba(255,255,255,.6);
       letter-spacing: .1em;
       background: rgba(0,0,0,.2);
@@ -453,14 +504,39 @@
 
     /* ── Top bar ─────────────────────────────────────────────────── */
     #topbar {
-      height: 46px;
+      height: 44px;
       flex-shrink: 0;
       background: var(--surface-0);
       border-bottom: 1px solid var(--border-hard);
       display: flex;
       align-items: center;
       padding: 0 24px;
-      gap: 20px;
+      gap: 16px;
+    }
+
+    /* Sidebar toggle button */
+    .sidebar-toggle {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-3);
+      transition: color .15s;
+      flex-shrink: 0;
+    }
+
+    .sidebar-toggle:hover { color: var(--text-1); }
+
+    .sidebar-toggle svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
     }
 
     .tb-path {
@@ -474,10 +550,7 @@
     }
 
     .tb-path .sep { color: var(--border-hard); }
-    .tb-path .current {
-      color: var(--text-1);
-      font-weight: 500;
-    }
+    .tb-path .current { color: var(--text-1); font-weight: 500; }
 
     .tb-spacer { flex: 1; }
 
@@ -485,13 +558,11 @@
     .tb-progress {
       display: flex;
       align-items: center;
-      gap: 0;
     }
 
     .prog-seg {
       display: flex;
       align-items: center;
-      gap: 0;
       cursor: pointer;
     }
 
@@ -502,7 +573,6 @@
       background: var(--surface-3);
       border: 1px solid var(--border-hard);
       transition: all .2s;
-      position: relative;
     }
 
     .prog-seg.done .prog-node {
@@ -525,17 +595,16 @@
 
     .prog-seg.done .prog-line { background: var(--text-3); }
 
-    /* UTC */
     .tb-clock {
       font-family: var(--font-data);
       font-size: 10px;
       color: var(--text-3);
       letter-spacing: .08em;
       border-left: 1px solid var(--border-hard);
-      padding-left: 20px;
+      padding-left: 18px;
     }
 
-    /* ── iframe ──────────────────────────────────────────────────── */
+    /* ── iframe / loader ─────────────────────────────────────────── */
     #frame-wrap {
       flex: 1;
       position: relative;
@@ -557,7 +626,6 @@
 
     #loader.hidden { opacity: 0; visibility: hidden; }
 
-    /* Document-style loading — no spinner, just text */
     .loader-doc {
       border: 1px solid var(--border-hard);
       padding: 28px 40px;
@@ -574,12 +642,12 @@
       letter-spacing: .24em;
       color: var(--red);
       text-transform: uppercase;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .loader-label {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--text-0);
       letter-spacing: .08em;
@@ -633,7 +701,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 0 18px;
+      padding: 0 16px;
       height: 100%;
       border-right: 1px solid var(--border-soft);
       flex-shrink: 0;
@@ -653,7 +721,7 @@
 
     .sb-key {
       font-family: var(--font-data);
-      font-size: 9px;
+      font-size: 8.5px;
       color: var(--text-3);
       letter-spacing: .1em;
       text-transform: uppercase;
@@ -662,7 +730,7 @@
 
     .sb-val {
       font-family: var(--font-data);
-      font-size: 9px;
+      font-size: 8.5px;
       color: var(--text-2);
       letter-spacing: .04em;
       white-space: nowrap;
@@ -670,7 +738,7 @@
 
     .sb-online {
       font-family: var(--font-data);
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 500;
       color: #3d9a3d;
       letter-spacing: .12em;
@@ -681,7 +749,7 @@
 
     .sb-lead {
       font-family: var(--font-data);
-      font-size: 9px;
+      font-size: 8.5px;
       color: var(--text-2);
       letter-spacing: .06em;
     }
@@ -692,20 +760,20 @@
     }
 
     /* ═══════════════════════════════════════════════════════════════
-       INTRO ANIMATION — staggered entrance
+       ENTRANCE ANIMATIONS
     ═══════════════════════════════════════════════════════════════ */
     @keyframes fade-up {
       from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .wordmark        { animation: fade-up .5s ease both; animation-delay: .05s; }
-    .doc-meta        { animation: fade-up .5s ease both; animation-delay: .12s; }
-    .nav-list        { animation: fade-up .5s ease both; animation-delay: .20s; }
-    .kpi-block       { animation: fade-up .5s ease both; animation-delay: .28s; }
-    #threat-banner   { animation: fade-up .4s ease both; animation-delay: .10s; }
-    #topbar          { animation: fade-up .4s ease both; animation-delay: .18s; }
-    #frame-wrap      { animation: fade-up .4s ease both; animation-delay: .26s; }
+    .wordmark      { animation: fade-up .5s ease both; animation-delay: .05s; }
+    .doc-meta      { animation: fade-up .5s ease both; animation-delay: .12s; }
+    .nav-list      { animation: fade-up .5s ease both; animation-delay: .20s; }
+    .bottom-section { animation: fade-up .5s ease both; animation-delay: .28s; }
+    #signal-banner { animation: fade-up .4s ease both; animation-delay: .10s; }
+    #topbar        { animation: fade-up .4s ease both; animation-delay: .18s; }
+    #frame-wrap    { animation: fade-up .4s ease both; animation-delay: .26s; }
   </style>
 </head>
 
@@ -715,29 +783,43 @@
   <!-- ══════════════════════════════════════════
        SIDEBAR
   ══════════════════════════════════════════ -->
-  <aside id="sidebar">
+  <aside id="sidebar" aria-label="Navigation panel">
 
     <div class="redaction-bar"></div>
 
     <!-- Wordmark -->
     <div class="wordmark">
       <div class="wm-classification">
+        <!-- NATO compass rose SVG -->
+        <svg class="wm-nato" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <line x1="50" y1="0" x2="50" y2="100" stroke="white" stroke-width="3"/>
+          <line x1="0" y1="50" x2="100" y2="50" stroke="white" stroke-width="3"/>
+          <circle cx="50" cy="50" r="22" fill="none" stroke="white" stroke-width="3.5"/>
+          <polygon points="50,10 54,36 50,50 46,36" fill="white"/>
+          <polygon points="50,90 54,64 50,50 46,64" fill="white"/>
+          <polygon points="90,50 64,54 50,50 64,46" fill="white"/>
+          <polygon points="10,50 36,54 50,50 36,46" fill="white"/>
+          <polygon points="51.4,51.4 48.6,48.6 65.6,34.4" fill="white"/>
+          <polygon points="51.4,48.6 48.6,51.4 65.6,65.6" fill="white"/>
+          <polygon points="48.6,48.6 51.4,51.4 34.4,65.6" fill="white"/>
+          <polygon points="51.4,48.6 48.6,51.4 34.4,34.4" fill="white"/>
+        </svg>
         <span class="wm-class-tag">Restricted</span>
         <span class="wm-class-line"></span>
       </div>
       <div class="wm-title">Narrative<br /><span>Intelligence</span></div>
-      <div class="wm-sub">Disinformation Threat Assessment · NATO</div>
+      <div class="wm-sub">Narrative Threat Assessment<br />NATO Information Environment</div>
     </div>
 
     <!-- Document metadata -->
     <div class="doc-meta">
       <div class="meta-row">
         <span class="meta-key">Report ID</span>
-        <span class="meta-val">NI-2024-NATO-007</span>
+        <span class="meta-val">NI-2026-NATO-001</span>
       </div>
       <div class="meta-row">
-        <span class="meta-key">Region</span>
-        <span class="meta-val">Eastern Flank · Multi-platform</span>
+        <span class="meta-key">Platform</span>
+        <span class="meta-val">Twitter / X · English</span>
       </div>
       <div class="meta-row">
         <span class="meta-key">Risk Level</span>
@@ -745,7 +827,7 @@
       </div>
       <div class="meta-row">
         <span class="meta-key">Coverage</span>
-        <span class="meta-val">Jan – Dec 2024</span>
+        <span class="meta-val">1 Feb – 3 Apr 2026</span>
       </div>
     </div>
 
@@ -753,6 +835,24 @@
     <div class="nav-header">// Intelligence Modules</div>
 
     <ul class="nav-list" id="nav-list" role="menu">
+
+      <li role="none">
+        <button class="nav-btn nav-btn--overview active" role="menuitem"
+                data-src="reports/NATO_Intro_Overview.html"
+                data-label="Project Overview"
+                data-phase="-1"
+                onclick="loadReport(this)">
+          <div class="nav-inner">
+            <div class="nav-accent"></div>
+            <div class="nav-body">
+              <div class="nav-index">Intro — Overview</div>
+              <div class="nav-title-text">Project Overview</div>
+              <div class="nav-scope">Context · Scientific methodology</div>
+            </div>
+            <div class="nav-status"><span class="status-dot"></span></div>
+          </div>
+        </button>
+      </li>
 
       <li role="none">
         <button class="nav-btn" role="menuitem"
@@ -763,9 +863,9 @@
           <div class="nav-inner">
             <div class="nav-accent"></div>
             <div class="nav-body">
-              <div class="nav-index">Module 01 — Overview</div>
+              <div class="nav-index">Module 01 — Descriptive</div>
               <div class="nav-title-text">Signal Landscape</div>
-              <div class="nav-scope">Corpus mapping · Volume & source distribution</div>
+              <div class="nav-scope">3,514 posts · Temporal dynamics · Source mapping</div>
             </div>
             <div class="nav-status"><span class="status-dot"></span></div>
           </div>
@@ -783,25 +883,7 @@
             <div class="nav-body">
               <div class="nav-index">Module 02 — Clustering</div>
               <div class="nav-title-text">Threat Clusters</div>
-              <div class="nav-scope">Topic segmentation · Narrative grouping</div>
-            </div>
-            <div class="nav-status"><span class="status-dot"></span></div>
-          </div>
-        </button>
-      </li>
-
-      <li role="none">
-        <button class="nav-btn active" role="menuitem"
-                data-src="reports/NATO_Phase3_AnalyseNarrative.html"
-                data-label="Influence Operations"
-                data-phase="2"
-                onclick="loadReport(this)">
-          <div class="nav-inner">
-            <div class="nav-accent"></div>
-            <div class="nav-body">
-              <div class="nav-index">Module 03 — Critical</div>
-              <div class="nav-title-text">Influence Operations</div>
-              <div class="nav-scope">Coordinated behaviour · 82 flagged accounts</div>
+              <div class="nav-scope">UMAP + HDBSCAN · 36 clusters identified</div>
             </div>
             <div class="nav-status"><span class="status-dot"></span></div>
           </div>
@@ -810,16 +892,34 @@
 
       <li role="none">
         <button class="nav-btn" role="menuitem"
-                data-src="reports/NATO_Phase4_VisualAnalysis.html"
-                data-label="Imagery Intelligence"
+                data-src="reports/NATO_Phase3_AnalyseNarrative.html"
+                data-label="Narrative Matrix"
+                data-phase="2"
+                onclick="loadReport(this)">
+          <div class="nav-inner">
+            <div class="nav-accent"></div>
+            <div class="nav-body">
+              <div class="nav-index">Module 03 — Critical</div>
+              <div class="nav-title-text">Narrative Matrix</div>
+              <div class="nav-scope">21 canonical narratives · Threat-level mapping</div>
+            </div>
+            <div class="nav-status"><span class="status-dot"></span></div>
+          </div>
+        </button>
+      </li>
+
+      <li role="none">
+        <button class="nav-btn" role="menuitem"
+                data-src="reports/NATO_Phase4_AnalyseVisuelle.html"
+                data-label="Visual Intelligence"
                 data-phase="3"
                 onclick="loadReport(this)">
           <div class="nav-inner">
             <div class="nav-accent"></div>
             <div class="nav-body">
               <div class="nav-index">Module 04 — Visual</div>
-              <div class="nav-title-text">Imagery Intelligence</div>
-              <div class="nav-scope">Cross-platform visual pattern analysis</div>
+              <div class="nav-title-text">Visual Intelligence</div>
+              <div class="nav-scope">13 image clusters · 9 coordination groups · 82 accounts</div>
             </div>
             <div class="nav-status"><span class="status-dot"></span></div>
           </div>
@@ -828,74 +928,101 @@
 
     </ul>
 
-    <!-- KPIs -->
-    <div class="kpi-block">
+    <!-- Bottom: KPIs + Analyst profile -->
+    <div class="bottom-section">
       <div class="kpi-grid">
         <div class="kpi-cell">
-          <div class="kpi-label">Posts Collected</div>
-          <div class="kpi-number neutral">3,514</div>
-          <div class="kpi-unit">Cross-platform</div>
+          <div class="kpi-label">Corpus</div>
+          <div class="kpi-number">3,514</div>
+          <div class="kpi-unit">Posts · Twitter / X</div>
         </div>
         <div class="kpi-cell">
-          <div class="kpi-label">Flagged Actors</div>
-          <div class="kpi-number danger">82</div>
-          <div class="kpi-unit">High confidence</div>
+          <div class="kpi-label">Total reach</div>
+          <div class="kpi-number">178M</div>
+          <div class="kpi-unit">Views</div>
         </div>
       </div>
-      <div class="corner-stamp">
-        <span class="stamp-text">Anass El Basraoui · Lead Analyst</span>
-        <span class="stamp-id">2024</span>
+
+      <div class="analyst-block">
+        <div class="analyst-tag">Lead Analyst</div>
+        <div class="analyst-name">Anass El Basraoui</div>
+        <div class="analyst-role">
+          Narrative Intelligence Analyst<br/>
+          Data Science · Strategic Analysis<br/>
+          Information Environment
+        </div>
+        <div class="analyst-links">
+          <a href="https://www.linkedin.com/in/el-basraoui/"
+             target="_blank" rel="noopener noreferrer"
+             class="analyst-link">LinkedIn</a>
+          <a href="https://github.com/opinionscience"
+             target="_blank" rel="noopener noreferrer"
+             class="analyst-link">GitHub</a>
+          <a href="https://elbasraoui.engineer/"
+             target="_blank" rel="noopener noreferrer"
+             class="analyst-link">Portfolio</a>
+        </div>
       </div>
     </div>
 
-  </aside>
+  </aside><!-- /#sidebar -->
 
   <!-- ══════════════════════════════════════════
        MAIN
   ══════════════════════════════════════════ -->
   <main id="main">
 
-    <!-- Threat banner -->
-    <div id="threat-banner" role="alert">
+    <!-- Narrative signal banner -->
+    <div id="signal-banner" role="status">
       <div class="banner-inner">
-        <span class="banner-label">⬤ Active Threat</span>
+        <span class="banner-label">▸ Critical Cohesion Risk</span>
         <span class="banner-divider"></span>
         <span class="banner-message">
-          Cluster 12 — "NATO Aggression" narrative confirmed active ·
-          82 coordinated accounts identified across 4 platforms
+          N18 dominant — Alliance fracture / US withdrawal framing · 362 texts · peak 1 Apr 2026 · 9.6M total engagements
         </span>
-        <span class="banner-ref">REF: NI-2024-C12-082</span>
+        <span class="banner-ref">NI-2026-N18</span>
       </div>
     </div>
 
     <!-- Top bar -->
     <header id="topbar">
+
+      <!-- Sidebar toggle -->
+      <button class="sidebar-toggle" onclick="toggleSidebar()"
+              aria-label="Toggle navigation panel" title="Toggle sidebar">
+        <svg viewBox="0 0 14 14" aria-hidden="true">
+          <line x1="1" y1="3.5" x2="13" y2="3.5"/>
+          <line x1="1" y1="7"   x2="13" y2="7"/>
+          <line x1="1" y1="10.5" x2="13" y2="10.5"/>
+        </svg>
+      </button>
+
       <nav class="tb-path" aria-label="Current module">
         <span>narrative-intelligence.systems</span>
         <span class="sep">›</span>
         <span>Reports</span>
         <span class="sep">›</span>
-        <span class="current" id="breadcrumb">Influence Operations</span>
+        <span class="current" id="breadcrumb">Project Overview</span>
       </nav>
 
       <div class="tb-spacer"></div>
 
-      <!-- Progress nodes -->
+      <!-- Progress nodes (4 analytical phases) -->
       <div class="tb-progress" id="progress" aria-hidden="true">
-        <div class="prog-seg done">
-          <div class="prog-node" title="Module 01"></div>
-          <div class="prog-line"></div>
-        </div>
-        <div class="prog-seg done">
-          <div class="prog-node" title="Module 02"></div>
-          <div class="prog-line"></div>
-        </div>
-        <div class="prog-seg active">
-          <div class="prog-node" title="Module 03"></div>
+        <div class="prog-seg">
+          <div class="prog-node" title="Module 01 — Signal Landscape"></div>
           <div class="prog-line"></div>
         </div>
         <div class="prog-seg">
-          <div class="prog-node" title="Module 04"></div>
+          <div class="prog-node" title="Module 02 — Threat Clusters"></div>
+          <div class="prog-line"></div>
+        </div>
+        <div class="prog-seg">
+          <div class="prog-node" title="Module 03 — Narrative Matrix"></div>
+          <div class="prog-line"></div>
+        </div>
+        <div class="prog-seg">
+          <div class="prog-node" title="Module 04 — Visual Intelligence"></div>
         </div>
       </div>
 
@@ -907,21 +1034,21 @@
       <div id="loader" aria-hidden="true">
         <div class="loader-doc">
           <div class="loader-stamp">Loading module</div>
-          <div class="loader-label" id="loader-label">Influence Operations</div>
+          <div class="loader-label" id="loader-label">Project Overview</div>
           <div class="loader-bar-wrap">
             <div class="loader-bar"></div>
           </div>
         </div>
       </div>
       <iframe id="report-frame"
-              src="reports/NATO_Phase3_AnalyseNarrative.html"
+              src="reports/NATO_Intro_Overview.html"
               title="Intelligence report"
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
               loading="lazy"
               aria-label="Active intelligence module"></iframe>
     </div>
 
-  </main>
+  </main><!-- /#main -->
 
   <!-- ══════════════════════════════════════════
        STATUS BAR
@@ -930,7 +1057,7 @@
 
     <div class="sb-cell">
       <span class="sb-dot"></span>
-      <span class="sb-online">System Online</span>
+      <span class="sb-online">Analysis Complete</span>
     </div>
 
     <div class="sb-cell">
@@ -939,13 +1066,8 @@
     </div>
 
     <div class="sb-cell">
-      <span class="sb-key">Inference</span>
-      <span class="sb-val">GPU-accelerated · float16</span>
-    </div>
-
-    <div class="sb-cell">
-      <span class="sb-key">Hardware</span>
-      <span class="sb-val">NVIDIA RTX 4060 Laptop · 8GB</span>
+      <span class="sb-key">Corpus</span>
+      <span class="sb-val">3,514 posts · Twitter / X · 1 Feb – 3 Apr 2026</span>
     </div>
 
     <div class="sb-spacer"></div>
@@ -961,7 +1083,7 @@
 <script>
   'use strict';
 
-  /* ─── Live UTC clock ─────────────────────────────────── */
+  /* ─── Live UTC clock ──────────────────────────────────────── */
   (function () {
     const el  = document.getElementById('clock');
     const pad = n => String(n).padStart(2, '0');
@@ -975,27 +1097,34 @@
     setInterval(tick, 1000);
   })();
 
-  /* ─── Progress nodes ─────────────────────────────────── */
+  /* ─── Sidebar toggle ─────────────────────────────────────── */
+  const shell = document.getElementById('shell');
+
+  function toggleSidebar() {
+    shell.classList.toggle('sidebar-closed');
+  }
+
+  /* ─── Progress nodes ─────────────────────────────────────── */
   const progSegs = document.querySelectorAll('.prog-seg');
 
   function updateProgress(phase) {
     progSegs.forEach((seg, i) => {
       seg.classList.remove('done', 'active');
-      if (i === phase) seg.classList.add('active');
-      else if (i < phase) seg.classList.add('done');
+      if (phase < 0) return;        /* overview: no phase highlighted */
+      if (i === phase)     seg.classList.add('active');
+      else if (i < phase)  seg.classList.add('done');
     });
   }
 
-  /* ─── Report switcher ────────────────────────────────── */
-  const frame     = document.getElementById('report-frame');
-  const loader    = document.getElementById('loader');
-  const loaderLbl = document.getElementById('loader-label');
-  const breadcrumb= document.getElementById('breadcrumb');
-  const navBtns   = document.querySelectorAll('.nav-btn');
+  /* ─── Report switcher ────────────────────────────────────── */
+  const frame      = document.getElementById('report-frame');
+  const loader     = document.getElementById('loader');
+  const loaderLbl  = document.getElementById('loader-label');
+  const breadcrumb = document.getElementById('breadcrumb');
+  const navBtns    = document.querySelectorAll('.nav-btn');
 
   /**
-   * loadReport(btn)
-   * Switches the active intelligence module.
+   * loadReport(btn) — switches the active intelligence module.
    * @param {HTMLButtonElement} btn
    */
   function loadReport(btn) {
@@ -1017,15 +1146,19 @@
     setTimeout(() => loader.classList.add('hidden'), 200);
   });
 
-  /* ─── Keyboard nav (↑↓) ──────────────────────────────── */
+  /* ─── Keyboard navigation (↑ ↓) ─────────────────────────── */
   document.addEventListener('keydown', e => {
     const btns = [...navBtns];
     const idx  = btns.findIndex(b => b.classList.contains('active'));
     if (e.key === 'ArrowDown' && idx < btns.length - 1) {
-      e.preventDefault(); loadReport(btns[idx + 1]); btns[idx + 1].focus();
+      e.preventDefault();
+      loadReport(btns[idx + 1]);
+      btns[idx + 1].focus();
     }
     if (e.key === 'ArrowUp' && idx > 0) {
-      e.preventDefault(); loadReport(btns[idx - 1]); btns[idx - 1].focus();
+      e.preventDefault();
+      loadReport(btns[idx - 1]);
+      btns[idx - 1].focus();
     }
   });
 </script>
