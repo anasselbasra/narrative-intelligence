@@ -3,88 +3,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NATO Narrative Intelligence - Phase 3 - Analyse Narrative</title>
+<title>NATO Narrative Intelligence · Module 03 · Analyse Narrative</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0c10;--surface:#111318;--surface2:#181b22;--border:#232836;
-  --accent:#4d7cfe;--accent2:#fe4d4d;--accent3:#fec04d;--accent4:#4dfeba;
-  --purple:#a78bfa;--orange:#ff6b35;
-  --text:#e2e8f0;--muted:#6b7591;--dim:#3d4461;
-  --crit:#fe4d4d;--high:#fec04d;--mod:#4dfeba;--low:#4d7cfe;
+  --void:#000000;--surface-0:#080808;--surface-1:#0f0f0f;--surface-2:#161616;--surface-3:#1e1e1e;
+  --border-hard:#2a2a2a;--border-soft:#1a1a1a;
+  --red:#d0021b;--orange:#c45c00;
+  --text-0:#ffffff;--text-1:#c8c8c8;--text-2:#8c8c8c;--text-3:#686868;
+  --font-display:'Barlow Condensed',sans-serif;
+  --font-body:'Barlow',sans-serif;
+  --font-data:'DM Mono',monospace;
+  --bg:var(--void);--surface:var(--surface-0);--surface2:var(--surface-2);
+  --border:var(--border-hard);
+  --accent:var(--red);--accent2:var(--orange);
+  --accent3:#d4a800;--accent4:#2d8a6e;--purple:#7c6ab0;
+  --text:var(--text-0);--muted:var(--text-3);--dim:var(--border-hard);
+  --crit:var(--red);--high:var(--orange);--mod:var(--text-2);--low:var(--text-3);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;line-height:1.7;padding:48px 32px;max-width:1200px;margin:0 auto;}
+body{background:var(--void);color:var(--text-1);font-family:var(--font-body);font-size:13.5px;line-height:1.7;padding:48px 32px;max-width:1200px;margin:0 auto;}
 .report-header{border-left:3px solid var(--accent);padding-left:24px;margin-bottom:52px;}
-.report-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.report-label{font-family:var(--font-data);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
 .report-title{font-size:28px;font-weight:600;color:#fff;line-height:1.2;margin-bottom:4px;}
 .report-subtitle{font-size:13px;color:var(--muted);font-weight:300;}
 .report-meta{display:flex;gap:28px;margin-top:16px;flex-wrap:wrap;}
-.meta-item{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+.meta-item{font-family:var(--font-data);font-size:10px;color:var(--muted);}
 .meta-item span{color:var(--text);}
 .section{margin-bottom:60px;}
-.section-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.section-title{font-family:var(--font-data);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;gap:12px;}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
-.callout{border-left:3px solid var(--accent3);background:var(--surface);padding:14px 18px;margin:14px 0;font-size:12.5px;color:#8899bb;}
+.callout{border-left:3px solid var(--accent3);background:var(--surface);padding:14px 18px;margin:14px 0;font-size:12.5px;color:var(--text-2);}
 .callout.blue{border-color:var(--accent);}.callout.red{border-color:var(--accent2);}.callout.green{border-color:var(--accent4);}.callout.grey{border-color:var(--dim);}.callout.purple{border-color:var(--purple);}
-.callout-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent3);margin-bottom:6px;}
+.callout-title{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent3);margin-bottom:6px;}
 .callout.blue .callout-title{color:var(--accent);}.callout.red .callout-title{color:var(--accent2);}.callout.green .callout-title{color:var(--accent4);}.callout.grey .callout-title{color:var(--dim);}.callout.purple .callout-title{color:var(--purple);}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px;margin-bottom:28px;background:var(--border);border:1px solid var(--border);}
 .kpi-card{background:var(--surface);padding:16px 18px 12px;}
-.kpi-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.kpi-label{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
 .kpi-value{font-size:22px;font-weight:600;color:#fff;line-height:1;margin-bottom:3px;}
-.kpi-sub{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
-.threat-crit{background:rgba(254,77,77,.12);border:1px solid rgba(254,77,77,.4);color:var(--crit);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;display:inline-block;}
-.threat-high{background:rgba(254,192,77,.10);border:1px solid rgba(254,192,77,.4);color:var(--high);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;display:inline-block;}
-.threat-mod{background:rgba(77,254,186,.08);border:1px solid rgba(77,254,186,.3);color:var(--mod);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;display:inline-block;}
-.threat-low{background:rgba(77,124,254,.10);border:1px solid rgba(77,124,254,.3);color:var(--low);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;display:inline-block;}
-.nid{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--accent3);background:rgba(254,192,77,.08);border:1px solid rgba(254,192,77,.2);padding:1px 6px;display:inline-block;margin-right:4px;}
+.kpi-sub{font-size:10px;color:var(--muted);font-family:var(--font-data);}
+.threat-crit{background:rgba(254,77,77,.12);border:1px solid rgba(254,77,77,.4);color:var(--crit);font-family:var(--font-data);font-size:9px;padding:2px 7px;display:inline-block;}
+.threat-high{background:rgba(254,192,77,.10);border:1px solid rgba(254,192,77,.4);color:var(--high);font-family:var(--font-data);font-size:9px;padding:2px 7px;display:inline-block;}
+.threat-mod{background:rgba(77,254,186,.08);border:1px solid rgba(77,254,186,.3);color:var(--mod);font-family:var(--font-data);font-size:9px;padding:2px 7px;display:inline-block;}
+.threat-low{background:rgba(77,124,254,.10);border:1px solid rgba(77,124,254,.3);color:var(--low);font-family:var(--font-data);font-size:9px;padding:2px 7px;display:inline-block;}
+.nid{font-family:var(--font-data);font-size:10px;font-weight:600;color:var(--accent3);background:rgba(254,192,77,.08);border:1px solid rgba(254,192,77,.2);padding:1px 6px;display:inline-block;margin-right:4px;}
 .chart-wrap{background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:2px;}
-.chart-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.chart-label{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 .data-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:20px;}
-.data-table th{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);font-weight:400;}
-.data-table td{padding:7px 10px;border-bottom:1px solid #1a1d27;color:#9aa8c4;vertical-align:middle;}
+.data-table th{font-family:var(--font-data);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);font-weight:400;}
+.data-table td{padding:7px 10px;border-bottom:1px solid #1a1d27;color:var(--text-2);vertical-align:middle;}
 .data-table tr:hover td{background:var(--surface2);}
-.data-table td.nid-cell{font-family:'IBM Plex Mono',monospace;color:var(--accent3);font-weight:600;white-space:nowrap;}
-.data-table td.vol-cell{font-family:'IBM Plex Mono',monospace;text-align:right;color:var(--text);}
+.data-table td.nid-cell{font-family:var(--font-data);color:var(--accent3);font-weight:600;white-space:nowrap;}
+.data-table td.vol-cell{font-family:var(--font-data);text-align:right;color:var(--text);}
 .vol-bar{display:inline-block;height:4px;background:var(--accent);vertical-align:middle;margin-left:6px;border-radius:1px;}
 .macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);margin-bottom:20px;}
 .macro-cell{background:var(--surface);padding:16px 18px;}
-.macro-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;font-weight:600;}
-.macro-body{font-size:12px;color:#8899bb;font-weight:300;line-height:1.65;margin-bottom:10px;}
+.macro-label{font-family:var(--font-data);font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;font-weight:600;}
+.macro-body{font-size:12px;color:var(--text-2);font-weight:300;line-height:1.65;margin-bottom:10px;}
 .macro-ids{display:flex;flex-wrap:wrap;gap:4px;}
 .mirror-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--purple);padding:18px 20px;margin-bottom:10px;}
 .mirror-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
-.mirror-vs{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);}
-.mirror-overlap{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--purple);background:rgba(167,139,250,.1);padding:2px 8px;border:1px solid rgba(167,139,250,.25);}
-.mirror-body{font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;}
+.mirror-vs{font-family:var(--font-data);font-size:10px;color:var(--dim);}
+.mirror-overlap{font-family:var(--font-data);font-size:10px;color:var(--purple);background:rgba(167,139,250,.1);padding:2px 8px;border:1px solid rgba(167,139,250,.25);}
+.mirror-body{font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;}
 .rec-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 22px;margin-bottom:10px;}
 .rec-header{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
-.rec-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);background:rgba(77,124,254,.1);padding:2px 8px;border:1px solid rgba(77,124,254,.3);white-space:nowrap;}
+.rec-num{font-family:var(--font-data);font-size:10px;color:var(--accent);background:rgba(77,124,254,.1);padding:2px 8px;border:1px solid rgba(77,124,254,.3);white-space:nowrap;}
 .rec-title{font-size:14px;font-weight:600;color:#fff;flex:1;}
 .rec-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:2px;background:var(--border);}
 .rec-field{background:var(--surface2);padding:10px 12px;}
-.rec-field-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;}
-.rec-field-val{font-size:12px;color:#9aa8c4;font-weight:300;}
+.rec-field-label{font-family:var(--font-data);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;}
+.rec-field-val{font-size:12px;color:var(--text-2);font-weight:300;}
 .finding-card{background:var(--surface);border-left:3px solid var(--accent2);padding:16px 20px;margin-bottom:8px;}
-.finding-num{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent2);margin-bottom:6px;letter-spacing:.1em;text-transform:uppercase;}
+.finding-num{font-family:var(--font-data);font-size:9px;color:var(--accent2);margin-bottom:6px;letter-spacing:.1em;text-transform:uppercase;}
 .finding-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;}
-.finding-body{font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;}
+.finding-body{font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;}
 .matrix-legend{background:var(--surface);border:1px solid var(--border);padding:16px 18px;margin-bottom:12px;}
-.matrix-legend-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.matrix-legend-title{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
 .matrix-legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.matrix-legend-item{font-size:12px;color:#8899bb;}
+.matrix-legend-item{font-size:12px;color:var(--text-2);}
 .matrix-legend-item strong{color:var(--text);}
-.tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 6px;border:1px solid var(--border);color:var(--muted);margin:1px 2px 1px 0;}
+.tag{display:inline-block;font-family:var(--font-data);font-size:9px;padding:2px 6px;border:1px solid var(--border);color:var(--muted);margin:1px 2px 1px 0;}
 .annex-section{margin-bottom:36px;}
-.annex-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
-.limit-item{background:var(--surface);border-left:2px solid var(--dim);padding:7px 12px;margin-bottom:3px;font-size:12px;color:#8899bb;font-weight:300;}
+.annex-title{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.limit-item{background:var(--surface);border-left:2px solid var(--dim);padding:7px 12px;margin-bottom:3px;font-size:12px;color:var(--text-2);font-weight:300;}
 .report-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);}
-.footer-text{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);}
-p{color:#b0bcd4;margin-bottom:10px;font-weight:300;font-size:13px;}
+.footer-text{font-family:var(--font-data);font-size:10px;color:var(--dim);}
+p{color:var(--text-1);margin-bottom:10px;font-weight:300;font-size:13px;}
 strong{color:var(--text);font-weight:600;}
-h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin-top:22px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin-top:22px;font-family:var(--font-data);letter-spacing:.05em;}
 @media(max-width:768px){.macro-grid,.rec-grid{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -94,19 +104,19 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
   <div class="report-label">NATO Narrative Intelligence · Importation 696 · CONFIDENTIEL</div>
   <div class="report-title">Rapport Phase 3 · Analyse Narrative</div>
   <div class="report-subtitle">Paysage narratif · Dynamiques temporelles · Matrice de menace · Narratifs miroirs · Recommandations stratégiques</div>
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:4px;">Twitter/X · Anglais · 1 fév. – 3 avr. 2026 · 3 510 posts · 21 narratifs canoniques · analyse_id = 474</div>
+  <div style="font-family:var(--font-data);font-size:10px;color:var(--dim);margin-top:4px;">Twitter/X · Anglais · 1 fév. – 3 avr. 2026 · 3 510 posts · 21 narratifs canoniques · analyse_id = 474</div>
   <div class="report-meta">
     <div class="meta-item">Narratifs identifiés <span>21</span></div>
     <div class="meta-item">Textes couverts <span>1 075 · 30,6%</span></div>
     <div class="meta-item">Textes multi-narratifs <span>602 · 17,2%</span></div>
     <div class="meta-item">Paires miroirs <span>5 documentées</span></div>
     <div class="meta-item">Produit le <span>07 avr. 2026</span></div>
-    <div class="meta-item" style="margin-left:auto;">par <strong style="color:var(--text);">Anass El Basraoui</strong>&nbsp;<a href="https://www.linkedin.com/in/el-basraoui/" target="_blank" style="color:var(--accent);text-decoration:none;font-family:'IBM Plex Mono',monospace;">LinkedIn</a></div>
+    <div class="meta-item" style="margin-left:auto;">par <strong style="color:var(--text);">Anass El Basraoui</strong>&nbsp;<a href="https://www.linkedin.com/in/el-basraoui/" target="_blank" style="color:var(--accent);text-decoration:none;font-family:var(--font-data);">LinkedIn</a></div>
   </div>
 </div>
 
 <div style="border-left:3px solid var(--border);padding-left:20px;margin-bottom:48px;">
-  <p style="color:#8899bb;font-size:13px;line-height:1.8;margin:0;">Ce rapport est le troisième volet d'un programme de surveillance du débat en ligne autour du retrait potentiel des Etats-Unis de l'OTAN dans le contexte de la guerre en Iran. La Phase 3 entre dans le contenu : <strong>21 narratifs canoniques</strong> extraits du corpus, leur distribution, leurs dynamiques temporelles, leurs interactions et leurs implications stratégiques pour l'Alliance. Toutes les données chiffrées sont directement tracables aux tables de données fournies.</p>
+  <p style="color:var(--text-2);font-size:13px;line-height:1.8;margin:0;">Ce rapport est le troisième volet d'un programme de surveillance du débat en ligne autour du retrait potentiel des Etats-Unis de l'OTAN dans le contexte de la guerre en Iran. La Phase 3 entre dans le contenu : <strong>21 narratifs canoniques</strong> extraits du corpus, leur distribution, leurs dynamiques temporelles, leurs interactions et leurs implications stratégiques pour l'Alliance. Toutes les données chiffrées sont directement tracables aux tables de données fournies.</p>
 </div>
 
 <!-- SYNTH EXEC -->
@@ -207,8 +217,8 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
 <div class="section">
   <div class="section-title">02 · Dynamiques temporelles</div>
 
-  <p style="color:#8899bb;margin-bottom:4px;">Les données présentées ici sont issues du croisement exact entre les indices de textes assignés à chaque narratif et les dates de publication issues de la table <em>chunk_created_at</em>. Les périodes hebdomadaires sont les suivantes : 1-8 fév · 9-19 fév · 20-28 fév · 1-15 mar · 16-24 mar · 25-31 mar · 1-3 avr. Les totaux par narratif correspondent aux volumes documentés en Section 1.</p>
-  <p style="color:#8899bb;margin-bottom:16px;">Les lignes verticales indiquent les événements géopolitiques clés identifiés en Phase 1 : 28/02 (frappes US-Israël sur l'Iran), 16/03 (escalade des frappes + refus européens officiels), 25/03 (Trump accuse les alliés de "lâcheté"), 01/04 (Trump déclare envisager le retrait OTAN).</p>
+  <p style="color:var(--text-2);margin-bottom:4px;">Les données présentées ici sont issues du croisement exact entre les indices de textes assignés à chaque narratif et les dates de publication issues de la table <em>chunk_created_at</em>. Les périodes hebdomadaires sont les suivantes : 1-8 fév · 9-19 fév · 20-28 fév · 1-15 mar · 16-24 mar · 25-31 mar · 1-3 avr. Les totaux par narratif correspondent aux volumes documentés en Section 1.</p>
+  <p style="color:var(--text-2);margin-bottom:16px;">Les lignes verticales indiquent les événements géopolitiques clés identifiés en Phase 1 : 28/02 (frappes US-Israël sur l'Iran), 16/03 (escalade des frappes + refus européens officiels), 25/03 (Trump accuse les alliés de "lâcheté"), 01/04 (Trump déclare envisager le retrait OTAN).</p>
 
   <div class="chart-label">Evolution hebdomadaire · 10 narratifs principaux (volume de textes par période)</div>
   <div class="chart-wrap"><div id="chart-temporal" style="height:400px"></div></div>
@@ -278,28 +288,28 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
   <h3>Evaluation par macro-catégorie</h3>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);margin-bottom:20px;">
     <div style="background:var(--surface);padding:18px 20px;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px;">CAT-A · Cohésion transatlantique · CRITIQUE</div>
-      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;">Volume combiné de N02, N05, N06, N07, N17, N18, N21 : 1 058 textes. La cible est la confiance opérationnelle dans l'Article 5, pas sa légalité formelle. La menace est critique et endogène : portée par des acteurs américains et européens.</p>
+      <div style="font-family:var(--font-data);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px;">CAT-A · Cohésion transatlantique · CRITIQUE</div>
+      <p style="font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;">Volume combiné de N02, N05, N06, N07, N17, N18, N21 : 1 058 textes. La cible est la confiance opérationnelle dans l'Article 5, pas sa légalité formelle. La menace est critique et endogène : portée par des acteurs américains et européens.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-crit">CRITIQUE</span><span class="tag">Cible : COHÉSION</span></div>
     </div>
     <div style="background:var(--surface);padding:18px 20px;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px;">CAT-C · Légitimité du refus allié · CRITIQUE</div>
-      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;"><span class="nid">N15</span> (293 textes) justifie juridiquement le refus. <span class="nid">N19</span> (211 textes) en tire les conséquences institutionnelles. Les deux pincent la crédibilité de l'Article 5 par deux angles opposés. La paire miroir N15/N19 est le cas le plus structurellement dangereux du corpus.</p>
+      <div style="font-family:var(--font-data);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px;">CAT-C · Légitimité du refus allié · CRITIQUE</div>
+      <p style="font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;"><span class="nid">N15</span> (293 textes) justifie juridiquement le refus. <span class="nid">N19</span> (211 textes) en tire les conséquences institutionnelles. Les deux pincent la crédibilité de l'Article 5 par deux angles opposés. La paire miroir N15/N19 est le cas le plus structurellement dangereux du corpus.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-crit">CRITIQUE</span><span class="tag">Cible : CRÉDIBILITÉ</span></div>
     </div>
     <div style="background:var(--surface);padding:18px 20px;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:10px;">CAT-E · Reconfiguration de l'ordre mondial · ÉLEVÉ</div>
-      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;"><span class="nid">N01</span> (90 textes) s'appuie sur des faits partiels pour construire une comparaison valorisant les modeles autoritaires. <span class="nid">N12</span> (131 textes) affecte la crédibilité du casus belli. Ces narratifs opèrent sur un horizon cumulatif.</p>
+      <div style="font-family:var(--font-data);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:10px;">CAT-E · Reconfiguration de l'ordre mondial · ÉLEVÉ</div>
+      <p style="font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;"><span class="nid">N01</span> (90 textes) s'appuie sur des faits partiels pour construire une comparaison valorisant les modeles autoritaires. <span class="nid">N12</span> (131 textes) affecte la crédibilité du casus belli. Ces narratifs opèrent sur un horizon cumulatif.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-high">ÉLEVÉ</span><span class="tag">Cible : LÉGITIMITÉ</span></div>
     </div>
     <div style="background:var(--surface);padding:18px 20px;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:10px;">CAT-D · Fractures intra-alliées · ÉLEVÉ</div>
-      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;">La paire miroir N10/N11 sur la Turquie amplifie l'image d'une Alliance fracturée dans les deux sens simultanément. N03 cible nominativement des responsables institutionnels · un levier d'amplification personnelle que les adversaires exploitent préférentiellement.</p>
+      <div style="font-family:var(--font-data);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:10px;">CAT-D · Fractures intra-alliées · ÉLEVÉ</div>
+      <p style="font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;">La paire miroir N10/N11 sur la Turquie amplifie l'image d'une Alliance fracturée dans les deux sens simultanément. N03 cible nominativement des responsables institutionnels · un levier d'amplification personnelle que les adversaires exploitent préférentiellement.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-high">ÉLEVÉ</span><span class="tag">Cible : COHÉSION</span></div>
     </div>
     <div style="background:var(--surface);padding:18px 20px;grid-column:1/-1;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">CAT-B · Repositionnement géopolitique · MODÉRÉ</div>
-      <p style="font-size:12.5px;color:#8899bb;font-weight:300;line-height:1.7;"><span class="nid">N04</span> (113 textes) crée un risque de second ordre en promouvant une réinterprétation offensive du mandat OTAN. La présence de @pahlavireza (8 mentions documentées en Phase 1) est le signal acteur le plus tangible d'une campagne de lobbying ciblant l'audience atlantiste. N08 (16 textes) ne présente pas de risque narratif autonome.</p>
+      <div style="font-family:var(--font-data);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">CAT-B · Repositionnement géopolitique · MODÉRÉ</div>
+      <p style="font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;"><span class="nid">N04</span> (113 textes) crée un risque de second ordre en promouvant une réinterprétation offensive du mandat OTAN. La présence de @pahlavireza (8 mentions documentées en Phase 1) est le signal acteur le plus tangible d'une campagne de lobbying ciblant l'audience atlantiste. N08 (16 textes) ne présente pas de risque narratif autonome.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="threat-mod">MODÉRÉ</span><span class="tag">Cible : CRÉDIBILITÉ</span></div>
     </div>
   </div>
@@ -309,7 +319,7 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
 <div class="section">
   <div class="section-title">04 · Narratifs miroirs et dynamiques d'instrumentalisation</div>
 
-  <p style="color:#8899bb;margin-bottom:16px;">Un narratif miroir est une paire portant des cadrages opposés du même événement factuel. L'existence de ces paires crée un mécanisme de piège narratif : toute réponse de l'Alliance à l'événement de référence alimente les deux narratifs simultanément. Les chiffres de co-occurrence sont issus du calcul exact d'intersection des ensembles d'indices.</p>
+  <p style="color:var(--text-2);margin-bottom:16px;">Un narratif miroir est une paire portant des cadrages opposés du même événement factuel. L'existence de ces paires crée un mécanisme de piège narratif : toute réponse de l'Alliance à l'événement de référence alimente les deux narratifs simultanément. Les chiffres de co-occurrence sont issus du calcul exact d'intersection des ensembles d'indices.</p>
 
   <div class="mirror-card">
     <div class="mirror-header">
@@ -391,7 +401,7 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
 <div class="section">
   <div class="section-title">05 · Acteurs et chaines d'amplification</div>
 
-  <p style="color:#8899bb;margin-bottom:16px;">Le croisement narratif x acteur est contraint par les données disponibles : les données de Phase 1 identifient les acteurs par volume et engagement, mais ne permettent pas de lier directement un acteur à un narratif spécifique sans analyse de réseau. Ce qui suit est directement tracable aux données de Phase 1.</p>
+  <p style="color:var(--text-2);margin-bottom:16px;">Le croisement narratif x acteur est contraint par les données disponibles : les données de Phase 1 identifient les acteurs par volume et engagement, mais ne permettent pas de lier directement un acteur à un narratif spécifique sans analyse de réseau. Ce qui suit est directement tracable aux données de Phase 1.</p>
 
   <div class="callout blue">
     <div class="callout-title">ZeroHedge · URL n°1 du corpus (Phase 1) · Compatible N18, N19</div>
@@ -425,13 +435,13 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
   </div>
 
   <h3>Vulnérabilité structurelle commune</h3>
-  <p style="color:#8899bb;">Les 21 narratifs exploitent une vulnérabilité partagée : l'ambiguité du mandat offensif vs défensif de l'OTAN. Sept des 21 narratifs (N02, N14, N15, N18, N19, N20, N21) se positionnent explicitement sur la question "l'OTAN était-elle obligée d'aider les Etats-Unis en Iran ?" avec des réponses contradictoires. Cette question est devenue le terrain de bataille narratif central, et l'Alliance n'a pas de réponse officielle unifiée dans l'espace public.</p>
+  <p style="color:var(--text-2);">Les 21 narratifs exploitent une vulnérabilité partagée : l'ambiguité du mandat offensif vs défensif de l'OTAN. Sept des 21 narratifs (N02, N14, N15, N18, N19, N20, N21) se positionnent explicitement sur la question "l'OTAN était-elle obligée d'aider les Etats-Unis en Iran ?" avec des réponses contradictoires. Cette question est devenue le terrain de bataille narratif central, et l'Alliance n'a pas de réponse officielle unifiée dans l'espace public.</p>
 
   <h3>Le débat est durablement installé</h3>
-  <p style="color:#8899bb;">La décélération du 2-3 avril documentée en Phase 1 (–54% le 02/04, –63% le 03/04) concerne le volume total de posts. Les données montrent que N05 et N21 maintiennent des niveaux élevés les 2 et 3 avril (respectivement 16 et 18 textes le 02/04, 26 et 18 le 03/04). Le sujet a basculé dans la conversation permanente.</p>
+  <p style="color:var(--text-2);">La décélération du 2-3 avril documentée en Phase 1 (–54% le 02/04, –63% le 03/04) concerne le volume total de posts. Les données montrent que N05 et N21 maintiennent des niveaux élevés les 2 et 3 avril (respectivement 16 et 18 textes le 02/04, 26 et 18 le 03/04). Le sujet a basculé dans la conversation permanente.</p>
 
   <h3>Impact sur la crédibilité de l'Article 5</h3>
-  <p style="color:#8899bb;">La paire miroir N15/N19 (106 textes en co-occurrence) est le signal le plus direct d'une remise en question de l'Article 5. N15 construit un précédent juridique du refus ; N19 en tire les conséquences institutionnelles. Le cluster Article 5 (C31, Phase 2 : mots-clés czech, north, armed, pact) confirme que des experts juridiques et militaires participent à ce débat, lui donnant une légitimité analytique qui dépasse la simple polémique politique.</p>
+  <p style="color:var(--text-2);">La paire miroir N15/N19 (106 textes en co-occurrence) est le signal le plus direct d'une remise en question de l'Article 5. N15 construit un précédent juridique du refus ; N19 en tire les conséquences institutionnelles. Le cluster Article 5 (C31, Phase 2 : mots-clés czech, north, armed, pact) confirme que des experts juridiques et militaires participent à ce débat, lui donnant une légitimité analytique qui dépasse la simple polémique politique.</p>
 </div>
 
 <!-- SECTION 7 -->
@@ -552,8 +562,8 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
 <div class="section">
   <div class="section-title">ANNEXE B · Note méthodologique</div>
   <div style="background:var(--surface);border:1px solid var(--border);padding:20px 24px;">
-    <p style="color:#8899bb;margin-bottom:12px;"><strong>Pipeline de traitement :</strong> Les textes bruts (3 510 posts, filtrés à min_retweets = 5) sont transformés en vecteurs sémantiques par un modèle d'embeddings. Ces vecteurs sont réduits à 2D via UMAP, puis regroupés par HDBSCAN (36 clusters, Phase 2). Pour la Phase 3, 21 narratifs canoniques ont été extraits et formulés à partir du corpus avec assistance LLM. Chaque texte est assigné aux narratifs dont la similarité cosinus dépasse 0,70. La moyenne observée est 0,730, le max 0,879 (N18), le min 0,653 (N03).</p>
-    <p style="color:#8899bb;margin-bottom:0;"><strong>Limites principales :</strong> (1) Plateforme unique : Twitter/X anglophone uniquement. (2) Filtre min_retweets = 5 : signaux faibles exclus. (3) Période de 62 jours. (4) Pas d'analyse d'images/vidéos (dont la vidéo BitChute à fort impact de Phase 1). (5) Bruit de 30,6% non narrativisé. (6) Le positionnement dans la matrice de menace est analytique, basé sur les descriptions canoniques, pas sur une attribution acteur-par-acteur vérifiée. (7) Les croisements narratif x engagement et narratif x acteur nécessitent un graphe social non disponible dans ce corpus.</p>
+    <p style="color:var(--text-2);margin-bottom:12px;"><strong>Pipeline de traitement :</strong> Les textes bruts (3 510 posts, filtrés à min_retweets = 5) sont transformés en vecteurs sémantiques par un modèle d'embeddings. Ces vecteurs sont réduits à 2D via UMAP, puis regroupés par HDBSCAN (36 clusters, Phase 2). Pour la Phase 3, 21 narratifs canoniques ont été extraits et formulés à partir du corpus avec assistance LLM. Chaque texte est assigné aux narratifs dont la similarité cosinus dépasse 0,70. La moyenne observée est 0,730, le max 0,879 (N18), le min 0,653 (N03).</p>
+    <p style="color:var(--text-2);margin-bottom:0;"><strong>Limites principales :</strong> (1) Plateforme unique : Twitter/X anglophone uniquement. (2) Filtre min_retweets = 5 : signaux faibles exclus. (3) Période de 62 jours. (4) Pas d'analyse d'images/vidéos (dont la vidéo BitChute à fort impact de Phase 1). (5) Bruit de 30,6% non narrativisé. (6) Le positionnement dans la matrice de menace est analytique, basé sur les descriptions canoniques, pas sur une attribution acteur-par-acteur vérifiée. (7) Les croisements narratif x engagement et narratif x acteur nécessitent un graphe social non disponible dans ce corpus.</p>
   </div>
 </div>
 
@@ -620,9 +630,9 @@ const TS_KEYS=['N18','N05','N15','N02','N21','N19','N10','N12','N01','N04'];
 const TS_COLORS={N18:'#fe4d4d',N05:'#ff6b35',N15:'#fec04d',N02:'#a78bfa',N21:'#4dfeba',N19:'#4d7cfe',N10:'#f59e0b',N12:'#ec4899',N01:'#38bdf8',N04:'#6366f1'};
 
 const BASE={
-  paper_bgcolor:'#111318',plot_bgcolor:'#111318',
-  font:{family:'IBM Plex Mono, monospace',color:'#6b7591',size:10},
-  hoverlabel:{bgcolor:'#181b22',bordercolor:'#232836',font:{size:11,color:'#e2e8f0'}}
+  paper_bgcolor:'#080808',plot_bgcolor:'#080808',
+  font:{family:'DM Mono, monospace',color:'#686868',size:10},
+  hoverlabel:{bgcolor:'#161616',bordercolor:'#2a2a2a',font:{size:11,color:'#e2e8f0'}}
 };
 
 // VOLUME BAR
@@ -634,8 +644,8 @@ Plotly.newPlot('chart-vol',[{
   hovertemplate:'<b>%{x}</b> · %{customdata[0]}<br>Volume : %{y} textes · %{customdata[1]} · Menace : %{customdata[2]}<extra></extra>'
 }],{
   ...BASE,
-  xaxis:{gridcolor:'transparent',linecolor:'#232836',tickfont:{size:9,color:'#9aa8c4'}},
-  yaxis:{gridcolor:'#1a1e2a',linecolor:'#232836',tickfont:{size:9,color:'#9aa8c4'},title:{text:'Textes assignés',font:{size:9,color:'#6b7591'}}},
+  xaxis:{gridcolor:'transparent',linecolor:'#2a2a2a',tickfont:{size:9,color:'#8c8c8c'}},
+  yaxis:{gridcolor:'#1a1a1a',linecolor:'#2a2a2a',tickfont:{size:9,color:'#8c8c8c'},title:{text:'Textes assignés',font:{size:9,color:'#686868'}}},
   bargap:.3,margin:{t:20,b:40,l:55,r:20},hovermode:'closest'
 },{responsive:true,displayModeBar:false});
 
@@ -647,10 +657,10 @@ const shapes=[
   {type:'line',x0:'1-3 avr',x1:'1-3 avr',y0:0,y1:1,yref:'paper',line:{color:'rgba(254,77,77,1)',width:1.8,dash:'dot'}},
 ];
 const anns=[
-  {x:'20-28 fév',y:.98,yref:'paper',text:'Frappes 28/02',showarrow:false,font:{size:8,color:'rgba(254,77,77,.8)',family:'IBM Plex Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
-  {x:'16-24 mar',y:.98,yref:'paper',text:'16/03 Escalade',showarrow:false,font:{size:8,color:'rgba(167,139,250,.8)',family:'IBM Plex Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
-  {x:'25-31 mar',y:.98,yref:'paper',text:'25/03 Rupture',showarrow:false,font:{size:8,color:'rgba(254,77,77,.9)',family:'IBM Plex Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
-  {x:'1-3 avr',y:.98,yref:'paper',text:'01/04 Trump retrait',showarrow:false,font:{size:8,color:'rgba(254,77,77,1)',family:'IBM Plex Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
+  {x:'20-28 fév',y:.98,yref:'paper',text:'Frappes 28/02',showarrow:false,font:{size:8,color:'rgba(254,77,77,.8)',family:'DM Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
+  {x:'16-24 mar',y:.98,yref:'paper',text:'16/03 Escalade',showarrow:false,font:{size:8,color:'rgba(167,139,250,.8)',family:'DM Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
+  {x:'25-31 mar',y:.98,yref:'paper',text:'25/03 Rupture',showarrow:false,font:{size:8,color:'rgba(254,77,77,.9)',family:'DM Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
+  {x:'1-3 avr',y:.98,yref:'paper',text:'01/04 Trump retrait',showarrow:false,font:{size:8,color:'rgba(254,77,77,1)',family:'DM Mono, monospace'},textangle:-90,yanchor:'top',xanchor:'left'},
 ];
 
 const traces=TS_KEYS.map(k=>({
@@ -660,10 +670,10 @@ const traces=TS_KEYS.map(k=>({
 }));
 Plotly.newPlot('chart-temporal',traces,{
   ...BASE,
-  xaxis:{gridcolor:'#1a1e2a',linecolor:'#232836',tickfont:{size:9,color:'#9aa8c4'}},
-  yaxis:{gridcolor:'#1a1e2a',linecolor:'#232836',tickfont:{size:9,color:'#9aa8c4'},rangemode:'tozero',title:{text:'Textes / période',font:{size:9,color:'#6b7591'}}},
+  xaxis:{gridcolor:'#1a1a1a',linecolor:'#2a2a2a',tickfont:{size:9,color:'#8c8c8c'}},
+  yaxis:{gridcolor:'#1a1a1a',linecolor:'#2a2a2a',tickfont:{size:9,color:'#8c8c8c'},rangemode:'tozero',title:{text:'Textes / période',font:{size:9,color:'#686868'}}},
   shapes,annotations:anns,
-  legend:{bgcolor:'rgba(17,19,24,.9)',bordercolor:'#232836',borderwidth:1,font:{size:9,color:'#9aa8c4'},x:.01,y:.99},
+  legend:{bgcolor:'rgba(17,19,24,.9)',bordercolor:'#2a2a2a',borderwidth:1,font:{size:9,color:'#8c8c8c'},x:.01,y:.99},
   margin:{t:30,b:50,l:55,r:20},hovermode:'x unified'
 },{responsive:true,displayModeBar:false});
 
@@ -672,7 +682,7 @@ const leg=document.getElementById('temporal-legend');
 TS_KEYS.forEach(k=>{
   const el=document.createElement('div');
   el.style.cssText='display:flex;align-items:center;gap:5px;';
-  el.innerHTML='<div style="width:18px;height:2px;background:'+TS_COLORS[k]+';flex-shrink:0;"></div><span style="font-family:IBM Plex Mono,monospace;font-size:8.5px;color:'+TS_COLORS[k]+';">'+k+'</span>';
+  el.innerHTML='<div style="width:18px;height:2px;background:'+TS_COLORS[k]+';flex-shrink:0;"></div><span style="font-family:DM Mono,monospace;font-size:8.5px;color:'+TS_COLORS[k]+';">'+k+'</span>';
   leg.appendChild(el);
 });
 
@@ -686,7 +696,7 @@ for(const[tName,tColor] of Object.entries({"Critique":"#fe4d4d","Élevé":"#fec0
     text:ns.map(n=>n.id),
     mode:'markers+text',type:'scatter',name:tName,
     textposition:'top center',
-    textfont:{size:9,color:tColor,family:'IBM Plex Mono, monospace'},
+    textfont:{size:9,color:tColor,family:'DM Mono, monospace'},
     marker:{
       size:ns.map(n=>Math.sqrt(n.vol)*1.5+5),
       color:tColor,opacity:.75,
@@ -700,18 +710,18 @@ for(const[tName,tColor] of Object.entries({"Critique":"#fe4d4d","Élevé":"#fec0
 Plotly.newPlot('chart-matrix',matrixTraces,{
   ...BASE,
   xaxis:{
-    range:[-1.1,1.1],gridcolor:'#232836',linecolor:'#3d4461',
+    range:[-1.1,1.1],gridcolor:'#2a2a2a',linecolor:'#3d4461',
     zeroline:true,zerolinecolor:'rgba(77,124,254,.3)',zerolinewidth:1,
     tickfont:{size:9,color:'#3d4461'},
     title:{text:'← Fracture interne (débat occidental)          Menace externe / adversaires →',font:{size:9,color:'#4d7cfe'}}
   },
   yaxis:{
-    range:[-1.1,1.1],gridcolor:'#232836',linecolor:'#3d4461',
+    range:[-1.1,1.1],gridcolor:'#2a2a2a',linecolor:'#3d4461',
     zeroline:true,zerolinecolor:'rgba(77,124,254,.3)',zerolinewidth:1,
     tickfont:{size:9,color:'#3d4461'},
     title:{text:'Cible = Légitimité ↓    ↑ Cible = Cohésion',font:{size:9,color:'#4d7cfe'}}
   },
-  legend:{bgcolor:'rgba(17,19,24,.9)',bordercolor:'#232836',borderwidth:1,font:{size:9,color:'#9aa8c4'}},
+  legend:{bgcolor:'rgba(17,19,24,.9)',bordercolor:'#2a2a2a',borderwidth:1,font:{size:9,color:'#8c8c8c'}},
   margin:{t:20,b:70,l:100,r:20},hovermode:'closest',
   shapes:[
     {type:'rect',x0:-1.1,x1:0,y0:0,y1:1.1,fillcolor:'rgba(254,77,77,.03)',line:{width:0}},
@@ -720,10 +730,10 @@ Plotly.newPlot('chart-matrix',matrixTraces,{
     {type:'rect',x0:0,x1:1.1,y0:-1.1,y1:0,fillcolor:'rgba(77,254,186,.02)',line:{width:0}},
   ],
   annotations:[
-    {x:-0.55,y:1.06,text:'Fracture interne · Cible cohésion',showarrow:false,font:{size:8,color:'rgba(254,77,77,.4)',family:'IBM Plex Mono'}},
-    {x:0.55,y:1.06,text:'Adversaires · Cible cohésion',showarrow:false,font:{size:8,color:'rgba(254,192,77,.4)',family:'IBM Plex Mono'}},
-    {x:-0.55,y:-1.07,text:'Fracture interne · Cible légitimité',showarrow:false,font:{size:8,color:'rgba(77,124,254,.4)',family:'IBM Plex Mono'}},
-    {x:0.55,y:-1.07,text:'Adversaires · Cible légitimité',showarrow:false,font:{size:8,color:'rgba(77,254,186,.4)',family:'IBM Plex Mono'}},
+    {x:-0.55,y:1.06,text:'Fracture interne · Cible cohésion',showarrow:false,font:{size:8,color:'rgba(254,77,77,.4)',family:'DM Mono'}},
+    {x:0.55,y:1.06,text:'Adversaires · Cible cohésion',showarrow:false,font:{size:8,color:'rgba(254,192,77,.4)',family:'DM Mono'}},
+    {x:-0.55,y:-1.07,text:'Fracture interne · Cible légitimité',showarrow:false,font:{size:8,color:'rgba(77,124,254,.4)',family:'DM Mono'}},
+    {x:0.55,y:-1.07,text:'Adversaires · Cible légitimité',showarrow:false,font:{size:8,color:'rgba(77,254,186,.4)',family:'DM Mono'}},
   ]
 },{responsive:true,displayModeBar:false});
 
@@ -733,18 +743,18 @@ const tBody=document.getElementById('narr-table-body');
   const maxVol=362;
   const barW=Math.round(n.vol/maxVol*80);
   const tClass={'Critique':'threat-crit','Élevé':'threat-high','Modéré':'threat-mod','Faible':'threat-low'}[n.threat];
-  const mColor=MACRO_COLORS[n.macro]||'#6b7591';
+  const mColor=MACRO_COLORS[n.macro]||'#686868';
   const tIcon={'Accéléré':'↑↑','Croissant':'↑','Stable':'→','Déclinant':'↓','Marginal':'·'}[n.trend]||'';
-  const tColor={'Accéléré':'#fe4d4d','Croissant':'#fec04d','Déclinant':'#4d7cfe','Stable':'#6b7591','Marginal':'#3d4461'}[n.trend]||'#6b7591';
+  const tColor={'Accéléré':'#fe4d4d','Croissant':'#fec04d','Déclinant':'#4d7cfe','Stable':'#686868','Marginal':'#3d4461'}[n.trend]||'#686868';
   const tr=document.createElement('tr');
   tr.innerHTML=`
     <td class="nid-cell">${n.id}</td>
     <td style="color:var(--text);font-size:12px;">${n.label}</td>
-    <td style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:${mColor};">${n.macro}</td>
+    <td style="font-family:var(--font-data);font-size:9px;color:${mColor};">${n.macro}</td>
     <td class="vol-cell">${n.vol}<span class="vol-bar" style="width:${barW}px;opacity:.5;background:${THREAT_COLORS[n.threat]||'var(--accent)'};"></span></td>
-    <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:${tColor};">${tIcon} ${n.trend}</td>
+    <td style="font-family:var(--font-data);font-size:10px;color:${tColor};">${tIcon} ${n.trend}</td>
     <td><span class="${tClass}">${n.threat}</span></td>
-    <td style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);">${n.target}</td>`;
+    <td style="font-family:var(--font-data);font-size:9px;color:var(--muted);">${n.target}</td>`;
   tBody.appendChild(tr);
 });
 
@@ -752,16 +762,16 @@ const tBody=document.getElementById('narr-table-body');
 const annexBody=document.getElementById('annexe-table-body');
 NARRATIVES.forEach(n=>{
   const tClass={'Critique':'threat-crit','Élevé':'threat-high','Modéré':'threat-mod','Faible':'threat-low'}[n.threat];
-  const mColor=MACRO_COLORS[n.macro]||'#6b7591';
+  const mColor=MACRO_COLORS[n.macro]||'#686868';
   const tr=document.createElement('tr');
   tr.innerHTML=`
     <td class="nid-cell">${n.id}</td>
     <td style="color:var(--text);font-size:11.5px;">${n.label}</td>
-    <td style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:${mColor};white-space:nowrap;">${n.macro}</td>
+    <td style="font-family:var(--font-data);font-size:9px;color:${mColor};white-space:nowrap;">${n.macro}</td>
     <td class="vol-cell">${n.vol}</td>
     <td><span class="${tClass}">${n.threat}</span></td>
-    <td style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);white-space:nowrap;">${n.target}</td>
-    <td style="font-size:11.5px;color:#8899bb;">${n.counter}</td>`;
+    <td style="font-family:var(--font-data);font-size:9px;color:var(--muted);white-space:nowrap;">${n.target}</td>
+    <td style="font-size:11.5px;color:var(--text-2);">${n.counter}</td>`;
   annexBody.appendChild(tr);
 });
 </script>
