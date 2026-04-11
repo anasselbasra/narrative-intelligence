@@ -28,41 +28,41 @@
 body{background:var(--void);color:var(--text-1);font-family:var(--font-body);font-size:13.5px;line-height:1.7;padding:48px 32px;max-width:1200px;margin:0 auto;}
 .report-header{border-left:3px solid var(--accent);padding-left:24px;margin-bottom:48px;}
 .report-label{font-family:var(--font-data);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
-.report-title{font-size:26px;font-weight:600;color:#fff;line-height:1.2;margin-bottom:4px;}
-.report-subtitle{font-size:13px;color:var(--muted);font-weight:300;}
-.report-meta{display:flex;gap:28px;margin-top:16px;flex-wrap:wrap;}
-.meta-item{font-family:var(--font-data);font-size:10px;color:var(--muted);}
+.report-title{font-family:var(--font-display);font-size:52px;font-weight:800;color:var(--text-0);text-transform:uppercase;letter-spacing:-.02em;line-height:.92;margin-bottom:18px;}
+.report-subtitle{font-family:var(--font-body);font-size:14px;font-weight:300;color:var(--text-2);max-width:580px;line-height:1.65;margin-bottom:0;}
+.report-meta{display:flex;gap:20px;margin-top:20px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--border-hard);}
+.meta-item{font-family:var(--font-data);font-size:9px;color:var(--text-3);}
 .meta-item span{color:var(--text);}
 .section{margin-bottom:56px;}
-.section-title{font-family:var(--font-data);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.section-title{font-family:var(--font-data);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-3);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 .chart-wrap{background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:2px;}
-.callout{border-left:3px solid var(--accent3);background:var(--surface);padding:14px 18px;margin:14px 0;font-size:12.5px;color:var(--text-2);}
+.callout{border-left:2px solid var(--border-hard);background:var(--surface);padding:14px 18px;margin:14px 0;font-size:12.5px;color:var(--text-2);}
 .callout.blue{border-color:var(--accent);}.callout.red{border-color:var(--accent2);}.callout.green{border-color:var(--accent4);}.callout.grey{border-color:var(--dim);}
-.callout-title{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent3);margin-bottom:6px;}
+.callout-title{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
 .callout.blue .callout-title{color:var(--accent);}.callout.red .callout-title{color:var(--accent2);}.callout.green .callout-title{color:var(--accent4);}.callout.grey .callout-title{color:var(--dim);}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:2px;margin-bottom:28px;background:var(--border);border:1px solid var(--border);}
 .kpi-card{background:var(--surface);padding:18px 18px 14px;}
 .kpi-label{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
-.kpi-value{font-size:24px;font-weight:600;color:#fff;line-height:1;margin-bottom:3px;}
+.kpi-value{font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--text-0);line-height:1;margin-bottom:3px;}
 .kpi-sub{font-size:10px;color:var(--muted);font-family:var(--font-data);}
 .kpi-value.a{color:var(--accent);}.kpi-value.b{color:var(--accent2);}.kpi-value.c{color:var(--accent3);}.kpi-value.d{color:var(--accent4);}
 .tag{display:inline-block;font-family:var(--font-data);font-size:9px;padding:2px 6px;border:1px solid var(--border);color:var(--muted);margin:1px 2px 1px 0;}
 .tag.flag{border-color:var(--accent2);color:var(--accent2);}.tag.info{border-color:var(--accent);color:var(--accent);}.tag.warn{border-color:var(--accent3);color:var(--accent3);}.tag.green{border-color:var(--accent4);color:var(--accent4);}.tag.alt{border-color:#ff6b35;color:#ff6b35;}
-.analysis-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:22px 24px;margin-bottom:14px;}
+.analysis-card{background:var(--surface);border-top:1px solid var(--border-hard);border-left:3px solid var(--accent);padding:18px 20px 20px;margin-bottom:0;}
 .ac-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
-.rank-badge{font-family:var(--font-data);font-size:9px;padding:2px 8px;background:rgba(77,124,254,.1);border:1px solid rgba(77,124,254,.3);color:var(--accent);}
+.rank-badge{font-family:var(--font-data);font-size:9px;padding:2px 8px;background:rgba(208,2,27,.06);border:1px solid rgba(208,2,27,.2);color:var(--accent);}
 .rank-badge.noise{background:rgba(61,68,97,.15);border-color:var(--dim);color:var(--dim);}
 .ac-label{font-family:var(--font-data);font-size:12px;font-weight:600;}
 .ac-meta{font-family:var(--font-data);font-size:9px;color:var(--muted);margin-left:auto;white-space:nowrap;}
 .ac-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:10px;}
 .ac-body{font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.75;margin-bottom:16px;}
 .ac-footer{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;}
-.ac-keywords{background:var(--surface2);padding:10px 14px;flex:1;min-width:220px;}
+.ac-keywords{background:none;border-top:1px solid var(--border-hard);padding:10px 0 0;flex:1;min-width:220px;}
 .kw-label{font-family:var(--font-data);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
 .kw-row{display:flex;flex-wrap:wrap;gap:4px;}
-.kw-tag{font-family:var(--font-data);font-size:10px;padding:2px 8px;background:rgba(77,124,254,.07);border:1px solid rgba(77,124,254,.2);color:#7090dd;}
-.ac-signal{background:var(--surface2);padding:10px 14px;flex:1;min-width:200px;}
+.kw-tag{font-family:var(--font-data);font-size:9px;color:var(--text-3);background:none;border:none;padding:0;}
+.ac-signal{background:none;border-top:1px solid var(--border-hard);padding:10px 0 0;flex:1;min-width:200px;}
 .signal-label{font-family:var(--font-data);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
 .signal-val{font-size:13px;font-weight:600;margin-bottom:2px;}
 .signal-sub{font-family:var(--font-data);font-size:10px;color:var(--muted);}
@@ -85,12 +85,13 @@ body{background:var(--void);color:var(--text-1);font-family:var(--font-body);fon
 .footer-text{font-family:var(--font-data);font-size:10px;color:var(--dim);}
 p{color:var(--text-1);margin-bottom:10px;font-weight:300;font-size:13px;}
 strong{color:var(--text);font-weight:600;}
+.kw-tag+.kw-tag::before{content:" ·";color:var(--border-hard);}.kw-row{gap:0;}
 </style></head><body>
 <div class="report-header">
-  <div class="report-label">NATO Narrative Intelligence &middot; Importation 696 &middot; CONFIDENTIEL</div>
-  <div class="report-title">Rapport Phase 2 &middot; Topic Modeling</div>
-  <div class="report-subtitle">Cartographie narratologique &middot; Pipeline Topic Modeling &middot; UMAP + HDBSCAN</div>
-  <div style="font-family:var(--font-data);font-size:10px;color:var(--dim);margin-top:4px;">Twitter/X &middot; Anglais &middot; 1 fév. – 3 avr. 2026 &middot; 3 510 posts &middot; 36 clusters &middot; analyse_id = 474</div>
+  <div class="report-label">NI-2026-NATO-001 &middot; Module 02 &middot; Confidentiel</div>
+  <div class="report-title">Topic<br>Landscape</div>
+  <div class="report-subtitle">Cartographie sémantique de 3 510 posts anglais. 36 clusters narratifs identifiés par UMAP + HDBSCAN, deux familles distinctes : opérationnelle et institutionnelle. Non plus <em>combien</em> ont parlé de l’OTAN, mais <strong>ce qu’ils ont dit, avec quels cadrages, et quand.</strong></div>
+  <div style="font-family:var(--font-data);font-size:9px;color:var(--text-3);letter-spacing:.08em;margin-top:18px;margin-bottom:0;">Twitter/X &middot; Anglais &middot; 1 fév. – 3 avr. 2026 &middot; 3 510 posts &middot; 36 clusters</div>
   <div class="report-meta">
     <div class="meta-item">Posts classifiés <span>2 437</span></div>
     <div class="meta-item">Bruit non classifié <span>1 073 &middot; 30,6%</span></div>
