@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Narrative Intelligence — NATO Information Environment</title>
   <meta name="author" content="Anass El Basraoui">
-  <meta name="description" content="Anass El Basraoui — Narrative Intelligence Analyst. Analyse stratégique des environnements informationnels, data science et intelligence narrative. NATO Information Environment.">
+  <meta name="description" content="Narrative Intelligence — NATO Information Environment 2026. Strategic analysis of 3,510 posts on the Iranian nuclear crisis and NATO cohesion. 21 canonical narratives identified. By Anass El Basraoui, Narrative Intelligence Analyst.">
   <meta name="keywords" content="Anass El Basraoui, Narrative Intelligence, NATO, Information Environment, Data Science, Strategic Analysis">
   <meta property="og:title" content="Anass El Basraoui — Narrative Intelligence">
   <meta property="og:description" content="Analyse stratégique des environnements informationnels. NATO Information Environment.">
@@ -15,6 +15,28 @@
   <meta property="og:type" content="website">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://narrative-intelligence.systems/">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Report",
+    "name": "Narrative Threat Assessment — NATO Information Environment",
+    "description": "Strategic analysis of 3,510 Twitter/X posts on the Iranian nuclear crisis and NATO cohesion. 21 canonical narratives identified across 4 analytical modules.",
+    "datePublished": "2026-04-03",
+    "author": {
+      "@type": "Person",
+      "name": "Anass El Basraoui",
+      "url": "https://elbasraoui.engineer/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Narrative Intelligence Systems"
+    },
+    "url": "https://narrative-intelligence.systems/",
+    "inLanguage": ["fr", "en"],
+    "keywords": "NATO, Narrative Intelligence, Information Environment, Iranian Crisis, Alliance Cohesion, NLP, UMAP, HDBSCAN"
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -830,11 +852,126 @@
       box-shadow: 0 0 0 3px var(--surface-1);
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       CTA & PDF BLOCKS
+    ═══════════════════════════════════════════════════════════════ */
+    .cta-block {
+      padding: 12px 16px 0;
+    }
+    .cta-btn {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid var(--red);
+      color: var(--red);
+      font-family: var(--font-data);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-align: center;
+      text-decoration: none;
+      transition: background .2s, color .2s;
+    }
+    .cta-btn:hover {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .pdf-block {
+      padding: 6px 16px 16px;
+    }
+    .pdf-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 7px 12px;
+      background: transparent;
+      border: 1px solid var(--border-hard);
+      color: var(--text-2);
+      font-family: var(--font-data);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .pdf-btn:hover {
+      border-color: var(--text-2);
+      color: var(--text-1);
+    }
+    .pdf-btn svg {
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+    }
+
+    /* Screen-reader / crawler utility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVE (≤ 768px)
+    ═══════════════════════════════════════════════════════════════ */
+    #sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .55);
+      z-index: 999;
+    }
+
+    @media (max-width: 768px) {
+      #shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+      }
+      #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform .28s cubic-bezier(.4,0,.2,1);
+        overflow-y: auto;
+      }
+      #shell.sidebar-open #sidebar {
+        transform: translateX(0);
+      }
+      #shell.sidebar-open #sidebar-overlay {
+        display: block;
+      }
+      #main {
+        grid-column: 1;
+      }
+      #statusbar {
+        grid-column: 1;
+        justify-content: flex-start;
+        overflow-x: auto;
+      }
+    }
+
   </style>
 </head>
 
 <body>
 <div id="shell">
+
+  <div id="sidebar-overlay" onclick="closeSidebar()" aria-hidden="true"></div>
 
   <!-- ══════════════════════════════════════════
        SIDEBAR
@@ -901,7 +1038,7 @@
             <div class="nav-body">
               <div class="nav-index">Module 01 · Descriptive</div>
               <div class="nav-title-text">Signal Landscape</div>
-              <div class="nav-scope">3,514 posts · Temporal dynamics · Source mapping</div>
+              <div class="nav-scope">3,510 posts · Temporal dynamics · Source mapping</div>
             </div>
             <div class="nav-status"><span class="status-dot"></span></div>
           </div>
@@ -969,7 +1106,7 @@
       <div class="kpi-grid">
         <div class="kpi-cell">
           <div class="kpi-label">Corpus</div>
-          <div class="kpi-number">3,514</div>
+          <div class="kpi-number">3,510</div>
           <div class="kpi-unit">Posts · Twitter / X</div>
         </div>
         <div class="kpi-cell">
@@ -998,6 +1135,20 @@
              target="_blank" rel="noopener noreferrer"
              class="analyst-link">Portfolio</a>
         </div>
+      </div>
+
+      <div class="cta-block">
+        <a href="mailto:anass@elbasraoui.engineer?subject=Briefing%20Request%20%E2%80%94%20NI-2026-NATO&body=Bonjour%20Anass%2C%0A%0AJe%20souhaite%20organiser%20un%20briefing%20autour%20de%20votre%20rapport%20Narrative%20Intelligence%20NATO.%0A%0ACordialement%2C"
+           class="cta-btn">Request Briefing</a>
+      </div>
+
+      <div class="pdf-block">
+        <a href="NI-2026-NATO-001_Resume_Executif.pdf" download class="pdf-btn">
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path d="M5 1v5.5M2.5 4.5L5 7l2.5-2.5M1.5 8.5h7"/>
+          </svg>
+          Executive Summary (PDF)
+        </a>
       </div>
     </div>
 
@@ -1105,7 +1256,7 @@
 
     <div class="sb-cell">
       <span class="sb-key">Corpus</span>
-      <span class="sb-val">3,514 posts · Twitter / X · 1 Feb – 3 Apr 2026</span>
+      <span class="sb-val">3,510 posts · Twitter / X · 1 Feb – 3 Apr 2026</span>
     </div>
 
     <div class="sb-cell">
@@ -1137,7 +1288,15 @@
   const shell = document.getElementById('shell');
 
   function toggleSidebar() {
-    shell.classList.toggle('sidebar-closed');
+    if (window.innerWidth <= 768) {
+      shell.classList.toggle('sidebar-open');
+    } else {
+      shell.classList.toggle('sidebar-closed');
+    }
+  }
+
+  function closeSidebar() {
+    shell.classList.remove('sidebar-open');
   }
 
   /* ─── Progress nodes ─────────────────────────────────────── */
@@ -1198,5 +1357,10 @@
     }
   });
 </script>
+
+<div class="sr-only">
+  Narrative Intelligence report on the NATO Information Environment. Analysis of 3,510 posts collected on Twitter/X between 1 February and 3 April 2026, covering the Iranian nuclear crisis and NATO alliance cohesion. 21 canonical narratives identified. N18 (Alliance Fracture / US Withdrawal) is the dominant threat narrative with 362 texts and 9.6M engagements. Conducted by Anass El Basraoui, Narrative Intelligence Analyst.
+</div>
+
 </body>
 </html>
