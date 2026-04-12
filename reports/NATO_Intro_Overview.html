@@ -492,6 +492,22 @@
       line-height: 1.7;
     }
 
+
+    /* ── Radar hero layout ───────────────────────────────────── */
+    .title-hero {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 36px;
+      align-items: center;
+      margin-bottom: 44px;
+    }
+    .title-block { margin-bottom: 0; }
+    .hero-radar-wrap { position: relative; width: 260px; height: 260px; flex-shrink: 0; }
+    #radarCanvas { display: block; }
+    @media (max-width: 580px) {
+      .title-hero { grid-template-columns: 1fr; }
+      .hero-radar-wrap { display: none; }
+    }
     @keyframes fade-in {
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -518,6 +534,7 @@
   </header>
 
   <!-- Title block — kept in English per project specification -->
+  <div class="title-hero">
   <div class="title-block">
     <div class="overline">Analytical Report · 4-Phase Pipeline</div>
     <h1 class="main-title">Narrative<br/><span>Threat</span><br/>Assessment</h1>
@@ -530,7 +547,14 @@
       les structures narratives en circulation, identifie les cadres de menace ciblant la cohésion
       de l'alliance, et détecte les signaux visuels coordonnés dans l'environnement informationnel.
     </p>
+  </div><!-- /.title-block -->
+
+  <!-- Radar -->
+  <div class="hero-radar-wrap">
+    <canvas id="radarCanvas" width="260" height="260"></canvas>
   </div>
+
+  </div><!-- /.title-hero -->
 
   <!-- Study parameters -->
   <div class="params-grid">
@@ -771,6 +795,98 @@
 
 <script>
   'use strict';
+
+// Radar sweep animation
+(function(){
+  var canvas = document.getElementById('radarCanvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var cx = W/2, cy = H/2, maxR = W/2 - 8;
+
+  var blipDefs = [
+    [-42, 0.84, 'N18', 'crit'],
+    [ 18, 0.67, 'N02', 'crit'],
+    [-18, 0.58, 'N05', 'crit'],
+    [102, 0.76, 'N15', 'crit'],
+    [142, 0.54, 'N19', 'crit'],
+    [ 62, 0.81, 'N21', 'high'],
+    [-98, 0.46, 'N10', 'high'],
+    [172, 0.37, 'N01', 'high'],
+    [-152,0.68, 'N12', 'high']
+  ];
+  var blips = blipDefs.map(function(b){
+    var rad = (b[0]-90)*Math.PI/180;
+    return {x:cx+Math.cos(rad)*b[1]*maxR, y:cy+Math.sin(rad)*b[1]*maxR,
+            label:b[2], cat:b[3], glow:0};
+  });
+
+  var angle = -Math.PI/2;
+  var SPEED = (2*Math.PI)/(6*60);
+  var TRAIL = Math.PI*0.65;
+  var STEPS = 55;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    for(var i=1;i<=4;i++){
+      ctx.beginPath();
+      ctx.arc(cx,cy,(maxR/4)*i,0,Math.PI*2);
+      ctx.strokeStyle = i===4 ? 'rgba(255,255,255,.09)' : 'rgba(255,255,255,.04)';
+      ctx.lineWidth = i===4 ? 0.8 : 0.5;
+      ctx.stroke();
+    }
+
+    ctx.lineWidth=0.5;
+    ctx.strokeStyle='rgba(255,255,255,.04)';
+    ctx.beginPath(); ctx.moveTo(cx-maxR,cy); ctx.lineTo(cx+maxR,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-maxR); ctx.lineTo(cx,cy+maxR); ctx.stroke();
+    var d=maxR*0.707;
+    ctx.strokeStyle='rgba(255,255,255,.02)';
+    ctx.beginPath(); ctx.moveTo(cx-d,cy-d); ctx.lineTo(cx+d,cy+d); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+d,cy-d); ctx.lineTo(cx-d,cy+d); ctx.stroke();
+
+    for(var s=0;s<STEPS;s++){
+      var t=s/STEPS;
+      var ta=angle-TRAIL*(1-t);
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,maxR,ta-TRAIL/STEPS,ta+0.002);
+      ctx.closePath();
+      ctx.fillStyle='rgba(208,2,27,'+(t*0.13)+')';
+      ctx.fill();
+    }
+
+    var ex=cx+Math.cos(angle)*maxR, ey=cy+Math.sin(angle)*maxR;
+    var g=ctx.createLinearGradient(cx,cy,ex,ey);
+    g.addColorStop(0,'rgba(208,2,27,0)');
+    g.addColorStop(0.2,'rgba(208,2,27,.2)');
+    g.addColorStop(1,'rgba(208,2,27,.85)');
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(ex,ey);
+    ctx.strokeStyle=g; ctx.lineWidth=1.5; ctx.stroke();
+
+    ctx.beginPath(); ctx.arc(cx,cy,2.5,0,Math.PI*2);
+    ctx.fillStyle='rgba(208,2,27,.85)'; ctx.fill();
+
+    blips.forEach(function(b){
+      var ba=Math.atan2(b.y-cy,b.x-cx);
+      var diff=((angle-ba)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+      if(diff<0.18) b.glow=1.0; else b.glow=Math.max(0,b.glow-0.007);
+      if(b.glow<0.03) return;
+      var col=b.cat==='crit'?'rgba(208,2,27,'+b.glow+')':'rgba(240,184,74,'+b.glow+')';
+      var gr=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,10);
+      gr.addColorStop(0,col); gr.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(b.x,b.y,10,0,Math.PI*2); ctx.fillStyle=gr; ctx.fill();
+      ctx.beginPath(); ctx.arc(b.x,b.y,2,0,Math.PI*2); ctx.fillStyle=col; ctx.fill();
+      ctx.font='500 7px DM Mono,monospace'; ctx.fillStyle=col;
+      ctx.fillText(b.label,b.x+5,b.y-3);
+    });
+
+    angle=(angle+SPEED)%(Math.PI*2);
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
   function toggleAccordion(btn) {
     const isOpen = btn.classList.contains('open');
     const body   = btn.nextElementSibling;
