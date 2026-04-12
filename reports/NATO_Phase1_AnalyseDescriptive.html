@@ -10,15 +10,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --void:        #000000;
-  --surface-0:   #080808;
-  --surface-1:   #0f0f0f;
-  --surface-2:   #161616;
-  --surface-3:   #1e1e1e;
-  --border-hard: #2a2a2a;
-  --border-soft: #1a1a1a;
+  --void:        #080d14;
+  --surface-0:   #0d1420;
+  --surface-1:   #121b2b;
+  --surface-2:   #1a2438;
+  --surface-3:   #1f2d40;
+  --border-hard: #2a3a52;
+  --border-soft: #182236;
   --red:         #d0021b;
-  --orange:      #c45c00;
+  --orange:      #e07b1a;
   --red-dim:     rgba(208,2,27,0.08);
   --text-0:      #ffffff;
   --text-1:      #c8c8c8;
@@ -39,7 +39,7 @@ body {
   line-height: 1.7;
   max-width: 860px;
   margin: 0 auto;
-  padding: 44px 48px 80px;
+  padding: 44px clamp(24px, 5vw, 48px) 80px;
 }
 
 /* ── HEADER ─────────────────────────────────────────────── */
@@ -176,10 +176,10 @@ h3 {
   color: var(--text-2);
   letter-spacing: .14em;
   text-transform: uppercase;
-  margin: 24px 0 12px;
+  margin: 48px 0 12px;
 }
 
-p { color: var(--text-2); margin-bottom: 10px; font-weight: 300; font-size: 13px; }
+p { color: var(--text-2); margin-bottom: 1.2em; font-weight: 300; font-size: 13px; }
 strong { color: var(--text-1); font-weight: 500; }
 em { font-style: italic; }
 

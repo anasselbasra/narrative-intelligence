@@ -25,14 +25,14 @@
        DESIGN TOKENS
     ═══════════════════════════════════════════════════════════════ */
     :root {
-      --void:        #000000;
-      --surface-0:   #080808;
-      --surface-1:   #0f0f0f;
-      --surface-2:   #161616;
-      --surface-3:   #1e1e1e;
+      --void:        #080d14;
+      --surface-0:   #0d1420;
+      --surface-1:   #121b2b;
+      --surface-2:   #1a2438;
+      --surface-3:   #1f2d40;
 
-      --border-hard: #2a2a2a;
-      --border-soft: #1a1a1a;
+      --border-hard: #2a3a52;
+      --border-soft: #182236;
 
       --red:         #d0021b;
       --red-dim:     rgba(208, 2, 27, 0.15);
@@ -202,7 +202,7 @@
       padding: 18px 24px 9px;
       font-family: var(--font-data);
       font-size: 8px;
-      color: var(--text-3);
+      color: var(--text-2);
       letter-spacing: .18em;
       text-transform: uppercase;
       flex-shrink: 0;
@@ -236,19 +236,20 @@
     .nav-inner {
       display: flex;
       align-items: stretch;
-      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 2px;
       transition: border-color .15s, background .15s;
       overflow: hidden;
     }
 
     .nav-btn:hover .nav-inner {
-      background: var(--surface-2);
-      border-color: var(--border-hard);
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.16);
     }
 
     .nav-btn.active .nav-inner {
-      background: var(--surface-2);
+      background: rgba(255, 255, 255, 0.07);
       border-color: var(--border-hard);
       border-left-color: var(--red);
     }
@@ -287,7 +288,7 @@
       font-family: var(--font-display);
       font-size: 14px;
       font-weight: 700;
-      color: var(--text-2);
+      color: var(--text-1);
       letter-spacing: .04em;
       text-transform: uppercase;
       line-height: 1.1;
@@ -422,14 +423,16 @@
     .analyst-link {
       font-family: var(--font-data);
       font-size: 8.5px;
-      color: var(--text-3);
+      color: var(--text-2);
       letter-spacing: .1em;
       text-transform: uppercase;
-      text-decoration: none;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(255,255,255,0.2);
       transition: color .15s;
     }
 
-    .analyst-link:hover { color: var(--text-1); }
+    .analyst-link:hover { color: var(--text-1); text-decoration-color: rgba(255,255,255,0.5); }
 
     /* ═══════════════════════════════════════════════════════════════
        MAIN
@@ -458,8 +461,8 @@
         -55deg,
         transparent,
         transparent 6px,
-        rgba(0,0,0,.12) 6px,
-        rgba(0,0,0,.12) 7px
+        rgba(0,0,0,.08) 6px,
+        rgba(0,0,0,.08) 7px
       );
       pointer-events: none;
     }
@@ -469,14 +472,14 @@
       align-items: center;
       gap: 16px;
       padding: 0 24px;
-      height: 40px;
+      height: 36px;
       position: relative;
     }
 
     .banner-label {
       font-family: var(--font-display);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
       color: #fff;
       letter-spacing: .14em;
       text-transform: uppercase;
@@ -514,7 +517,7 @@
 
     /* ── Top bar ─────────────────────────────────────────────────── */
     #topbar {
-      height: 44px;
+      height: 48px;
       flex-shrink: 0;
       background: var(--surface-0);
       border-bottom: 1px solid var(--border-hard);
@@ -561,12 +564,12 @@
       gap: 8px;
       font-family: var(--font-data);
       font-size: 10px;
-      color: var(--text-3);
+      color: var(--text-2);
       letter-spacing: .06em;
     }
 
     .tb-path .sep { color: var(--border-hard); }
-    .tb-path .current { color: var(--text-1); font-weight: 500; }
+    .tb-path .current { color: var(--text-0); font-weight: 500; }
 
     .tb-spacer { flex: 1; }
 
@@ -614,7 +617,7 @@
     .tb-clock {
       font-family: var(--font-data);
       font-size: 10px;
-      color: var(--text-3);
+      color: var(--text-2);
       letter-spacing: .08em;
       border-left: 1px solid var(--border-hard);
       padding-left: 18px;
@@ -710,6 +713,8 @@
       border-top: 1px solid var(--border-hard);
       display: flex;
       align-items: center;
+      justify-content: center;
+      gap: 0;
       overflow: hidden;
     }
 
@@ -717,7 +722,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 0 16px;
+      padding: 0 20px;
       height: 100%;
       border-right: 1px solid var(--border-soft);
       flex-shrink: 0;
@@ -738,7 +743,7 @@
     .sb-key {
       font-family: var(--font-data);
       font-size: 8.5px;
-      color: var(--text-3);
+      color: var(--text-2);
       letter-spacing: .1em;
       text-transform: uppercase;
       white-space: nowrap;
@@ -747,7 +752,7 @@
     .sb-val {
       font-family: var(--font-data);
       font-size: 8.5px;
-      color: var(--text-2);
+      color: var(--text-1);
       letter-spacing: .04em;
       white-space: nowrap;
     }
@@ -761,7 +766,7 @@
       text-transform: uppercase;
     }
 
-    .sb-spacer { flex: 1; }
+    /* .sb-spacer removed */
 
     .sb-lead {
       font-family: var(--font-data);
@@ -1085,8 +1090,6 @@
       <span class="sb-key">Corpus</span>
       <span class="sb-val">3,514 posts · Twitter / X · 1 Feb – 3 Apr 2026</span>
     </div>
-
-    <div class="sb-spacer"></div>
 
     <div class="sb-cell">
       <span class="sb-lead">Lead Analyst &nbsp;<strong>Anass El Basraoui</strong></span>

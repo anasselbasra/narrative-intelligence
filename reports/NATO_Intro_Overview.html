@@ -10,12 +10,12 @@
 
   <style>
     :root {
-      --void:        #000000;
-      --surface-0:   #080808;
-      --surface-1:   #0f0f0f;
-      --surface-2:   #161616;
-      --border-hard: #2a2a2a;
-      --border-soft: #1a1a1a;
+      --void:        #080d14;
+      --surface-0:   #0d1420;
+      --surface-1:   #121b2b;
+      --surface-2:   #1a2438;
+      --border-hard: #2a3a52;
+      --border-soft: #182236;
       --red:         #d0021b;
       --text-0:      #ffffff;
       --text-1:      #c8c8c8;
@@ -33,7 +33,7 @@
       color: var(--text-1);
       font-family: var(--font-body);
       font-size: 13px;
-      line-height: 1.6;
+      line-height: 1.7;
       height: 100%;
       overflow-y: auto;
       scrollbar-width: thin;
@@ -44,6 +44,8 @@
       max-width: 740px;
       margin: 0 auto;
       padding: 44px 32px 80px;
+      padding-left: max(32px, env(safe-area-inset-left));
+      padding-right: max(32px, env(safe-area-inset-right));
     }
 
     /* ── Document header ───────────────────────────────────────── */
