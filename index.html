@@ -99,7 +99,7 @@
 
     /* ── Wordmark ────────────────────────────────────────────────── */
     .wordmark {
-      padding: 20px 24px 18px;
+      padding: 10px 18px 8px;
       border-bottom: 1px solid var(--border-soft);
       flex-shrink: 0;
     }
@@ -108,7 +108,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 7px;
     }
 
     /* NATO compass rose — inline SVG, 20×20 */
@@ -139,7 +139,7 @@
 
     .wm-title {
       font-family: var(--font-display);
-      font-size: 26px;
+      font-size: 21px;
       font-weight: 800;
       color: var(--text-0);
       letter-spacing: -.01em;
@@ -150,9 +150,9 @@
     .wm-title span { color: var(--red); }
 
     .wm-sub {
-      margin-top: 6px;
+      margin-top: 4px;
       font-family: var(--font-data);
-      font-size: 8.5px;
+      font-size: 8px;
       color: var(--text-3);
       letter-spacing: .1em;
       text-transform: uppercase;
@@ -161,11 +161,11 @@
 
     /* ── Document metadata ───────────────────────────────────────── */
     .doc-meta {
-      padding: 14px 24px;
+      padding: 8px 18px;
       border-bottom: 1px solid var(--border-soft);
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 4px;
       flex-shrink: 0;
     }
 
@@ -194,7 +194,7 @@
 
     /* ── Navigation ──────────────────────────────────────────────── */
     .nav-header {
-      padding: 18px 24px 9px;
+      padding: 12px 18px 7px;
       font-family: var(--font-data);
       font-size: 8px;
       color: var(--text-2);
@@ -208,7 +208,7 @@
       padding: 0 12px 8px;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
       flex: 1;
       min-height: 0;
       overflow-y: auto;
@@ -259,7 +259,7 @@
     .nav-btn.active .nav-accent { background: var(--red); }
 
     .nav-body {
-      padding: 10px 12px;
+      padding: 15px 12px;
       flex: 1;
       min-width: 0;
     }
@@ -286,7 +286,7 @@
 
     .nav-title-text {
       font-family: var(--font-display);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--text-1);
       letter-spacing: .04em;
@@ -349,7 +349,7 @@
     }
 
     .kpi-cell {
-      padding: 10px 16px;
+      padding: 7px 14px;
       border-right: 1px solid var(--border-soft);
       border-bottom: 1px solid var(--border-soft);
     }
@@ -367,7 +367,7 @@
 
     .kpi-number {
       font-family: var(--font-display);
-      font-size: 28px;
+      font-size: 22px;
       font-weight: 700;
       line-height: 1;
       color: var(--text-0);
@@ -384,7 +384,7 @@
 
     /* Analyst block */
     .analyst-block {
-      padding: 10px 20px 10px;
+      padding: 8px 16px;
       border-top: 1px solid var(--border-soft);
     }
 
@@ -614,6 +614,14 @@
     }
 
     .prog-seg.done .prog-line { background: var(--text-3); }
+
+    .tb-coverage {
+      font-family: var(--font-data);
+      font-size: 10px;
+      color: var(--text-3);
+      letter-spacing: .06em;
+      padding-right: 20px;
+    }
 
     .tb-clock {
       font-family: var(--font-data);
@@ -859,14 +867,7 @@
       <div class="wm-title">Narrative<br /><span>Intelligence</span></div>
       <div class="wm-sub">Narrative Threat Assessment<br />NATO Information Environment</div>
     </div>
-
-    <!-- Document metadata -->
-    <div class="doc-meta">
-      <div class="meta-row">
-        <span class="meta-key">Report ID</span>
-        <span class="meta-val">NI-2026-NATO-001</span>
-      </div>
-      <div class="meta-row">
+<div class="meta-row">
         <span class="meta-key">Platform</span>
         <span class="meta-val">Twitter / X · English</span>
       </div>
@@ -1055,6 +1056,8 @@
       </nav>
 
       <div class="tb-spacer"></div>
+
+      <div class="tb-coverage">1 Feb – 3 Apr 2026</div>
 
       <!-- Progress nodes (4 analytical phases) -->
       <div class="tb-progress" id="progress" aria-hidden="true">
