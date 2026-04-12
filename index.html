@@ -831,6 +831,50 @@
       background: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.28);
     }
+
+    /* ── Sidebar progress tracker ───────────────────────────── */
+    .sb-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 20px 12px;
+    }
+    .sb-seg {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    .sb-seg:last-child { flex: 0; }
+    .sb-node {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--border-hard);
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+    .sb-line-h {
+      flex: 1;
+      height: 1px;
+      background: var(--border-hard);
+      transition: background .2s;
+    }
+    .sb-seg.done .sb-node   { background: var(--text-3); border-color: var(--text-3); }
+    .sb-seg.done .sb-line-h { background: var(--text-3); }
+    .sb-seg.active .sb-node {
+      background: var(--red);
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(208,2,27,.18);
+    }
+
+    /* Signal Landscape active → red highlight */
+    .nav-btn[data-phase="0"].active .nav-inner {
+      background: rgba(208, 2, 27, 0.10);
+      border-color: rgba(208, 2, 27, 0.45);
+    }
+    .nav-btn[data-phase="0"].active .nav-title-text { color: var(--red); }
+    .nav-btn[data-phase="0"].active .nav-index      { color: var(--red); }
   </style>
 </head>
 
@@ -870,6 +914,25 @@
 
     <!-- Navigation -->
     <div class="nav-header">// Intelligence Modules</div>
+
+    <!-- Sidebar progress tracker -->
+    <div class="sb-progress" aria-hidden="true">
+      <div class="sb-seg">
+        <div class="sb-node" title="Module 01 — Signal Landscape"></div>
+        <div class="sb-line-h"></div>
+      </div>
+      <div class="sb-seg">
+        <div class="sb-node" title="Module 02 — Threat Clusters"></div>
+        <div class="sb-line-h"></div>
+      </div>
+      <div class="sb-seg">
+        <div class="sb-node" title="Module 03 — Narrative Matrix"></div>
+        <div class="sb-line-h"></div>
+      </div>
+      <div class="sb-seg">
+        <div class="sb-node" title="Module 04 — Visual Intelligence"></div>
+      </div>
+    </div>
 
     <ul class="nav-list" id="nav-list" role="menu">
 
@@ -1143,13 +1206,16 @@
 
   /* ─── Progress nodes ─────────────────────────────────────── */
   const progSegs = document.querySelectorAll('.prog-seg');
+  const sbSegs   = document.querySelectorAll('.sb-seg');
 
   function updateProgress(phase) {
-    progSegs.forEach((seg, i) => {
-      seg.classList.remove('done', 'active');
-      if (phase < 0) return;        /* overview: no phase highlighted */
-      if (i === phase)     seg.classList.add('active');
-      else if (i < phase)  seg.classList.add('done');
+    [progSegs, sbSegs].forEach(list => {
+      list.forEach((seg, i) => {
+        seg.classList.remove('done', 'active');
+        if (phase < 0) return;      /* overview: no phase highlighted */
+        if (i === phase)    seg.classList.add('active');
+        else if (i < phase) seg.classList.add('done');
+      });
     });
   }
 

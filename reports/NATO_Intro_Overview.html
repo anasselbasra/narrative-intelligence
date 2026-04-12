@@ -56,6 +56,32 @@
       padding-bottom: 22px;
       border-bottom: 1px solid var(--border-hard);
       margin-bottom: 44px;
+      position: relative;
+    }
+
+    .doc-analyst {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      line-height: 1.7;
+    }
+    .doc-analyst-label {
+      display: block;
+      font-family: var(--font-data);
+      font-size: 8px;
+      color: var(--text-3);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .doc-analyst-name {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-1);
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
 
     .class-tag {
@@ -197,6 +223,21 @@
     }
 
     .accordion { background: var(--surface-0); }
+
+    .section-list .accordion:nth-child(1),
+    .section-list .accordion:nth-child(2) {
+      border: 1px solid rgba(208, 2, 27, 0.40);
+      box-shadow: inset 0 0 24px rgba(208, 2, 27, 0.04);
+    }
+    .section-list .accordion:nth-child(1) .accordion-tag,
+    .section-list .accordion:nth-child(2) .accordion-tag {
+      color: var(--red);
+      border-color: rgba(208, 2, 27, 0.35);
+    }
+    .section-list .accordion:nth-child(1) .accordion-title,
+    .section-list .accordion:nth-child(2) .accordion-title {
+      color: var(--text-0);
+    }
 
     .accordion-btn {
       width: 100%;
@@ -498,7 +539,7 @@
       display: grid;
       grid-template-columns: 1fr 260px;
       gap: 36px;
-      align-items: center;
+      align-items: start;
       margin-bottom: 44px;
     }
     .title-block { margin-bottom: 0; }
@@ -525,6 +566,10 @@
     <div>
       <span class="class-tag">Restricted</span>
       <span class="doc-ref">NI-2026-NATO-001</span>
+    </div>
+    <div class="doc-analyst">
+      <span class="doc-analyst-label">Analyste principal</span>
+      <span class="doc-analyst-name">Anass El Basraoui</span>
     </div>
     <div class="doc-meta-block">
       <div class="doc-meta-row">Période &nbsp;<strong>1 Feb – 3 Apr 2026</strong></div>
