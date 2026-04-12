@@ -80,7 +80,7 @@
     ═══════════════════════════════════════════════════════════════ */
     #sidebar {
       grid-row: 1 / 2;
-      background: var(--surface-0);
+      background: var(--surface-1);
       border-right: 1px solid var(--border-hard);
       display: flex;
       flex-direction: column;
@@ -95,12 +95,7 @@
     }
 
     /* Redaction bar */
-    .redaction-bar {
-      height: 4px;
-      background: var(--red);
-      width: 100%;
-      flex-shrink: 0;
-    }
+    /* .redaction-bar removed */
 
     /* ── Wordmark ────────────────────────────────────────────────── */
     .wordmark {
@@ -284,6 +279,11 @@
     /* Overview item gets a slightly different index label treatment */
     .nav-btn--overview .nav-index { letter-spacing: .1em; }
 
+    @keyframes nav-title-pulse {
+      0%, 55%, 100% { opacity: 1; }
+      30% { opacity: 0.38; }
+    }
+
     .nav-title-text {
       font-family: var(--font-display);
       font-size: 14px;
@@ -293,6 +293,7 @@
       text-transform: uppercase;
       line-height: 1.1;
       transition: color .15s;
+      animation: nav-title-pulse 3.6s ease-in-out infinite;
     }
 
     .nav-btn:hover .nav-title-text,
@@ -529,32 +530,32 @@
 
     /* Sidebar toggle button */
     .sidebar-toggle {
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 3px;
       cursor: pointer;
-      padding: 5px 8px;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-2);
+      color: var(--text-0);
       transition: color .15s, background .15s, border-color .15s;
       flex-shrink: 0;
-      margin-right: 4px;
+      margin-right: 8px;
     }
 
     .sidebar-toggle:hover {
       color: var(--text-0);
-      background: var(--surface-2);
-      border-color: var(--border-hard);
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     .sidebar-toggle svg {
-      width: 15px;
-      height: 15px;
+      width: 18px;
+      height: 18px;
       fill: none;
       stroke: currentColor;
-      stroke-width: 1.6;
+      stroke-width: 2;
       stroke-linecap: round;
     }
 
@@ -795,6 +796,24 @@
     #signal-banner { animation: fade-up .4s ease both; animation-delay: .10s; }
     #topbar        { animation: fade-up .4s ease both; animation-delay: .18s; }
     #frame-wrap    { animation: fade-up .4s ease both; animation-delay: .26s; }
+
+    /* ── Module 01 priority — Signal Landscape ──────────────── */
+    .nav-btn[data-phase="0"] .nav-inner {
+      background: rgba(208, 2, 27, 0.06);
+      border-color: rgba(208, 2, 27, 0.28);
+    }
+    .nav-btn[data-phase="0"] .nav-title-text {
+      font-size: 16px;
+      color: var(--text-0);
+      animation-duration: 2.4s;
+    }
+    .nav-btn[data-phase="0"] .nav-index {
+      color: rgba(208, 2, 27, 0.85);
+    }
+    .nav-btn[data-phase="0"]:hover .nav-inner {
+      background: rgba(208, 2, 27, 0.12);
+      border-color: rgba(208, 2, 27, 0.5);
+    }
   </style>
 </head>
 
@@ -806,7 +825,7 @@
   ══════════════════════════════════════════ -->
   <aside id="sidebar" aria-label="Navigation panel">
 
-    <div class="redaction-bar"></div>
+    
 
     <!-- Wordmark -->
     <div class="wordmark">

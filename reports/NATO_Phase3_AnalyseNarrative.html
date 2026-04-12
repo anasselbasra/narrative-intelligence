@@ -49,7 +49,12 @@ body{background:var(--void);color:var(--text-1);font-family:var(--font-body);fon
 .threat-high{background:rgba(254,192,77,.10);border:1px solid rgba(254,192,77,.4);color:var(--high);font-family:var(--font-data);font-size:9px;padding:2px 7px;display:inline-block;}
 .threat-mod{background:rgba(77,254,186,.08);border:1px solid rgba(77,254,186,.3);color:var(--mod);font-family:var(--font-data);font-size:9px;padding:2px 7px;display:inline-block;}
 .threat-low{background:rgba(77,124,254,.10);border:1px solid rgba(77,124,254,.3);color:var(--low);font-family:var(--font-data);font-size:9px;padding:2px 7px;display:inline-block;}
-.nid{font-family:var(--font-data);font-size:10px;font-weight:600;color:var(--accent3);background:rgba(254,192,77,.08);border:1px solid rgba(254,192,77,.2);padding:1px 6px;display:inline-block;margin-right:4px;}
+.nid{font-family:var(--font-data);font-size:10px;font-weight:600;color:var(--accent3);background:rgba(240,184,74,.08);border:1px solid rgba(240,184,74,.25);padding:1px 6px;display:inline-block;margin-right:4px;position:relative;cursor:default;}
+.nid[data-tooltip]{cursor:help;}
+.nid[data-tooltip]::after{content:attr(data-tooltip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0d1420;border:1px solid #2a3a52;color:#c8c8c8;font-family:'Barlow',sans-serif;font-size:11px;font-weight:400;line-height:1.5;padding:7px 11px;border-radius:3px;white-space:normal;width:260px;max-width:320px;z-index:999;pointer-events:none;opacity:0;transition:opacity .15s ease;box-shadow:0 4px 16px rgba(0,0,0,.5);}
+.nid[data-tooltip]:hover::after{opacity:1;}
+.nid[data-tooltip]::before{content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#2a3a52;z-index:1000;opacity:0;transition:opacity .15s ease;}
+.nid[data-tooltip]:hover::before{opacity:1;}
 .chart-wrap{background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:2px;}
 .chart-label{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 .data-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:20px;}
@@ -774,6 +779,19 @@ NARRATIVES.forEach(n=>{
     <td style="font-size:11.5px;color:var(--text-2);">${n.counter}</td>`;
   annexBody.appendChild(tr);
 });
+
+<script>
+// Narrative tooltip lookup — built from NARRATIVES array
+(function(){
+  const map = {};
+  if(typeof NARRATIVES !== 'undefined'){
+    NARRATIVES.forEach(function(n){ map[n.id] = n.label; });
+  }
+  document.querySelectorAll('.nid').forEach(function(el){
+    const id = el.textContent.trim();
+    if(map[id]){ el.setAttribute('data-tooltip', id + ' — ' + map[id]); }
+  });
+})();
 </script>
 </body>
 </html>

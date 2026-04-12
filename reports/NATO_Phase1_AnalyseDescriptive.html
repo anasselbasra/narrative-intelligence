@@ -724,15 +724,22 @@ li strong { color: var(--text-1); }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .report-stats { grid-template-columns: repeat(2, 1fr); }
 }
+/* ── Report header with red accent line ── */
+.report-header {
+  border-left: 3px solid var(--red);
+  padding-left: 24px;
+  margin-bottom: 28px;
+}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<div class="report-header">
 <div class="report-overline">MODULE 01 · SIGNAL LANDSCAPE · CONFIDENTIEL</div>
 <div class="report-headline">ALLIANCE<br>UNDER<br>PRESSURE</div>
 <div class="report-deck">62 jours de surveillance · 3 514 posts · de la baseline silencieuse au pic d'amplification ×49 · cartographie complète des signaux</div>
 <div class="report-metabar">Twitter / X &nbsp;·&nbsp; Anglais &nbsp;·&nbsp; 1 fév. – 3 avr. 2026 &nbsp;·&nbsp; min_retweets = 5 &nbsp;·&nbsp; scope : débat retrait USA / OTAN</div>
+</div>
 
 <div class="report-stats">
   <div class="rs-cell">
