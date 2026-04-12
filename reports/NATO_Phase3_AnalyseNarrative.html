@@ -40,7 +40,7 @@ body{background:var(--void);color:var(--text-1);font-family:var(--font-body);fon
 .callout.blue{border-color:var(--accent);}.callout.red{border-color:var(--accent2);}.callout.green{border-color:var(--accent4);}.callout.grey{border-color:var(--dim);}.callout.purple{border-color:var(--purple);}
 .callout-title{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
 .callout.blue .callout-title{color:var(--accent);}.callout.red .callout-title{color:var(--accent2);}.callout.green .callout-title{color:var(--accent4);}.callout.grey .callout-title{color:var(--dim);}.callout.purple .callout-title{color:var(--purple);}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px;margin-bottom:28px;background:var(--border);border:1px solid var(--border);}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:28px;background:var(--border);border:1px solid var(--border);}
 .kpi-card{background:var(--surface);padding:16px 18px 12px;}
 .kpi-label{font-family:var(--font-data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
 .kpi-value{font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--text-0);line-height:1;margin-bottom:3px;}
@@ -112,7 +112,7 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
   <div style="font-family:var(--font-data);font-size:9px;color:var(--text-3);letter-spacing:.08em;margin-top:18px;margin-bottom:0;">Twitter/X · Anglais · 1 fév. – 3 avr. 2026 · 3 510 posts · 21 narratifs canoniques</div>
   <div class="report-meta">
     <div class="meta-item">Narratifs identifiés <span>21</span></div>
-    <div class="meta-item">Textes couverts <span>1 075 · 30,6%</span></div>
+    <div class="meta-item">Textes couverts <span>1 073 · 30,6%</span></div>
     <div class="meta-item">Textes multi-narratifs <span>602 · 17,2%</span></div>
     <div class="meta-item">Paires miroirs <span>5 documentées</span></div>
     <div class="meta-item" style="margin-left:auto;">par <strong style="color:var(--text);">Anass El Basraoui</strong>&nbsp;<a href="https://www.linkedin.com/in/el-basraoui/" target="_blank" style="color:var(--accent);text-decoration:none;font-family:var(--font-data);">LinkedIn</a></div>
@@ -169,7 +169,7 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
 
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">Narratifs canoniques</div><div class="kpi-value" style="color:var(--accent);">21</div><div class="kpi-sub">Extraits du corpus</div></div>
-    <div class="kpi-card"><div class="kpi-label">Textes couverts</div><div class="kpi-value">1 075</div><div class="kpi-sub">30,6% du corpus (3 510)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Textes couverts</div><div class="kpi-value">1 073</div><div class="kpi-sub">30,6% du corpus (3 510)</div></div>
     <div class="kpi-card"><div class="kpi-label">Narratif dominant</div><div class="kpi-value" style="color:var(--accent2);">N18</div><div class="kpi-sub">362 textes</div></div>
     <div class="kpi-card"><div class="kpi-label">Total assignments</div><div class="kpi-value" style="color:var(--accent3);">2 561</div><div class="kpi-sub">Moy. 2,38 narratifs/texte</div></div>
     <div class="kpi-card"><div class="kpi-label">Seuil similarité</div><div class="kpi-value" style="color:var(--accent4);">0,70</div><div class="kpi-sub">Cosinus · moy. 0,730</div></div>
@@ -566,7 +566,7 @@ h3{font-size:12px;font-weight:600;color:var(--accent3);margin-bottom:10px;margin
 <div class="section">
   <div class="section-title">ANNEXE B · Note méthodologique</div>
   <div style="background:var(--surface);border:1px solid var(--border);padding:20px 24px;">
-    <p style="color:var(--text-2);margin-bottom:12px;"><strong>Pipeline de traitement :</strong> Les textes bruts (3 510 posts, filtrés à min_retweets = 5) sont transformés en vecteurs sémantiques par un modèle d'embeddings. Ces vecteurs sont réduits à 2D via UMAP, puis regroupés par HDBSCAN (36 clusters, Phase 2). Pour la Phase 3, 21 narratifs canoniques ont été extraits et formulés à partir du corpus avec assistance LLM. Chaque texte est assigné aux narratifs dont la similarité cosinus dépasse 0,70. La moyenne observée est 0,730, le max 0,879 (N18), le min 0,653 (N03).</p>
+    <p style="color:var(--text-2);margin-bottom:12px;"><strong>Pipeline de traitement :</strong> Les textes bruts (3 510 posts, filtrés à min_retweets = 5) sont transformés en vecteurs sémantiques par un modèle d'embeddings. Ces vecteurs sont réduits à 2D via UMAP, puis regroupés par HDBSCAN (36 clusters, Phase 2). Pour la Phase 3, 21 narratifs canoniques ont été extraits et formulés à partir du corpus avec assistance LLM. Chaque texte est assigné aux narratifs dont la similarité cosinus dépasse 0,70. La moyenne observée est 0,730, le max 0,879 (N18), le min 0,653 (N03). Ce minimum inférieur au seuil s'explique par la règle d'assignation : top_k = max(10, nb_textes_sim &gt; 0,70). Si un narratif compte moins de 10 textes dépassant le seuil, les 10 textes les plus proches sont retenus même si leur similarité est inférieure à 0,70. N03 est le seul narratif concerné par ce cas limite.</p>
     <p style="color:var(--text-2);margin-bottom:0;"><strong>Limites principales :</strong> (1) Plateforme unique : Twitter/X anglophone uniquement. (2) Filtre min_retweets = 5 : signaux faibles exclus. (3) Période de 62 jours. (4) Pas d'analyse d'images/vidéos (dont la vidéo BitChute à fort impact de Phase 1). (5) Bruit de 30,6% non narrativisé. (6) Le positionnement dans la matrice de menace est analytique, basé sur les descriptions canoniques, pas sur une attribution acteur-par-acteur vérifiée. (7) Les croisements narratif x engagement et narratif x acteur nécessitent un graphe social non disponible dans ce corpus.</p>
   </div>
 </div>
