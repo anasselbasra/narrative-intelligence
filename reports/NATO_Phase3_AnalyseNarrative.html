@@ -780,18 +780,14 @@ NARRATIVES.forEach(n=>{
   annexBody.appendChild(tr);
 });
 
-<script>
 // Narrative tooltip lookup — built from NARRATIVES array
 (function(){
   const map = {};
-  if(typeof NARRATIVES !== 'undefined'){
-    NARRATIVES.forEach(function(n){ map[n.id] = n.label; });
-  }
+  NARRATIVES.forEach(function(n){ map[n.id] = n.label; });
   document.querySelectorAll('.nid').forEach(function(el){
     const id = el.textContent.trim();
     if(map[id]){ el.setAttribute('data-tooltip', id + ' — ' + map[id]); }
   });
 })();
-</script>
 </body>
 </html>
