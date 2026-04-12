@@ -805,33 +805,6 @@
     #topbar        { animation: fade-up .4s ease both; animation-delay: .18s; }
     #frame-wrap    { animation: fade-up .4s ease both; animation-delay: .26s; }
 
-    /* ── Module 01 priority — Signal Landscape ──────────────── */
-    .nav-btn[data-phase="0"] .nav-inner {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.18);
-    }
-    .nav-btn[data-phase="0"] .nav-body {
-      padding: 14px 12px;
-    }
-    .nav-btn[data-phase="0"] .nav-title-text {
-      font-size: 18px;
-      color: var(--text-0);
-      animation-duration: 2.4s;
-    }
-    .nav-btn[data-phase="0"] .nav-index {
-      color: var(--text-2);
-      font-size: 9px;
-    }
-    .nav-btn[data-phase="0"] .nav-scope {
-      font-size: 11px;
-      color: var(--text-2);
-      margin-top: 3px;
-    }
-    .nav-btn[data-phase="0"]:hover .nav-inner {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.28);
-    }
-
     /* ── Sidebar progress tracker ───────────────────────────── */
     .sb-progress {
       display: flex;
@@ -868,13 +841,6 @@
       box-shadow: 0 0 0 3px rgba(208,2,27,.18);
     }
 
-    /* Signal Landscape active → red highlight */
-    .nav-btn[data-phase="0"].active .nav-inner {
-      background: rgba(208, 2, 27, 0.10);
-      border-color: rgba(208, 2, 27, 0.45);
-    }
-    .nav-btn[data-phase="0"].active .nav-title-text { color: var(--red); }
-    .nav-btn[data-phase="0"].active .nav-index      { color: var(--red); }
   </style>
 </head>
 
