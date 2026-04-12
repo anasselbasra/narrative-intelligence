@@ -344,6 +344,24 @@ const BASE = {
   font:{family:'DM Mono, monospace',color:'#686868',size:10},
   hoverlabel:{bgcolor:'#161616',bordercolor:'#2a2a2a',font:{size:11,color:'#e2e8f0'}}
 };
+// Text wrap: first line ≤50 chars, subsequent ≤80 chars
+function wrapHoverText(str,firstMax,restMax){
+  firstMax=firstMax||50; restMax=restMax||80;
+  if(!str) return str;
+  var words=String(str).split(' '), lines=[], cur='', first=true;
+  for(var i=0;i<words.length;i++){
+    var w=words[i], test=cur?cur+' '+w:w;
+    if(test.length>(first?firstMax:restMax)){
+      if(cur){lines.push(cur);first=false;cur=w;}
+      else{lines.push(w);first=false;cur='';}
+    } else {cur=test;}
+  }
+  if(cur) lines.push(cur);
+  return lines.join('<br>');
+}
+scatterTraces.forEach(function(tr){
+  if(Array.isArray(tr.text)) tr.text=tr.text.map(function(t){return wrapHoverText(t);});
+});
 // SCATTER
 Plotly.newPlot('scatter-chart', scatterTraces, {
   ...BASE,
@@ -353,28 +371,28 @@ Plotly.newPlot('scatter-chart', scatterTraces, {
   legend:{bgcolor:'rgba(17,19,24,0.9)',bordercolor:'#2a2a2a',borderwidth:1,font:{size:9,color:'#8c8c8c'},x:1.01,y:1,xanchor:'left',itemsizing:'constant'},
   hovermode:'closest', margin:{t:30,b:50,l:50,r:200}
 },{responsive:true,displayModeBar:true,modeBarButtonsToRemove:['lasso2d','select2d'],displaylogo:false});
-// BAR — horizontal for readability (36 clusters)
+// BAR — vertical
 Plotly.newPlot('bar-chart',[{
-  type:'bar', orientation:'h',
-  y:barData.labels, x:barData.counts,
+  type:'bar',
+  x:barData.labels, y:barData.counts,
   text:barData.pcts.map(p=>p+'%'), textposition:'outside',
   textfont:{size:9,color:'#8c8c8c',family:'DM Mono, monospace'},
   marker:{color:barData.colors,opacity:.88,line:{width:0}},
   customdata:barData.pcts.map((p,i)=>[barData.cluster_ids[i],p,barData.labels[i]]),
-  hovertemplate:'<b>%{y}</b><br>%{x} posts · %{customdata[1]}% du corpus<extra></extra>'
+  hovertemplate:'<b>%{x}</b><br>%{y} posts · %{customdata[1]}% du corpus<extra></extra>'
 }],{
   ...BASE,
-  yaxis:{gridcolor:'transparent',linecolor:'#2a2a2a',automargin:true,
-         tickfont:{size:10,color:'#c8c8c8',family:'DM Mono, monospace'}},
-  xaxis:{gridcolor:'#1a1a1a',linecolor:'#2a2a2a',tickfont:{size:9,color:'#686868'},
+  xaxis:{gridcolor:'transparent',linecolor:'#2a2a2a',automargin:true,
+         tickfont:{size:9,color:'#c8c8c8',family:'DM Mono, monospace'},tickangle:-40},
+  yaxis:{gridcolor:'#1a1a1a',linecolor:'#2a2a2a',tickfont:{size:9,color:'#686868'},
          title:{text:'Nombre de posts',font:{size:9,color:'#686868'}}},
-  bargap:.25, margin:{t:20,b:50,l:16,r:60}, hovermode:'closest'
+  bargap:.25, margin:{t:40,b:200,l:60,r:20}, hovermode:'closest'
 },{responsive:true,displayModeBar:false});
 document.getElementById('bar-chart').on('plotly_click',function(d){
   const pt=d.points[0];
   document.getElementById('bar-detail').style.display='block';
   document.getElementById('bar-detail-title').textContent=pt.customdata[2]+(pt.customdata[0]===-1?' [BRUIT]':' [Cluster #'+pt.customdata[0]+']');
-  document.getElementById('bar-detail-body').innerHTML='<strong>'+pt.x+' posts</strong> · <strong>'+pt.customdata[1]+'%</strong> du corpus total (3 510 posts).';
+  document.getElementById('bar-detail-body').innerHTML='<strong>'+pt.y+' posts</strong> · <strong>'+pt.customdata[1]+'%</strong> du corpus total (3 510 posts).';
 });
 // ANIMATED
 const allDates=linesData['_total'].dates;
