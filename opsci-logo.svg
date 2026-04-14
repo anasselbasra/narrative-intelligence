@@ -1,50 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 110">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 112">
   <!--
-    Opsci.ai logo — 7 hollow diamonds
+    Opsci.ai logo — 8 hollow diamonds
     Circle: r=26, center (62, 44)
-    Gap at 270° (left / 9 o'clock)
-    Positions: 315°, 0°, 45°, 90°, 135°, 180°, 225°
-    Each diamond: 16×16 rect rotated 45°, fill=none, thick stroke
+    All 8 positions at 45° intervals (full circle)
+    Each diamond: path, half-diagonal=12, fill=none, stroke only
+    Colors: yellow (upper-left) → green (right) → olive (bottom) → yellow-green (left)
   -->
 
-  <!-- 315° upper-left  — (43.6, 25.6) — bright yellow -->
-  <rect x="35.6" y="17.6" width="16" height="16"
-        fill="none" stroke="#E0FF00" stroke-width="2.8"
-        transform="rotate(45 43.6 25.6)"/>
+  <!-- 315° upper-left — center (43.6, 25.6) — bright yellow -->
+  <path d="M43.6,13.6 L55.6,25.6 L43.6,37.6 L31.6,25.6Z"
+        fill="none" stroke="#DDFF00" stroke-width="2.8" stroke-linejoin="miter"/>
 
-  <!-- 0° top — (62, 18) — yellow-green -->
-  <rect x="54" y="10" width="16" height="16"
-        fill="none" stroke="#C0FF00" stroke-width="2.8"
-        transform="rotate(45 62 18)"/>
+  <!-- 0° top — center (62, 18) — yellow-green -->
+  <path d="M62,6 L74,18 L62,30 L50,18Z"
+        fill="none" stroke="#C0FF00" stroke-width="2.8" stroke-linejoin="miter"/>
 
-  <!-- 45° upper-right — (80.4, 25.6) — green-yellow -->
-  <rect x="72.4" y="17.6" width="16" height="16"
-        fill="none" stroke="#88FF00" stroke-width="2.8"
-        transform="rotate(45 80.4 25.6)"/>
+  <!-- 45° upper-right — center (80.4, 25.6) — lime -->
+  <path d="M80.4,13.6 L92.4,25.6 L80.4,37.6 L68.4,25.6Z"
+        fill="none" stroke="#88FF00" stroke-width="2.8" stroke-linejoin="miter"/>
 
-  <!-- 90° right — (88, 44) — green -->
-  <rect x="80" y="36" width="16" height="16"
-        fill="none" stroke="#55EE00" stroke-width="2.8"
-        transform="rotate(45 88 44)"/>
+  <!-- 90° right — center (88, 44) — green -->
+  <path d="M88,32 L100,44 L88,56 L76,44Z"
+        fill="none" stroke="#55EE00" stroke-width="2.8" stroke-linejoin="miter"/>
 
-  <!-- 135° lower-right — (80.4, 62.4) — darker green -->
-  <rect x="72.4" y="54.4" width="16" height="16"
-        fill="none" stroke="#40DD00" stroke-width="2.8"
-        transform="rotate(45 80.4 62.4)"/>
+  <!-- 135° lower-right — center (80.4, 62.4) — dark green -->
+  <path d="M80.4,50.4 L92.4,62.4 L80.4,74.4 L68.4,62.4Z"
+        fill="none" stroke="#40DD00" stroke-width="2.8" stroke-linejoin="miter"/>
 
-  <!-- 180° bottom — (62, 70) — olive-green -->
-  <rect x="54" y="62" width="16" height="16"
-        fill="none" stroke="#80CC00" stroke-width="2.8"
-        transform="rotate(45 62 70)"/>
+  <!-- 180° bottom — center (62, 70) — olive-green -->
+  <path d="M62,58 L74,70 L62,82 L50,70Z"
+        fill="none" stroke="#70CC00" stroke-width="2.8" stroke-linejoin="miter"/>
 
-  <!-- 225° lower-left — (43.6, 62.4) — yellow-green -->
-  <rect x="35.6" y="54.4" width="16" height="16"
-        fill="none" stroke="#A0DD00" stroke-width="2.8"
-        transform="rotate(45 43.6 62.4)"/>
+  <!-- 225° lower-left — center (43.6, 62.4) — yellow-green -->
+  <path d="M43.6,50.4 L55.6,62.4 L43.6,74.4 L31.6,62.4Z"
+        fill="none" stroke="#90DD00" stroke-width="2.8" stroke-linejoin="miter"/>
 
-  <!-- GAP at 270° (left / 9 o'clock) -->
+  <!-- 270° left — center (36, 44) — warm yellow-green -->
+  <path d="M36,32 L48,44 L36,56 L24,44Z"
+        fill="none" stroke="#BBEE00" stroke-width="2.8" stroke-linejoin="miter"/>
 
-  <text x="62" y="101"
+  <!-- Text -->
+  <text x="62" y="103"
         text-anchor="middle"
         font-family="'Helvetica Neue', Arial, sans-serif"
         font-size="17" font-weight="300" letter-spacing="2"
