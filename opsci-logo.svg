@@ -1,23 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" width="120" height="100">
-  <!-- Diamond 1: upper-left — bright yellow -->
-  <rect x="21.5" y="3.5" width="15" height="15" transform="rotate(45 29 11)" fill="#D4FF00"/>
-  <!-- Diamond 2: top — yellow-green -->
-  <rect x="52.5" y="-3.5" width="15" height="15" transform="rotate(45 60 4)" fill="#B0FF00"/>
-  <!-- Diamond 3: upper-right — green-yellow -->
-  <rect x="79.5" y="3.5" width="15" height="15" transform="rotate(45 87 11)" fill="#88FF00"/>
-  <!-- Diamond 4: right — green -->
-  <rect x="88" y="30" width="15" height="15" transform="rotate(45 95.5 37.5)" fill="#55FF00"/>
-  <!-- Diamond 5: lower-right — bright green -->
-  <rect x="79.5" y="56.5" width="15" height="15" transform="rotate(45 87 64)" fill="#33EE00"/>
-  <!-- Diamond 6: bottom — green -->
-  <rect x="52.5" y="64.5" width="15" height="15" transform="rotate(45 60 72)" fill="#33CC00"/>
-  <!-- Diamond 7: lower-left — green-yellow -->
-  <rect x="21.5" y="56.5" width="15" height="15" transform="rotate(45 29 64)" fill="#55DD00"/>
-  <!-- Gap at left (9 o'clock) — intentional -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 108">
+  <!--
+    7 diamonds in a circle (radius 26, center 60/42), gap at ~315° upper-left.
+    Each diamond = polygon with 4 explicit points (top, right, bottom, left).
+    Half-size = 8.
+    0°   top:        cx=60   cy=16
+    45°  upper-right: cx=78.4 cy=23.6
+    90°  right:      cx=86   cy=42
+    135° lower-right: cx=78.4 cy=60.4
+    180° bottom:     cx=60   cy=68
+    225° lower-left: cx=41.6 cy=60.4
+    270° left:       cx=34   cy=42
+    GAP at 315° (upper-left)
+  -->
+  <polygon points="60,8   68,16  60,24  52,16"  fill="#C6FF00"/>
+  <polygon points="78.4,15.6 86.4,23.6 78.4,31.6 70.4,23.6" fill="#AAFF00"/>
+  <polygon points="86,34  94,42  86,50  78,42"   fill="#88FF00"/>
+  <polygon points="78.4,52.4 86.4,60.4 78.4,68.4 70.4,60.4" fill="#66EE00"/>
+  <polygon points="60,60  68,68  60,76  52,68"   fill="#44DD00"/>
+  <polygon points="41.6,52.4 49.6,60.4 41.6,68.4 33.6,60.4" fill="#55CC00"/>
+  <polygon points="34,34  42,42  34,50  26,42"   fill="#88DD00"/>
 
-  <!-- Text — white for dark backgrounds -->
-  <text x="60" y="97" text-anchor="middle"
+  <text x="60" y="100"
+        text-anchor="middle"
         font-family="'Helvetica Neue', Arial, sans-serif"
-        font-size="17" font-weight="300" letter-spacing="1.5"
+        font-size="16" font-weight="300" letter-spacing="2"
         fill="#ffffff">opsci.ai</text>
 </svg>
