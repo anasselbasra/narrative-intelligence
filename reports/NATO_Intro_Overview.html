@@ -50,13 +50,12 @@
 
     /* ── Document header ───────────────────────────────────────── */
     .doc-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: start;
       padding-bottom: 22px;
       border-bottom: 1px solid var(--border-hard);
       margin-bottom: 44px;
-      position: relative;
     }
 
     .doc-analyst {
@@ -102,7 +101,7 @@
       letter-spacing: .1em;
     }
 
-    .doc-meta-block { text-align: right; }
+    .doc-meta-block { text-align: right; justify-self: end; }
 
     .doc-meta-row {
       font-family: var(--font-data);
