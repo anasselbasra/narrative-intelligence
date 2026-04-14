@@ -1,48 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 112">
-  <!--
-    Opsci.ai logo — 8 hollow diamonds
-    Circle: r=26, center (62, 44)
-    All 8 positions at 45° intervals (full circle)
-    Each diamond: path, half-diagonal=12, fill=none, stroke only
-    Colors: yellow (upper-left) → green (right) → olive (bottom) → yellow-green (left)
-  -->
+<svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" width="560" height="210">
+  <rect width="560" height="210" fill="#000000"/>
 
-  <!-- 315° upper-left — center (43.6, 25.6) — bright yellow -->
-  <path d="M43.6,13.6 L55.6,25.6 L43.6,37.6 L31.6,25.6Z"
-        fill="none" stroke="#DDFF00" stroke-width="2.8" stroke-linejoin="miter"/>
+  <!-- Defs: glow filter for diamonds -->
+  <defs>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
 
-  <!-- 0° top — center (62, 18) — yellow-green -->
-  <path d="M62,6 L74,18 L62,30 L50,18Z"
-        fill="none" stroke="#C0FF00" stroke-width="2.8" stroke-linejoin="miter"/>
+  <!-- 7 hollow diamonds arranged in a circle -->
+  <!-- center: (185, 105), radius: 62 -->
+  <!-- Each diamond: rect 22x22, rotated 45deg, no fill, stroke -->
 
-  <!-- 45° upper-right — center (80.4, 25.6) — lime -->
-  <path d="M80.4,13.6 L92.4,25.6 L80.4,37.6 L68.4,25.6Z"
-        fill="none" stroke="#88FF00" stroke-width="2.8" stroke-linejoin="miter"/>
+  <!-- i=0: top (185, 43) -->
+  <rect x="-11" y="-11" width="22" height="22"
+        fill="none" stroke="#CCFF00" stroke-width="4.5"
+        transform="translate(185,43) rotate(45)"
+        filter="url(#glow)"/>
 
-  <!-- 90° right — center (88, 44) — green -->
-  <path d="M88,32 L100,44 L88,56 L76,44Z"
-        fill="none" stroke="#55EE00" stroke-width="2.8" stroke-linejoin="miter"/>
+  <!-- i=1: top-right (233.5, 66.3) -->
+  <rect x="-11" y="-11" width="22" height="22"
+        fill="none" stroke="#BBFF00" stroke-width="4.5"
+        transform="translate(233.5,66.3) rotate(45)"
+        filter="url(#glow)"/>
 
-  <!-- 135° lower-right — center (80.4, 62.4) — dark green -->
-  <path d="M80.4,50.4 L92.4,62.4 L80.4,74.4 L68.4,62.4Z"
-        fill="none" stroke="#40DD00" stroke-width="2.8" stroke-linejoin="miter"/>
+  <!-- i=2: right (245.5, 118.8) -->
+  <rect x="-11" y="-11" width="22" height="22"
+        fill="none" stroke="#99FF00" stroke-width="4.5"
+        transform="translate(245.5,118.8) rotate(45)"
+        filter="url(#glow)"/>
 
-  <!-- 180° bottom — center (62, 70) — olive-green -->
-  <path d="M62,58 L74,70 L62,82 L50,70Z"
-        fill="none" stroke="#70CC00" stroke-width="2.8" stroke-linejoin="miter"/>
+  <!-- i=3: bottom-right (211.9, 160.9) -->
+  <rect x="-11" y="-11" width="22" height="22"
+        fill="none" stroke="#66FF22" stroke-width="4.5"
+        transform="translate(211.9,160.9) rotate(45)"
+        filter="url(#glow)"/>
 
-  <!-- 225° lower-left — center (43.6, 62.4) — yellow-green -->
-  <path d="M43.6,50.4 L55.6,62.4 L43.6,74.4 L31.6,62.4Z"
-        fill="none" stroke="#90DD00" stroke-width="2.8" stroke-linejoin="miter"/>
+  <!-- i=4: bottom-left (158.1, 160.9) -->
+  <rect x="-11" y="-11" width="22" height="22"
+        fill="none" stroke="#55FF33" stroke-width="4.5"
+        transform="translate(158.1,160.9) rotate(45)"
+        filter="url(#glow)"/>
 
-  <!-- 270° left — center (36, 44) — warm yellow-green -->
-  <path d="M36,32 L48,44 L36,56 L24,44Z"
-        fill="none" stroke="#BBEE00" stroke-width="2.8" stroke-linejoin="miter"/>
+  <!-- i=5: left (124.5, 118.8) -->
+  <rect x="-11" y="-11" width="22" height="22"
+        fill="none" stroke="#88FF00" stroke-width="4.5"
+        transform="translate(124.5,118.8) rotate(45)"
+        filter="url(#glow)"/>
 
-  <!-- Text -->
-  <text x="62" y="103"
-        text-anchor="middle"
-        font-family="'Helvetica Neue', Arial, sans-serif"
-        font-size="17" font-weight="300" letter-spacing="2"
-        fill="#ffffff">opsci.ai</text>
+  <!-- i=6: top-left (136.5, 66.3) -->
+  <rect x="-11" y="-11" width="22" height="22"
+        fill="none" stroke="#AAFF00" stroke-width="4.5"
+        transform="translate(136.5,66.3) rotate(45)"
+        filter="url(#glow)"/>
+
+  <!-- ".ai" text -->
+  <text
+    x="305"
+    y="158"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="72"
+    font-weight="300"
+    letter-spacing="2"
+    fill="#444444">.ai</text>
 </svg>
