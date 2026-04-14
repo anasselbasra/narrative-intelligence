@@ -43,10 +43,10 @@ Analytical report on the NATO information environment during the Iranian nuclear
 
 ---
 
-## Author
+## Produced by
 
-**Anass El Basraoui** — Narrative Intelligence Analyst  
-[LinkedIn](https://www.linkedin.com/in/el-basraoui/) · [Portfolio](https://elbasraoui.engineer/) · [anasselbasraoui0@gmail.com](mailto:anasselbasraoui0@gmail.com?subject=Briefing%20Request%20%E2%80%94%20NI-2026-NATO)
+**[Opsci.ai](https://www.opsci.ai/fr)** — Narrative Intelligence Platform  
+[LinkedIn](https://www.linkedin.com/company/opsci-ai) · [opsci.ai](https://www.opsci.ai/fr) · [anasselbasraoui0@gmail.com](mailto:anasselbasraoui0@gmail.com?subject=Briefing%20Request%20%E2%80%94%20NI-2026-NATO)
 
 ---
 

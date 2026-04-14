@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" width="120" height="100">
+  <!-- Diamond 1: upper-left — bright yellow -->
+  <rect x="21.5" y="3.5" width="15" height="15" transform="rotate(45 29 11)" fill="#D4FF00"/>
+  <!-- Diamond 2: top — yellow-green -->
+  <rect x="52.5" y="-3.5" width="15" height="15" transform="rotate(45 60 4)" fill="#B0FF00"/>
+  <!-- Diamond 3: upper-right — green-yellow -->
+  <rect x="79.5" y="3.5" width="15" height="15" transform="rotate(45 87 11)" fill="#88FF00"/>
+  <!-- Diamond 4: right — green -->
+  <rect x="88" y="30" width="15" height="15" transform="rotate(45 95.5 37.5)" fill="#55FF00"/>
+  <!-- Diamond 5: lower-right — bright green -->
+  <rect x="79.5" y="56.5" width="15" height="15" transform="rotate(45 87 64)" fill="#33EE00"/>
+  <!-- Diamond 6: bottom — green -->
+  <rect x="52.5" y="64.5" width="15" height="15" transform="rotate(45 60 72)" fill="#33CC00"/>
+  <!-- Diamond 7: lower-left — green-yellow -->
+  <rect x="21.5" y="56.5" width="15" height="15" transform="rotate(45 29 64)" fill="#55DD00"/>
+  <!-- Gap at left (9 o'clock) — intentional -->
+
+  <!-- Text — white for dark backgrounds -->
+  <text x="60" y="97" text-anchor="middle"
+        font-family="'Helvetica Neue', Arial, sans-serif"
+        font-size="17" font-weight="300" letter-spacing="1.5"
+        fill="#ffffff">opsci.ai</text>
+</svg>
